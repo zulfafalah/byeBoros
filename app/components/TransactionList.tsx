@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type Transaction = {
     id: number;
     name: string;
@@ -92,9 +94,9 @@ export default function TransactionList() {
         <section>
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold dark:text-white">Recent Transactions</h2>
-                <button className="text-primary text-sm font-bold active:opacity-70 transition-opacity">
+                <Link href="/transactions" className="text-primary text-sm font-bold active:opacity-70 transition-opacity">
                     See All
-                </button>
+                </Link>
             </div>
 
             <div className="space-y-3">
