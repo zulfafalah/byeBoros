@@ -15,7 +15,7 @@ export default function Header() {
                     <p className="text-[10px] uppercase tracking-widest text-muted font-bold">
                         {greeting}
                     </p>
-                    <p className="text-sm font-bold dark:text-white">Alex Rivers</p>
+                    <p className="text-sm font-bold dark:text-white">Aulia Fitrianti</p>
                 </div>
             </div>
 
