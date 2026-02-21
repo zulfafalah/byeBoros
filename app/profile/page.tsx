@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import BottomNav from "../components/BottomNav";
 
 export default function ProfilePage() {
+    const router = useRouter();
     const [darkMode, setDarkMode] = useState(false);
 
     const toggleDarkMode = () => {
@@ -128,7 +130,10 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Log Out */}
-                    <button className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark text-expense-red font-bold active:scale-[0.98] transition-all">
+                    <button
+                        onClick={() => router.push("/login")}
+                        className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark text-expense-red font-bold active:scale-[0.98] transition-all cursor-pointer"
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                             <polyline points="16 17 21 12 16 7" />
