@@ -64,7 +64,7 @@ export default function ProfilePage() {
                                 <span className="text-sm font-bold">{t("darkMode")}</span>
                             </div>
                             <button
-                                onClick={toggleDarkMode}
+                                onClick={(e) => toggleDarkMode(e)}
                                 className={`w-12 h-6 rounded-full relative p-1 cursor-pointer transition-colors ${darkMode ? "bg-primary" : "bg-zinc-300 dark:bg-zinc-600"
                                     }`}
                             >

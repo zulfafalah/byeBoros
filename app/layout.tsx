@@ -49,7 +49,7 @@ export default async function RootLayout({
     <html lang={locale} className={isDark ? "dark" : ""}>
       <body className={`${manrope.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
+          <ThemeProvider initialDark={isDark}>
             {children}
           </ThemeProvider>
         </NextIntlClientProvider>
