@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { cookies } from "next/headers";
 import RegisterSW from "./components/RegisterSW";
+import InstallPrompt from "./components/InstallPrompt";
 import ThemeProvider from "./components/ThemeProvider";
 import "./globals.css";
 
@@ -60,6 +61,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider initialDark={isDark}>
             {children}
+            <InstallPrompt />
           </ThemeProvider>
         </NextIntlClientProvider>
         <RegisterSW />
