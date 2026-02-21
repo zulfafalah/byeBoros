@@ -276,9 +276,6 @@ export default function BudgetPage() {
                     </svg>
                     {t("saveBudget")}
                 </button>
-                <div className="h-6 w-full flex justify-center items-end pb-1">
-                    <div className="w-32 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full" />
-                </div>
             </footer>
 
             {/* ── Add Category Modal ─────────────────────── */}
