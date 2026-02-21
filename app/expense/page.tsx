@@ -35,12 +35,12 @@ export default function ExpensePage() {
                         strokeWidth={2}
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="size-5"
+                        className="size-5 dark:text-white"
                     >
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </Link>
-                <h1 className="text-lg font-bold tracking-tight">
+                <h1 className="text-lg font-bold tracking-tight dark:text-white">
                     {t("title")}
                 </h1>
                 <div className="size-10" /> {/* Spacer for symmetry */}
@@ -60,7 +60,7 @@ export default function ExpensePage() {
                         <input
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
-                            className="w-full max-w-[220px] text-5xl font-extrabold text-center bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-gray-200 dark:placeholder:text-gray-700"
+                            className="w-full max-w-[220px] text-5xl font-extrabold text-center bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-gray-200 dark:placeholder:text-gray-700 dark:text-white"
                             placeholder="0"
                             type="number"
                             inputMode="numeric"
@@ -77,7 +77,7 @@ export default function ExpensePage() {
                         <input
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="mt-2 block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400"
+                            className="mt-2 block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400 dark:text-white"
                             placeholder={t("placeholder")}
                             type="text"
                         />
@@ -94,7 +94,7 @@ export default function ExpensePage() {
                             <select
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
-                                className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 pr-10 text-base focus:border-primary focus:ring-primary"
+                                className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 pr-10 text-base focus:border-primary focus:ring-primary dark:text-white"
                             >
                                 <option>{t("food")}</option>
                                 <option>{t("transport")}</option>
@@ -123,7 +123,7 @@ export default function ExpensePage() {
                             <select
                                 value={priority}
                                 onChange={(e) => setPriority(e.target.value)}
-                                className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 pr-10 text-base focus:border-primary focus:ring-primary"
+                                className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 pr-10 text-base focus:border-primary focus:ring-primary dark:text-white"
                             >
                                 <option>{t("low")}</option>
                                 <option>{t("medium")}</option>
@@ -174,7 +174,7 @@ export default function ExpensePage() {
                         <input
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
-                            className="bg-transparent border-none focus:ring-0 focus:outline-none text-base w-full p-0"
+                            className="bg-transparent border-none focus:ring-0 focus:outline-none text-base w-full p-0 dark:text-white"
                             type="date"
                         />
                     </div>
@@ -188,7 +188,7 @@ export default function ExpensePage() {
                     <textarea
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
-                        className="block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 p-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400 min-h-[100px]"
+                        className="block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 p-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400 min-h-[100px] dark:text-white"
                         placeholder={t("notePlaceholder")}
                     />
                 </section>

@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { cookies } from "next/headers";
 import RegisterSW from "./components/RegisterSW";
+import ThemeProvider from "./components/ThemeProvider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -39,12 +41,17 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("theme")?.value;
+  const isDark = theme === "dark";
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={isDark ? "dark" : ""}>
       <body className={`${manrope.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </NextIntlClientProvider>
         <RegisterSW />
       </body>

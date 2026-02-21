@@ -99,13 +99,13 @@ export default function IncomeAnalysis() {
                             {selected ? (
                                 <>
                                     <span className="text-[10px] text-muted font-medium leading-tight">{selected.name}</span>
-                                    <span className="text-base font-extrabold leading-tight mt-0.5">Rp {formatCurrency(selected.amount)}</span>
+                                    <span className="text-base font-extrabold leading-tight mt-0.5 dark:text-white">Rp {formatCurrency(selected.amount)}</span>
                                     <span className="text-[10px] font-bold mt-0.5" style={{ color: selected.hex }}>{selected.pct}%</span>
                                 </>
                             ) : (
                                 <>
                                     <span className="text-[10px] text-muted font-medium uppercase tracking-tight">Total Income</span>
-                                    <span className="text-lg font-extrabold leading-tight mt-0.5">Rp {formatCurrency(totalIncome)}</span>
+                                    <span className="text-lg font-extrabold leading-tight mt-0.5 dark:text-white">Rp {formatCurrency(totalIncome)}</span>
                                 </>
                             )}
                         </div>
@@ -119,7 +119,7 @@ export default function IncomeAnalysis() {
                                 className={`flex items-center gap-2 transition-opacity ${selectedIdx !== null && selectedIdx !== i ? "opacity-40" : ""}`}
                             >
                                 <span className={`size-3 rounded-full ${cat.tw}`} />
-                                <span className="text-xs font-bold">{cat.name}</span>
+                                <span className="text-xs font-bold dark:text-white">{cat.name}</span>
                                 <span className="text-xs text-muted ml-auto">{cat.pct}%</span>
                             </button>
                         ))}
@@ -137,9 +137,9 @@ export default function IncomeAnalysis() {
                                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold">Salary</p>
+                        <p className="text-sm font-bold dark:text-white">Salary</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2">Rp {formatCurrency(5978000)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(5978000)}</p>
                 </div>
 
                 <div className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
@@ -150,15 +150,15 @@ export default function IncomeAnalysis() {
                                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold">Average</p>
+                        <p className="text-sm font-bold dark:text-white">Average</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2">Rp {formatCurrency(284600)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(284600)}</p>
                 </div>
             </div>
 
             {/* ── Source Consistency ── */}
             <section className="mt-6 mb-8">
-                <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between">
+                <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between dark:text-white">
                     Source Consistency
                     <span className="text-[10px] text-muted font-bold">THIS MONTH</span>
                 </h2>
@@ -168,9 +168,9 @@ export default function IncomeAnalysis() {
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                     <span className={`size-2 rounded-full ${s.dot}`} />
-                                    <span className="text-xs font-bold">{s.label}</span>
+                                    <span className="text-xs font-bold dark:text-white">{s.label}</span>
                                 </div>
-                                <span className="text-xs font-extrabold">Rp {formatCurrency(s.amount)}</span>
+                                <span className="text-xs font-extrabold dark:text-white">Rp {formatCurrency(s.amount)}</span>
                             </div>
                             <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
                                 <div className={`${s.color} h-full rounded-full transition-all`} style={{ width: `${s.pct}%` }} />

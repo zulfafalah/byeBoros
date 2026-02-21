@@ -176,11 +176,11 @@ export default function BudgetPage() {
                     href="/"
                     className="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5 dark:text-white">
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </Link>
-                <h1 className="text-lg font-bold tracking-tight">{t("title")}</h1>
+                <h1 className="text-lg font-bold tracking-tight dark:text-white">{t("title")}</h1>
                 <div className="size-10" />
             </header>
 
@@ -195,7 +195,7 @@ export default function BudgetPage() {
                                 <div className="flex items-center justify-center gap-1">
                                     <span className="text-xl font-extrabold text-primary">Rp</span>
                                     <input
-                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-20 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-20 text-center dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         type="number"
                                         value={dailyLimit}
                                         onChange={(e) => setDailyLimit(Number(e.target.value) || 0)}
@@ -207,7 +207,7 @@ export default function BudgetPage() {
                                 <div className="flex items-center justify-center gap-1">
                                     <span className="text-xl font-extrabold text-primary">Rp</span>
                                     <input
-                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-28 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-28 text-center dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         type="number"
                                         value={monthlyLimit}
                                         onChange={(e) => setMonthlyLimit(Number(e.target.value) || 0)}
@@ -246,12 +246,12 @@ export default function BudgetPage() {
                                         <div className={`size-10 rounded-lg ${cat.bgColor} flex items-center justify-center ${cat.color}`}>
                                             {cat.icon}
                                         </div>
-                                        <span className="font-bold">{cat.name}</span>
+                                        <span className="font-bold dark:text-white">{cat.name}</span>
                                     </div>
                                     <div className="flex items-center bg-gray-50 dark:bg-white/5 rounded-lg px-2 py-1 border border-primary/5">
                                         <span className="text-xs font-bold mr-1 opacity-50">Rp</span>
                                         <input
-                                            className="w-20 bg-transparent border-none p-0 text-sm font-extrabold focus:ring-0 focus:outline-none text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                            className="w-20 bg-transparent border-none p-0 text-sm font-extrabold focus:ring-0 focus:outline-none text-right dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                             type="number"
                                             value={cat.budget}
                                             onChange={(e) => handleCategoryChange(cat.name, e.target.value)}

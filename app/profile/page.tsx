@@ -4,19 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import BottomNav from "../components/BottomNav";
+import { useTheme } from "../components/ThemeProvider";
 
 export default function ProfilePage() {
     const router = useRouter();
     const t = useTranslations("Profile");
     const locale = useLocale();
-    const [darkMode, setDarkMode] = useState(false);
+    const { darkMode, toggleDarkMode } = useTheme();
     const [showLangModal, setShowLangModal] = useState(false);
     const [selectedLang, setSelectedLang] = useState(locale);
-
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-        document.documentElement.classList.toggle("dark");
-    };
 
     const confirmLanguage = () => {
         if (selectedLang !== locale) {

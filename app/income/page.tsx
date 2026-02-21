@@ -46,13 +46,13 @@ export default function IncomePage() {
                         strokeWidth={2}
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="size-5"
+                        className="size-5 dark:text-white"
                     >
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                 </Link>
-                <h1 className="text-base font-bold leading-tight tracking-tight">
+                <h1 className="text-base font-bold leading-tight tracking-tight dark:text-white">
                     {t("title")}
                 </h1>
                 <div className="size-10" /> {/* Spacer for symmetry */}
@@ -63,7 +63,7 @@ export default function IncomePage() {
                 <div className="space-y-8">
                     {/* Large Header */}
                     <div>
-                        <h2 className="text-4xl font-extrabold tracking-tight mb-2">
+                        <h2 className="text-4xl font-extrabold tracking-tight mb-2 dark:text-white">
                             {t("newEntry")}
                         </h2>
                         <p className="text-muted text-sm font-medium">
@@ -81,7 +81,7 @@ export default function IncomePage() {
                                 autoFocus
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full h-16 px-5 rounded-2xl bg-gray-50/50 dark:bg-white/5 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-xl font-semibold placeholder:text-gray-400 placeholder:font-normal"
+                                className="w-full h-16 px-5 rounded-2xl bg-gray-50/50 dark:bg-white/5 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-xl font-semibold placeholder:text-gray-400 placeholder:font-normal dark:text-white"
                                 placeholder={t("sourcePlaceholder")}
                                 type="text"
                             />
@@ -109,13 +109,13 @@ export default function IncomePage() {
                             {t("amount")}
                         </label>
                         <div className="relative group">
-                            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-3xl font-bold">
+                            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-3xl font-bold dark:text-white">
                                 Rp
                             </div>
                             <input
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                className="w-full h-24 pl-14 pr-14 rounded-2xl bg-gray-50/50 dark:bg-white/5 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-4xl font-extrabold placeholder:text-gray-300 dark:placeholder:text-gray-600"
+                                className="w-full h-24 pl-14 pr-14 rounded-2xl bg-gray-50/50 dark:bg-white/5 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-4xl font-extrabold placeholder:text-gray-300 dark:placeholder:text-gray-600 dark:text-white"
                                 placeholder="0"
                                 type="number"
                                 inputMode="numeric"

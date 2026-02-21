@@ -100,13 +100,13 @@ export default function ExpenseAnalysis() {
                             {selected ? (
                                 <>
                                     <span className="text-[10px] text-muted font-medium leading-tight">{selected.name}</span>
-                                    <span className="text-base font-extrabold leading-tight mt-0.5">Rp {formatCurrency(selected.amount)}</span>
+                                    <span className="text-base font-extrabold leading-tight mt-0.5 dark:text-white">Rp {formatCurrency(selected.amount)}</span>
                                     <span className="text-[10px] font-bold mt-0.5" style={{ color: selected.hex }}>{selected.pct}%</span>
                                 </>
                             ) : (
                                 <>
                                     <span className="text-[10px] text-muted font-medium uppercase tracking-tight">Total Spent</span>
-                                    <span className="text-lg font-extrabold leading-tight mt-0.5">Rp {formatCurrency(totalSpent)}</span>
+                                    <span className="text-lg font-extrabold leading-tight mt-0.5 dark:text-white">Rp {formatCurrency(totalSpent)}</span>
                                 </>
                             )}
                         </div>
@@ -120,7 +120,7 @@ export default function ExpenseAnalysis() {
                                 className={`flex items-center gap-2 transition-opacity ${selectedIdx !== null && selectedIdx !== i ? "opacity-40" : ""}`}
                             >
                                 <span className={`size-3 rounded-full ${cat.tw}`} />
-                                <span className="text-xs font-bold">{cat.name}</span>
+                                <span className="text-xs font-bold dark:text-white">{cat.name}</span>
                                 <span className="text-xs text-muted ml-auto">{cat.pct}%</span>
                             </button>
                         ))}
@@ -139,9 +139,9 @@ export default function ExpenseAnalysis() {
                                 <line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold">Food</p>
+                        <p className="text-sm font-bold dark:text-white">Food</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2">Rp {formatCurrency(1499000)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(1499000)}</p>
                 </div>
 
                 <div className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
@@ -152,15 +152,15 @@ export default function ExpenseAnalysis() {
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold">Average</p>
+                        <p className="text-sm font-bold dark:text-white">Average</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2">Rp {formatCurrency(142800)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(142800)}</p>
                 </div>
             </div>
 
             {/* ── Priority Distribution ── */}
             <section className="mt-6 mb-8">
-                <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between">
+                <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between dark:text-white">
                     Priority Distribution
                     <span className="text-[10px] text-muted font-bold">THIS MONTH</span>
                 </h2>
@@ -170,9 +170,9 @@ export default function ExpenseAnalysis() {
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                     <span className={`size-2 rounded-full ${p.dot}`} />
-                                    <span className="text-xs font-bold">{p.label}</span>
+                                    <span className="text-xs font-bold dark:text-white">{p.label}</span>
                                 </div>
-                                <span className="text-xs font-extrabold">Rp {formatCurrency(p.amount)}</span>
+                                <span className="text-xs font-extrabold dark:text-white">Rp {formatCurrency(p.amount)}</span>
                             </div>
                             <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
                                 <div className={`${p.color} h-full rounded-full transition-all`} style={{ width: `${p.pct}%` }} />

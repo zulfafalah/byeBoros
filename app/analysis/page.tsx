@@ -21,13 +21,13 @@ export default function AnalysisPage() {
                         href="/"
                         className="size-10 flex items-center justify-center rounded-full bg-card-light dark:bg-card-dark shadow-sm border border-border-light dark:border-border-dark transition-colors active:scale-95"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5 dark:text-white">
                             <polyline points="15 18 9 12 15 6" />
                         </svg>
                     </Link>
-                    <h1 className="text-lg font-bold">{t("title")}</h1>
+                    <h1 className="text-lg font-bold dark:text-white">{t("title")}</h1>
                     <button className="size-10 flex items-center justify-center rounded-full bg-card-light dark:bg-card-dark shadow-sm border border-border-light dark:border-border-dark transition-colors active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5 dark:text-white">
                             <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
                             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                         </svg>
@@ -39,7 +39,7 @@ export default function AnalysisPage() {
                     <button
                         onClick={() => setActiveTab("expense")}
                         className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${isExpense
-                            ? "bg-card-light dark:bg-zinc-700 shadow-sm"
+                            ? "bg-card-light dark:bg-zinc-700 shadow-sm dark:text-white"
                             : "text-muted"
                             }`}
                     >
@@ -48,7 +48,7 @@ export default function AnalysisPage() {
                     <button
                         onClick={() => setActiveTab("income")}
                         className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${!isExpense
-                            ? "bg-card-light dark:bg-zinc-700 shadow-sm"
+                            ? "bg-card-light dark:bg-zinc-700 shadow-sm dark:text-white"
                             : "text-muted"
                             }`}
                     >
