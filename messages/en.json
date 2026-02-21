@@ -1,0 +1,114 @@
+{
+    "Header": {
+        "goodMorning": "Good Morning",
+        "goodAfternoon": "Good Afternoon",
+        "goodEvening": "Good Evening"
+    },
+    "BalanceSummary": {
+        "todaysBalance": "Today's Balance",
+        "fromYesterday": "+2.4% from yesterday"
+    },
+    "QuickActions": {
+        "addIncome": "Add Income",
+        "addExpense": "Add Expense"
+    },
+    "TransactionList": {
+        "recentTransactions": "Recent Transactions",
+        "seeAll": "See All",
+        "today": "Today, {time}",
+        "yesterday": "Yesterday",
+        "food": "Food",
+        "housing": "Housing",
+        "income": "Income",
+        "shopping": "Shopping"
+    },
+    "BottomNav": {
+        "home": "Home",
+        "analysis": "Analysis",
+        "budget": "Budget",
+        "profile": "Profile"
+    },
+    "Profile": {
+        "title": "Profile",
+        "darkMode": "Dark Mode",
+        "language": "Language",
+        "documentation": "Documentation",
+        "helpCenter": "Help Center",
+        "logOut": "Log Out",
+        "english": "English",
+        "indonesian": "Indonesia",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+    },
+    "Budget": {
+        "title": "Set Budget",
+        "dailyLimit": "Daily Limit",
+        "monthlyLimit": "Monthly Limit",
+        "remainingBalance": "Remaining balance for this month:",
+        "categories": "Categories",
+        "addCategory": "Add Category",
+        "saveBudget": "Save Budget",
+        "addNewCategory": "Add New Category",
+        "categoryName": "Category Name",
+        "categoryNamePlaceholder": "e.g. Shopping",
+        "budgetAmount": "Budget Amount",
+        "chooseIcon": "Choose Icon",
+        "chooseColor": "Choose Color",
+        "cancel": "Cancel"
+    },
+    "Transactions": {
+        "title": "Transactions",
+        "filter": "Filter",
+        "date": "Date",
+        "category": "Category",
+        "amount": "Amount"
+    },
+    "Expense": {
+        "title": "Add New Expense",
+        "howMuch": "How much?",
+        "whatFor": "What for?",
+        "placeholder": "Where did the money go?",
+        "category": "Category",
+        "priority": "Priority",
+        "when": "When?",
+        "note": "Note (Optional)",
+        "notePlaceholder": "Add more details...",
+        "saveExpense": "Save Expense",
+        "food": "Food",
+        "transport": "Transport",
+        "entertainment": "Entertainment",
+        "health": "Health",
+        "shopping": "Shopping",
+        "others": "Others",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+    },
+    "Income": {
+        "title": "Add New Income",
+        "newEntry": "New Entry",
+        "subtitle": "Track your earnings effortlessly.",
+        "incomeSource": "Income Source",
+        "sourcePlaceholder": "e.g. Monthly Salary",
+        "amount": "Amount",
+        "saveIncome": "Save Income",
+        "salary": "Salary",
+        "freelance": "Freelance",
+        "gift": "Gift",
+        "dividends": "Dividends"
+    },
+    "Login": {
+        "welcomeBack": "Welcome Back",
+        "subtitle": "Log in to manage your finances.",
+        "continueWithGoogle": "Continue with Google",
+        "restrictedAccess": "Restricted Access",
+        "infoBox": "This application exclusively supports Google authentication. External email/password systems are not available to ensure maximum security.",
+        "havingTrouble": "Having trouble?",
+        "contactSupport": "Contact Support"
+    },
+    "Analysis": {
+        "title": "Analysis",
+        "expenseAnalysis": "Expense Analysis",
+        "incomeAnalysis": "Income Analysis"
+    }
+}

@@ -1,0 +1,114 @@
+{
+    "Header": {
+        "goodMorning": "Selamat Pagi",
+        "goodAfternoon": "Selamat Siang",
+        "goodEvening": "Selamat Malam"
+    },
+    "BalanceSummary": {
+        "todaysBalance": "Saldo Hari Ini",
+        "fromYesterday": "+2,4% dari kemarin"
+    },
+    "QuickActions": {
+        "addIncome": "Tambah Pemasukan",
+        "addExpense": "Tambah Pengeluaran"
+    },
+    "TransactionList": {
+        "recentTransactions": "Transaksi Terbaru",
+        "seeAll": "Lihat Semua",
+        "today": "Hari Ini, {time}",
+        "yesterday": "Kemarin",
+        "food": "Makanan",
+        "housing": "Tempat Tinggal",
+        "income": "Pemasukan",
+        "shopping": "Belanja"
+    },
+    "BottomNav": {
+        "home": "Beranda",
+        "analysis": "Analisis",
+        "budget": "Anggaran",
+        "profile": "Profil"
+    },
+    "Profile": {
+        "title": "Profil",
+        "darkMode": "Mode Gelap",
+        "language": "Bahasa",
+        "documentation": "Dokumentasi",
+        "helpCenter": "Pusat Bantuan",
+        "logOut": "Keluar",
+        "english": "English",
+        "indonesian": "Indonesia",
+        "cancel": "Batal",
+        "confirm": "Konfirmasi"
+    },
+    "Budget": {
+        "title": "Atur Anggaran",
+        "dailyLimit": "Batas Harian",
+        "monthlyLimit": "Batas Bulanan",
+        "remainingBalance": "Sisa saldo bulan ini:",
+        "categories": "Kategori",
+        "addCategory": "Tambah Kategori",
+        "saveBudget": "Simpan Anggaran",
+        "addNewCategory": "Tambah Kategori Baru",
+        "categoryName": "Nama Kategori",
+        "categoryNamePlaceholder": "cth. Belanja",
+        "budgetAmount": "Jumlah Anggaran",
+        "chooseIcon": "Pilih Ikon",
+        "chooseColor": "Pilih Warna",
+        "cancel": "Batal"
+    },
+    "Transactions": {
+        "title": "Transaksi",
+        "filter": "Filter",
+        "date": "Tanggal",
+        "category": "Kategori",
+        "amount": "Jumlah"
+    },
+    "Expense": {
+        "title": "Tambah Pengeluaran",
+        "howMuch": "Berapa?",
+        "whatFor": "Untuk apa?",
+        "placeholder": "Uangnya ke mana?",
+        "category": "Kategori",
+        "priority": "Prioritas",
+        "when": "Kapan?",
+        "note": "Catatan (Opsional)",
+        "notePlaceholder": "Tambahkan detail...",
+        "saveExpense": "Simpan Pengeluaran",
+        "food": "Makanan",
+        "transport": "Transportasi",
+        "entertainment": "Hiburan",
+        "health": "Kesehatan",
+        "shopping": "Belanja",
+        "others": "Lainnya",
+        "low": "Rendah",
+        "medium": "Sedang",
+        "high": "Tinggi"
+    },
+    "Income": {
+        "title": "Tambah Pemasukan",
+        "newEntry": "Entri Baru",
+        "subtitle": "Lacak penghasilan Anda dengan mudah.",
+        "incomeSource": "Sumber Pemasukan",
+        "sourcePlaceholder": "cth. Gaji Bulanan",
+        "amount": "Jumlah",
+        "saveIncome": "Simpan Pemasukan",
+        "salary": "Gaji",
+        "freelance": "Freelance",
+        "gift": "Hadiah",
+        "dividends": "Dividen"
+    },
+    "Login": {
+        "welcomeBack": "Selamat Datang",
+        "subtitle": "Masuk untuk mengelola keuangan Anda.",
+        "continueWithGoogle": "Lanjutkan dengan Google",
+        "restrictedAccess": "Akses Terbatas",
+        "infoBox": "Aplikasi ini hanya mendukung autentikasi Google. Sistem email/kata sandi eksternal tidak tersedia demi keamanan maksimal.",
+        "havingTrouble": "Ada masalah?",
+        "contactSupport": "Hubungi Dukungan"
+    },
+    "Analysis": {
+        "title": "Analisis",
+        "expenseAnalysis": "Analisis Pengeluaran",
+        "incomeAnalysis": "Analisis Pemasukan"
+    }
+}

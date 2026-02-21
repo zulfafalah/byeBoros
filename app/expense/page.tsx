@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function ExpensePage() {
+    const t = useTranslations("Expense");
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
     const [category, setCategory] = useState("Food");
@@ -39,7 +41,7 @@ export default function ExpensePage() {
                     </svg>
                 </Link>
                 <h1 className="text-lg font-bold tracking-tight">
-                    Add New Expense
+                    {t("title")}
                 </h1>
                 <div className="size-10" /> {/* Spacer for symmetry */}
             </header>
@@ -49,7 +51,7 @@ export default function ExpensePage() {
                 {/* Amount Input (Large & Prominent) */}
                 <section className="text-center space-y-2">
                     <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-                        How much?
+                        {t("howMuch")}
                     </p>
                     <div className="relative flex items-center justify-center">
                         <span className="text-3xl font-bold text-primary mr-2">
@@ -70,13 +72,13 @@ export default function ExpensePage() {
                 <section className="space-y-3">
                     <label className="block">
                         <span className="text-sm font-bold text-muted px-1">
-                            What for?
+                            {t("whatFor")}
                         </span>
                         <input
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             className="mt-2 block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400"
-                            placeholder="Where did the money go?"
+                            placeholder={t("placeholder")}
                             type="text"
                         />
                     </label>
@@ -86,7 +88,7 @@ export default function ExpensePage() {
                 <section className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <span className="text-sm font-bold text-muted px-1">
-                            Category
+                            {t("category")}
                         </span>
                         <div className="relative">
                             <select
@@ -94,12 +96,12 @@ export default function ExpensePage() {
                                 onChange={(e) => setCategory(e.target.value)}
                                 className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 pr-10 text-base focus:border-primary focus:ring-primary"
                             >
-                                <option>Food</option>
-                                <option>Transport</option>
-                                <option>Entertainment</option>
-                                <option>Health</option>
-                                <option>Shopping</option>
-                                <option>Others</option>
+                                <option>{t("food")}</option>
+                                <option>{t("transport")}</option>
+                                <option>{t("entertainment")}</option>
+                                <option>{t("health")}</option>
+                                <option>{t("shopping")}</option>
+                                <option>{t("others")}</option>
                             </select>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +117,7 @@ export default function ExpensePage() {
                     </div>
                     <div className="space-y-2">
                         <span className="text-sm font-bold text-muted px-1">
-                            Priority
+                            {t("priority")}
                         </span>
                         <div className="relative">
                             <select
@@ -123,9 +125,9 @@ export default function ExpensePage() {
                                 onChange={(e) => setPriority(e.target.value)}
                                 className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 pr-10 text-base focus:border-primary focus:ring-primary"
                             >
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
+                                <option>{t("low")}</option>
+                                <option>{t("medium")}</option>
+                                <option>{t("high")}</option>
                             </select>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +146,7 @@ export default function ExpensePage() {
                 {/* Date Picker */}
                 <section className="space-y-2">
                     <span className="text-sm font-bold text-muted px-1">
-                        When?
+                        {t("when")}
                     </span>
                     <div className="flex items-center space-x-3 bg-gray-50/50 dark:bg-gray-900/50 rounded-xl border border-border-light dark:border-border-dark p-4">
                         <svg
@@ -181,13 +183,13 @@ export default function ExpensePage() {
                 {/* Optional Note */}
                 <section className="space-y-2">
                     <span className="text-sm font-bold text-muted px-1">
-                        Note (Optional)
+                        {t("note")}
                     </span>
                     <textarea
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
                         className="block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 p-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400 min-h-[100px]"
-                        placeholder="Add more details..."
+                        placeholder={t("notePlaceholder")}
                     />
                 </section>
             </main>
@@ -211,7 +213,7 @@ export default function ExpensePage() {
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                         <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
-                    Save Expense
+                    {t("saveExpense")}
                 </button>
 
                 {/* iPhone Indicator Spacer */}

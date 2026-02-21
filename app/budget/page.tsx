@@ -2,6 +2,7 @@
 
 import { useState, ReactNode } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 /* ── Icon library ────────────────────────────────── */
 const iconOptions: { name: string; icon: ReactNode }[] = [
@@ -112,6 +113,7 @@ const defaultCategories: Category[] = [
 /* ═══════════════════════════════════════════════════ */
 
 export default function BudgetPage() {
+    const t = useTranslations("Budget");
     const [dailyLimit, setDailyLimit] = useState(45000);
     const [monthlyLimit, setMonthlyLimit] = useState(1350000);
     const [categoryList, setCategoryList] = useState<Category[]>(defaultCategories);
@@ -178,7 +180,7 @@ export default function BudgetPage() {
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </Link>
-                <h1 className="text-lg font-bold tracking-tight">Set Budget</h1>
+                <h1 className="text-lg font-bold tracking-tight">{t("title")}</h1>
                 <div className="size-10" />
             </header>
 
@@ -189,7 +191,7 @@ export default function BudgetPage() {
                     <div className="bg-white dark:bg-white/5 p-6 rounded-xl border border-primary/10 shadow-sm">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="text-center border-r border-primary/10">
-                                <span className="text-[10px] font-extrabold text-[#131811]/40 dark:text-white/40 uppercase tracking-widest mb-1 block">Daily Limit</span>
+                                <span className="text-[10px] font-extrabold text-[#131811]/40 dark:text-white/40 uppercase tracking-widest mb-1 block">{t("dailyLimit")}</span>
                                 <div className="flex items-center justify-center gap-1">
                                     <span className="text-xl font-extrabold text-primary">Rp</span>
                                     <input
@@ -201,7 +203,7 @@ export default function BudgetPage() {
                                 </div>
                             </div>
                             <div className="text-center">
-                                <span className="text-[10px] font-extrabold text-[#131811]/40 dark:text-white/40 uppercase tracking-widest mb-1 block">Monthly Limit</span>
+                                <span className="text-[10px] font-extrabold text-[#131811]/40 dark:text-white/40 uppercase tracking-widest mb-1 block">{t("monthlyLimit")}</span>
                                 <div className="flex items-center justify-center gap-1">
                                     <span className="text-xl font-extrabold text-primary">Rp</span>
                                     <input
@@ -214,7 +216,7 @@ export default function BudgetPage() {
                             </div>
                         </div>
                         <p className="text-[10px] text-[#131811]/40 dark:text-white/40 mt-4 text-center">
-                            Remaining balance for this month: <span className="font-bold">Rp {formatCurrency(840000)}</span>
+                            {t("remainingBalance")} <span className="font-bold">Rp {formatCurrency(840000)}</span>
                         </p>
                     </div>
                 </section>
@@ -222,7 +224,7 @@ export default function BudgetPage() {
                 {/* Categories */}
                 <section className="space-y-4">
                     <div className="flex items-center justify-between px-1">
-                        <h3 className="text-sm font-extrabold text-[#131811]/50 dark:text-white/50 uppercase tracking-widest">Categories</h3>
+                        <h3 className="text-sm font-extrabold text-[#131811]/50 dark:text-white/50 uppercase tracking-widest">{t("categories")}</h3>
                         <button
                             onClick={openModal}
                             className="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider"
@@ -232,7 +234,7 @@ export default function BudgetPage() {
                                 <line x1="12" y1="8" x2="12" y2="16" />
                                 <line x1="8" y1="12" x2="16" y2="12" />
                             </svg>
-                            Add Category
+                            {t("addCategory")}
                         </button>
                     </div>
 
@@ -272,7 +274,7 @@ export default function BudgetPage() {
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                         <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
-                    Save Budget
+                    {t("saveBudget")}
                 </button>
                 <div className="h-6 w-full flex justify-center items-end pb-1">
                     <div className="w-32 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full" />
@@ -296,24 +298,24 @@ export default function BudgetPage() {
                         </div>
 
                         <h2 className="text-lg font-extrabold tracking-tight mb-6">
-                            Add New Category
+                            {t("addNewCategory")}
                         </h2>
 
                         {/* Category Name */}
                         <div className="space-y-2 mb-5">
-                            <label className="text-sm font-bold text-muted">Category Name</label>
+                            <label className="text-sm font-bold text-muted">{t("categoryName")}</label>
                             <input
                                 value={newName}
                                 onChange={(e) => setNewName(e.target.value)}
                                 className="block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-white/5 h-12 px-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400"
-                                placeholder="e.g. Shopping"
+                                placeholder={t("categoryNamePlaceholder")}
                                 type="text"
                             />
                         </div>
 
                         {/* Budget Amount */}
                         <div className="space-y-2 mb-5">
-                            <label className="text-sm font-bold text-muted">Budget Amount</label>
+                            <label className="text-sm font-bold text-muted">{t("budgetAmount")}</label>
                             <div className="flex items-center rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-white/5 h-12 px-4">
                                 <span className="text-sm font-bold text-primary mr-2">Rp</span>
                                 <input
@@ -329,7 +331,7 @@ export default function BudgetPage() {
 
                         {/* Icon Picker */}
                         <div className="space-y-2 mb-5">
-                            <label className="text-sm font-bold text-muted">Choose Icon</label>
+                            <label className="text-sm font-bold text-muted">{t("chooseIcon")}</label>
                             <div className="grid grid-cols-8 gap-2">
                                 {iconOptions.map((opt, i) => (
                                     <button
@@ -348,7 +350,7 @@ export default function BudgetPage() {
 
                         {/* Color Picker */}
                         <div className="space-y-2 mb-6">
-                            <label className="text-sm font-bold text-muted">Choose Color</label>
+                            <label className="text-sm font-bold text-muted">{t("chooseColor")}</label>
                             <div className="flex gap-3">
                                 {colorOptions.map((c, i) => (
                                     <button
@@ -392,14 +394,14 @@ export default function BudgetPage() {
                                 onClick={() => setShowModal(false)}
                                 className="flex-1 py-3.5 rounded-xl border border-border-light dark:border-border-dark font-bold text-sm active:scale-[0.98] transition-transform"
                             >
-                                Cancel
+                                {t("cancel")}
                             </button>
                             <button
                                 onClick={handleAddCategory}
                                 disabled={!newName.trim()}
                                 className="flex-1 py-3.5 rounded-xl bg-primary text-[#131811] font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform disabled:opacity-40 disabled:active:scale-100"
                             >
-                                Add Category
+                                {t("addCategory")}
                             </button>
                         </div>
                     </div>

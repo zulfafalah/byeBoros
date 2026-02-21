@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function QuickActions() {
+    const t = useTranslations("QuickActions");
+
     return (
         <section className="grid grid-cols-2 gap-4 mb-10">
             {/* Add Income */}
@@ -18,7 +23,7 @@ export default function QuickActions() {
                         <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>
                 </div>
-                <span className="text-sm">Add Income</span>
+                <span className="text-sm">{t("addIncome")}</span>
             </Link>
 
             {/* Add Expense */}
@@ -35,7 +40,7 @@ export default function QuickActions() {
                         <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>
                 </div>
-                <span className="text-sm">Add Expense</span>
+                <span className="text-sm">{t("addExpense")}</span>
             </Link>
         </section>
     );

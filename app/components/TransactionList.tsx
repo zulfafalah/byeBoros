@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 type Transaction = {
     id: number;
@@ -90,12 +93,14 @@ function formatAmount(amount: number) {
 }
 
 export default function TransactionList() {
+    const t = useTranslations("TransactionList");
+
     return (
         <section>
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold dark:text-white">Recent Transactions</h2>
+                <h2 className="text-lg font-bold dark:text-white">{t("recentTransactions")}</h2>
                 <Link href="/transactions" className="text-primary text-sm font-bold active:opacity-70 transition-opacity">
-                    See All
+                    {t("seeAll")}
                 </Link>
             </div>
 

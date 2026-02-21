@@ -2,22 +2,35 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import BottomNav from "../components/BottomNav";
 
 export default function ProfilePage() {
     const router = useRouter();
+    const t = useTranslations("Profile");
+    const locale = useLocale();
     const [darkMode, setDarkMode] = useState(false);
+    const [showLangModal, setShowLangModal] = useState(false);
+    const [selectedLang, setSelectedLang] = useState(locale);
 
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
         document.documentElement.classList.toggle("dark");
     };
 
+    const confirmLanguage = () => {
+        if (selectedLang !== locale) {
+            document.cookie = `locale=${selectedLang};path=/;max-age=31536000`;
+            router.refresh();
+        }
+        setShowLangModal(false);
+    };
+
     return (
         <div className="relative flex h-dvh w-full flex-col overflow-hidden max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl text-[#131811] dark:text-white">
             {/* Header */}
             <header className="flex items-center justify-between px-6 pt-12 pb-4">
-                <h1 className="text-xl font-bold">Profile</h1>
+                <h1 className="text-xl font-bold">{t("title")}</h1>
                 <button className="size-10 flex items-center justify-center rounded-full bg-card-light dark:bg-card-dark shadow-sm border border-border-light dark:border-border-dark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="size-5">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -52,7 +65,7 @@ export default function ProfilePage() {
                                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                                     </svg>
                                 </div>
-                                <span className="text-sm font-bold">Dark Mode</span>
+                                <span className="text-sm font-bold">{t("darkMode")}</span>
                             </div>
                             <button
                                 onClick={toggleDarkMode}
@@ -67,7 +80,10 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Language */}
-                        <div className="flex items-center justify-between p-4">
+                        <button
+                            onClick={() => { setSelectedLang(locale); setShowLangModal(true); }}
+                            className="w-full flex items-center justify-between p-4 cursor-pointer active:bg-zinc-50 dark:active:bg-zinc-800 transition-colors"
+                        >
                             <div className="flex items-center gap-3">
                                 <div className="size-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="size-5">
@@ -76,15 +92,17 @@ export default function ProfilePage() {
                                         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                                     </svg>
                                 </div>
-                                <span className="text-sm font-bold">Language</span>
+                                <span className="text-sm font-bold">{t("language")}</span>
                             </div>
                             <div className="flex items-center gap-1 text-muted">
-                                <span className="text-xs font-bold uppercase">English</span>
+                                <span className="text-xs font-bold uppercase">
+                                    {locale === "en" ? t("english") : t("indonesian")}
+                                </span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-4">
                                     <polyline points="9 18 15 12 9 6" />
                                 </svg>
                             </div>
-                        </div>
+                        </button>
                     </div>
 
                     {/* Links */}
@@ -103,7 +121,7 @@ export default function ProfilePage() {
                                         <polyline points="10 9 9 9 8 9" />
                                     </svg>
                                 </div>
-                                <span className="text-sm font-bold">Documentation</span>
+                                <span className="text-sm font-bold">{t("documentation")}</span>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-4 text-zinc-400">
                                 <polyline points="9 18 15 12 9 6" />
@@ -121,7 +139,7 @@ export default function ProfilePage() {
                                         <line x1="12" y1="17" x2="12.01" y2="17" />
                                     </svg>
                                 </div>
-                                <span className="text-sm font-bold">Help Center</span>
+                                <span className="text-sm font-bold">{t("helpCenter")}</span>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-4 text-zinc-400">
                                 <polyline points="9 18 15 12 9 6" />
@@ -139,13 +157,73 @@ export default function ProfilePage() {
                             <polyline points="16 17 21 12 16 7" />
                             <line x1="21" y1="12" x2="9" y2="12" />
                         </svg>
-                        <span>Log Out</span>
+                        <span>{t("logOut")}</span>
                     </button>
                 </section>
             </main>
 
             {/* Bottom Navigation */}
             <BottomNav />
+
+            {/* Language Selection Modal */}
+            {showLangModal && (
+                <div className="fixed inset-0 z-50 flex items-end justify-center">
+                    <div
+                        className="absolute inset-0 bg-black/40 ios-blur"
+                        onClick={() => setShowLangModal(false)}
+                    />
+                    <div className="relative w-full max-w-[430px] bg-white dark:bg-[#1c1c1e] rounded-t-2xl p-6 pb-10 animate-slide-up">
+                        <div className="flex justify-center mb-5">
+                            <div className="w-10 h-1 rounded-full bg-gray-300 dark:bg-gray-600" />
+                        </div>
+
+                        <h2 className="text-lg font-extrabold tracking-tight mb-6">
+                            {t("language")}
+                        </h2>
+
+                        <div className="space-y-2 mb-6">
+                            <div className="relative">
+                                <select
+                                    value={selectedLang}
+                                    onChange={(e) => setSelectedLang(e.target.value)}
+                                    className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-white/5 h-14 px-4 pr-10 text-base font-semibold focus:border-primary focus:ring-primary"
+                                >
+                                    <option value="en">{t("english")}</option>
+                                    <option value="id">{t("indonesian")}</option>
+                                </select>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-5 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowLangModal(false)}
+                                className="flex-1 py-3.5 rounded-xl border border-border-light dark:border-border-dark font-bold text-sm active:scale-[0.98] transition-transform"
+                            >
+                                {t("cancel")}
+                            </button>
+                            <button
+                                onClick={confirmLanguage}
+                                className="flex-1 py-3.5 rounded-xl bg-primary text-[#131811] font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform"
+                            >
+                                {t("confirm")}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <style jsx>{`
+                @keyframes slideUp {
+                    from { transform: translateY(100%); }
+                    to   { transform: translateY(0); }
+                }
+                .animate-slide-up {
+                    animation: slideUp 0.3s ease-out;
+                }
+            `}</style>
         </div>
     );
 }

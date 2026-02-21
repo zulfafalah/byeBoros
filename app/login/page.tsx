@@ -1,9 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
     const router = useRouter();
+    const t = useTranslations("Login");
 
     const handleGoogleLogin = () => {
         // TODO: Implement actual Google authentication
@@ -32,10 +34,10 @@ export default function LoginPage() {
                         </svg>
                     </div>
                     <h1 className="text-[40px] font-extrabold tracking-tight mb-2 leading-tight">
-                        Welcome Back
+                        {t("welcomeBack")}
                     </h1>
                     <p className="text-muted dark:text-zinc-400 font-medium text-lg">
-                        Log in to manage your finances.
+                        {t("subtitle")}
                     </p>
                 </header>
 
@@ -63,7 +65,7 @@ export default function LoginPage() {
                                 fill="#EA4335"
                             />
                         </svg>
-                        <span className="text-base font-bold">Continue with Google</span>
+                        <span className="text-base font-bold">{t("continueWithGoogle")}</span>
                     </button>
 
                     {/* Divider */}
@@ -73,7 +75,7 @@ export default function LoginPage() {
                         </div>
                         <div className="relative flex justify-center text-xs font-bold uppercase tracking-widest">
                             <span className="bg-[#f9fbf9] dark:bg-background-dark px-4 text-zinc-400">
-                                Restricted Access
+                                {t("restrictedAccess")}
                             </span>
                         </div>
                     </div>
@@ -81,8 +83,7 @@ export default function LoginPage() {
                     {/* Info Box */}
                     <div className="bg-white/50 dark:bg-zinc-900/50 p-6 rounded-3xl border border-dashed border-zinc-200 dark:border-zinc-800">
                         <p className="text-center text-sm text-zinc-500 font-medium leading-relaxed">
-                            This application exclusively supports Google authentication. External
-                            email/password systems are not available to ensure maximum security.
+                            {t("infoBox")}
                         </p>
                     </div>
                 </div>
@@ -91,9 +92,9 @@ export default function LoginPage() {
             {/* Footer */}
             <footer className="p-8 text-center mt-auto">
                 <p className="text-sm font-medium text-zinc-400">
-                    Having trouble?
+                    {t("havingTrouble")}
                     <a className="text-primary font-bold ml-1" href="#">
-                        Contact Support
+                        {t("contactSupport")}
                     </a>
                 </p>
             </footer>

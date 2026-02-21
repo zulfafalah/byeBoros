@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 /* ── SVG Icons ────────────────────────────────────── */
 const ChevronLeftIcon = () => (
@@ -219,6 +220,8 @@ function formatAmount(amount: number) {
 
 /* ── Page ─────────────────────────────────────────── */
 export default function TransactionsPage() {
+    const t = useTranslations("Transactions");
+
     return (
         <div className="relative flex h-dvh w-full flex-col overflow-hidden max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
             {/* Header */}
@@ -231,7 +234,7 @@ export default function TransactionsPage() {
                         <ChevronLeftIcon />
                     </Link>
                     <h1 className="text-xl font-extrabold tracking-tight dark:text-white">
-                        Transactions
+                        {t("title")}
                     </h1>
                     <Link
                         href="/expense"
@@ -247,18 +250,18 @@ export default function TransactionsPage() {
                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-white font-semibold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">
                         <FilterIcon />
-                        <span>Filter</span>
+                        <span>{t("filter")}</span>
                     </button>
                     <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
-                        <span>Tanggal</span>
+                        <span>{t("date")}</span>
                         <ChevronDownIcon />
                     </button>
                     <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
-                        <span>Kategori</span>
+                        <span>{t("category")}</span>
                         <ChevronDownIcon />
                     </button>
                     <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
-                        <span>Jumlah</span>
+                        <span>{t("amount")}</span>
                         <ChevronDownIcon />
                     </button>
                 </div>

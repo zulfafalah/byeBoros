@@ -1,7 +1,12 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 export default function Header() {
+    const t = useTranslations("Header");
     const hour = new Date().getHours();
     const greeting =
-        hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
+        hour < 12 ? t("goodMorning") : hour < 18 ? t("goodAfternoon") : t("goodEvening");
 
     return (
         <header className="flex items-center justify-between px-6 mt-6 pt-12 pb-4 safe-top bg-background-light dark:bg-background-dark">

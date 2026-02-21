@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import BottomNav from "../components/BottomNav";
 import ExpenseAnalysis from "../components/ExpenseAnalysis";
 import IncomeAnalysis from "../components/IncomeAnalysis";
 
 export default function AnalysisPage() {
+    const t = useTranslations("Analysis");
     const [activeTab, setActiveTab] = useState<"expense" | "income">("expense");
     const isExpense = activeTab === "expense";
 
@@ -23,7 +25,7 @@ export default function AnalysisPage() {
                             <polyline points="15 18 9 12 15 6" />
                         </svg>
                     </Link>
-                    <h1 className="text-lg font-bold">Analysis</h1>
+                    <h1 className="text-lg font-bold">{t("title")}</h1>
                     <button className="size-10 flex items-center justify-center rounded-full bg-card-light dark:bg-card-dark shadow-sm border border-border-light dark:border-border-dark transition-colors active:scale-95">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
                             <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
@@ -41,7 +43,7 @@ export default function AnalysisPage() {
                             : "text-muted"
                             }`}
                     >
-                        Expense Analysis
+                        {t("expenseAnalysis")}
                     </button>
                     <button
                         onClick={() => setActiveTab("income")}
@@ -50,7 +52,7 @@ export default function AnalysisPage() {
                             : "text-muted"
                             }`}
                     >
-                        Income Analysis
+                        {t("incomeAnalysis")}
                     </button>
                 </div>
             </header>

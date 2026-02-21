@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-const QUICK_TAGS = ["Salary", "Freelance", "Gift", "Dividends"];
+import { useTranslations } from "next-intl";
 
 export default function IncomePage() {
+    const t = useTranslations("Income");
+    const QUICK_TAGS = [t("salary"), t("freelance"), t("gift"), t("dividends")];
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -52,7 +53,7 @@ export default function IncomePage() {
                     </svg>
                 </Link>
                 <h1 className="text-base font-bold leading-tight tracking-tight">
-                    Add New Income
+                    {t("title")}
                 </h1>
                 <div className="size-10" /> {/* Spacer for symmetry */}
             </header>
@@ -63,17 +64,17 @@ export default function IncomePage() {
                     {/* Large Header */}
                     <div>
                         <h2 className="text-4xl font-extrabold tracking-tight mb-2">
-                            New Entry
+                            {t("newEntry")}
                         </h2>
                         <p className="text-muted text-sm font-medium">
-                            Track your earnings effortlessly.
+                            {t("subtitle")}
                         </p>
                     </div>
 
                     {/* Income Source Input */}
                     <div className="space-y-3">
                         <label className="block text-xs font-bold uppercase tracking-widest text-muted ml-1">
-                            Income Source
+                            {t("incomeSource")}
                         </label>
                         <div className="relative group">
                             <input
@@ -81,7 +82,7 @@ export default function IncomePage() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="w-full h-16 px-5 rounded-2xl bg-gray-50/50 dark:bg-white/5 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-xl font-semibold placeholder:text-gray-400 placeholder:font-normal"
-                                placeholder="e.g. Monthly Salary"
+                                placeholder={t("sourcePlaceholder")}
                                 type="text"
                             />
                             <div className="absolute right-4 top-1/2 -translate-y-1/2 text-muted">
@@ -105,7 +106,7 @@ export default function IncomePage() {
                     {/* Amount Input */}
                     <div className="space-y-3">
                         <label className="block text-xs font-bold uppercase tracking-widest text-muted ml-1">
-                            Amount
+                            {t("amount")}
                         </label>
                         <div className="relative group">
                             <div className="absolute left-5 top-1/2 -translate-y-1/2 text-3xl font-bold">
@@ -147,8 +148,8 @@ export default function IncomePage() {
                                 key={tag}
                                 onClick={() => handleTagClick(tag)}
                                 className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors cursor-pointer ${selectedTag === tag
-                                        ? "bg-primary/20 border-primary text-primary"
-                                        : "bg-gray-50/80 dark:bg-white/5 border-transparent text-muted hover:border-primary"
+                                    ? "bg-primary/20 border-primary text-primary"
+                                    : "bg-gray-50/80 dark:bg-white/5 border-transparent text-muted hover:border-primary"
                                     }`}
                             >
                                 {tag}
@@ -177,7 +178,7 @@ export default function IncomePage() {
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                         <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
-                    Save Income
+                    {t("saveIncome")}
                 </button>
 
                 {/* iPhone Indicator Spacer */}

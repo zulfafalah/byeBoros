@@ -1,7 +1,13 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 export default function BalanceSummary() {
+    const t = useTranslations("BalanceSummary");
+
     return (
         <section className="py-8 text-center">
-            <p className="text-muted text-sm font-medium mb-1">Today&apos;s Balance</p>
+            <p className="text-muted text-sm font-medium mb-1">{t("todaysBalance")}</p>
 
             <h1 className="text-[36px] font-extrabold tracking-tight leading-tight dark:text-white">
                 Rp12.450.000
@@ -22,7 +28,7 @@ export default function BalanceSummary() {
                     <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
                     <polyline points="16 7 22 7 22 13" />
                 </svg>
-                <span>+2.4% from yesterday</span>
+                <span>{t("fromYesterday")}</span>
             </div>
         </section>
     );
