@@ -186,7 +186,7 @@ export default function BudgetPage() {
             <main className="flex-1 overflow-y-auto px-4 pb-32 space-y-6 scrollbar-hide">
                 {/* Budget Summary Card */}
                 <section className="mt-4">
-                    <div className="bg-white dark:bg-white/5 p-6 rounded-3xl border border-primary/10 shadow-sm">
+                    <div className="bg-white dark:bg-white/5 p-6 rounded-xl border border-primary/10 shadow-sm">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="text-center border-r border-primary/10">
                                 <span className="text-[10px] font-extrabold text-[#131811]/40 dark:text-white/40 uppercase tracking-widest mb-1 block">Daily Limit</span>
@@ -238,10 +238,10 @@ export default function BudgetPage() {
 
                     <div className="space-y-3">
                         {categoryList.map((cat) => (
-                            <div key={cat.name} className="p-4 bg-white dark:bg-white/5 rounded-2xl border border-primary/5 shadow-sm">
+                            <div key={cat.name} className="p-4 bg-white dark:bg-white/5 rounded-xl border border-primary/5 shadow-sm">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className={`size-10 rounded-xl ${cat.bgColor} flex items-center justify-center ${cat.color}`}>
+                                        <div className={`size-10 rounded-lg ${cat.bgColor} flex items-center justify-center ${cat.color}`}>
                                             {cat.icon}
                                         </div>
                                         <span className="font-bold">{cat.name}</span>
@@ -266,7 +266,7 @@ export default function BudgetPage() {
             <footer className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white/90 dark:bg-background-dark/90 ios-blur border-t border-border-light dark:border-border-dark p-5">
                 <button
                     onClick={handleSave}
-                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-2xl shadow-lg shadow-primary/20 text-[#131811] font-extrabold text-lg flex items-center justify-center gap-2"
+                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-xl shadow-lg shadow-primary/20 text-[#131811] font-extrabold text-lg flex items-center justify-center gap-2"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="size-6">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -289,7 +289,7 @@ export default function BudgetPage() {
                     />
 
                     {/* Sheet */}
-                    <div className="relative w-full max-w-[430px] bg-white dark:bg-[#1c1c1e] rounded-t-3xl p-6 pb-10 animate-slide-up">
+                    <div className="relative w-full max-w-[430px] bg-white dark:bg-[#1c1c1e] rounded-t-2xl p-6 pb-10 animate-slide-up">
                         {/* Drag indicator */}
                         <div className="flex justify-center mb-5">
                             <div className="w-10 h-1 rounded-full bg-gray-300 dark:bg-gray-600" />
@@ -335,9 +335,9 @@ export default function BudgetPage() {
                                     <button
                                         key={opt.name}
                                         onClick={() => setSelectedIcon(i)}
-                                        className={`size-10 rounded-xl flex items-center justify-center transition-all ${selectedIcon === i
-                                                ? `${colorOptions[selectedColor].bg} ${colorOptions[selectedColor].text} ring-2 ${colorOptions[selectedColor].ring}`
-                                                : "bg-gray-100 dark:bg-white/5 text-gray-500"
+                                        className={`size-10 rounded-lg flex items-center justify-center transition-all ${selectedIcon === i
+                                            ? `${colorOptions[selectedColor].bg} ${colorOptions[selectedColor].text} ring-2 ${colorOptions[selectedColor].ring}`
+                                            : "bg-gray-100 dark:bg-white/5 text-gray-500"
                                             }`}
                                     >
                                         {opt.icon}
@@ -355,8 +355,8 @@ export default function BudgetPage() {
                                         key={c.name}
                                         onClick={() => setSelectedColor(i)}
                                         className={`size-8 rounded-full transition-all ${c.bg} ${selectedColor === i
-                                                ? `ring-2 ring-offset-2 ${c.ring}`
-                                                : ""
+                                            ? `ring-2 ring-offset-2 ${c.ring}`
+                                            : ""
                                             }`}
                                     >
                                         <span className={`block size-full rounded-full ${c.text}`}>
@@ -373,9 +373,9 @@ export default function BudgetPage() {
 
                         {/* Preview */}
                         {newName.trim() && (
-                            <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-primary/5 mb-6">
+                            <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-primary/5 mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className={`size-10 rounded-xl ${colorOptions[selectedColor].bg} flex items-center justify-center ${colorOptions[selectedColor].text}`}>
+                                    <div className={`size-10 rounded-lg ${colorOptions[selectedColor].bg} flex items-center justify-center ${colorOptions[selectedColor].text}`}>
                                         {iconOptions[selectedIcon].icon}
                                     </div>
                                     <div>
