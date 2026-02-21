@@ -13,6 +13,9 @@
   --color-accent-blue: #3b82f6;
   --color-accent-purple: #a855f7;
   --color-accent-orange: #f97316;
+  --color-income-green: #22c55e;
+  --color-income-teal: #14b8a6;
+  --color-income-lime: #84cc16;
   --font-display: var(--font-manrope), "Manrope", sans-serif;
 }
 
