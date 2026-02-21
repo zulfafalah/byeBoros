@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const tabs = [
     {
         key: "home",
         label: "Home",
+        href: "/",
         icon: (active: boolean) => (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-6">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -17,7 +18,8 @@ const tabs = [
     {
         key: "analysis",
         label: "Analysis",
-        icon: () => (
+        href: "#",
+        icon: (active: boolean) => (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-6">
                 <line x1="18" y1="20" x2="18" y2="10" />
                 <line x1="12" y1="20" x2="12" y2="4" />
@@ -25,12 +27,13 @@ const tabs = [
             </svg>
         ),
     },
-    { key: "add", label: "", icon: () => null }, // FAB placeholder
+    { key: "add", label: "", href: "/expense", icon: () => null },
     {
         key: "budget",
         label: "Budget",
-        icon: () => (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-6">
+        href: "/budget",
+        icon: (active: boolean) => (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-6">
                 <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
                 <path d="M22 12A10 10 0 0 0 12 2v10z" />
             </svg>
@@ -39,7 +42,8 @@ const tabs = [
     {
         key: "profile",
         label: "Profile",
-        icon: () => (
+        href: "#",
+        icon: (active: boolean) => (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-6">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
@@ -48,8 +52,15 @@ const tabs = [
     },
 ];
 
+const pathToKey: Record<string, string> = {
+    "/": "home",
+    "/budget": "budget",
+    "/expense": "add",
+};
+
 export default function BottomNav() {
-    const [active, setActive] = useState("home");
+    const pathname = usePathname();
+    const activeKey = pathToKey[pathname] || "home";
 
     return (
         <nav className="absolute bottom-0 left-0 right-0 ios-blur bg-card-light/80 dark:bg-card-dark/80 border-t border-border-light dark:border-border-dark px-6 pb-8 pt-3 safe-bottom">
@@ -68,18 +79,18 @@ export default function BottomNav() {
                         );
                     }
 
-                    const isActive = active === tab.key;
+                    const isActive = activeKey === tab.key;
 
                     return (
-                        <button
+                        <Link
                             key={tab.key}
-                            onClick={() => setActive(tab.key)}
+                            href={tab.href}
                             className={`flex flex-col items-center gap-1 transition-colors ${isActive ? "text-[#131811] dark:text-white" : "text-muted"
                                 }`}
                         >
                             {tab.icon(isActive)}
                             <span className="text-[10px] font-bold">{tab.label}</span>
-                        </button>
+                        </Link>
                     );
                 })}
             </div>
