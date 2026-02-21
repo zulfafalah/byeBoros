@@ -45,8 +45,8 @@ export default function ProfilePage() {
                             <circle cx="12" cy="7" r="4" />
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-extrabold tracking-tight">Alex Rivers</h2>
-                    <p className="text-muted text-sm font-medium">alex.rivers@email.com</p>
+                    <h2 className="text-2xl font-extrabold tracking-tight">Aulia Fitrianti</h2>
+                    <p className="text-muted text-sm font-medium">aulia.fitrianti@email.com</p>
                 </section>
 
                 {/* Settings */}
