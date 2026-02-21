@@ -68,7 +68,7 @@ export default function BottomNav() {
     const activeKey = pathToKey[pathname] || "home";
 
     return (
-        <nav className="absolute bottom-0 left-0 right-0 ios-blur bg-card-light/80 dark:bg-card-dark/80 border-t border-border-light dark:border-border-dark px-6 pb-8 pt-3 safe-bottom">
+        <nav className="absolute bottom-0 left-0 right-0 ios-blur bg-card-light dark:bg-card-dark border-t border-border-light dark:border-border-dark px-6 pb-8 pt-3 safe-bottom">
             <div className="flex items-center justify-between max-w-md mx-auto">
                 {tabs.map((tab) => {
                     if (tab.key === "add") {
