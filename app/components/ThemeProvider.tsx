@@ -24,9 +24,15 @@ type DocumentWithVT = Document & {
 export default function ThemeProvider({ children, initialDark = false }: { children: ReactNode; initialDark?: boolean }) {
     const [darkMode, setDarkMode] = useState(initialDark);
 
-    // Sync cookie whenever darkMode changes
+    // Sync cookie & theme-color meta tag whenever darkMode changes
     useEffect(() => {
         document.cookie = `theme=${darkMode ? "dark" : "light"};path=/;max-age=31536000`;
+
+        // Update theme-color for PWA system UI (Android status bar, etc.)
+        const themeColor = darkMode ? "#142210" : "#f6f8f6";
+        document.querySelectorAll('meta[name="theme-color"]').forEach((el) => {
+            el.setAttribute("content", themeColor);
+        });
     }, [darkMode]);
 
     const toggleDarkMode = (e?: React.MouseEvent) => {
