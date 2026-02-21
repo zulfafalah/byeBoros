@@ -10,6 +10,9 @@
   --color-card-dark: #18181b;
   --color-border-light: #f1f4f0;
   --color-border-dark: #27272a;
+  --color-accent-blue: #3b82f6;
+  --color-accent-purple: #a855f7;
+  --color-accent-orange: #f97316;
   --font-display: var(--font-manrope), "Manrope", sans-serif;
 }
 
@@ -38,6 +41,7 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -47,7 +51,16 @@ body {
   .safe-top {
     padding-top: env(safe-area-inset-top);
   }
+
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
+}
+
+/* ── Donut chart gradient ─────────────────────────── */
+.donut-chart {
+  background: conic-gradient(#46ec13 0% 35%,
+      #3b82f6 35% 60%,
+      #f97316 60% 80%,
+      #a855f7 80% 100%);
 }

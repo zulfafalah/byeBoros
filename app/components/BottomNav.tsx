@@ -18,7 +18,7 @@ const tabs = [
     {
         key: "analysis",
         label: "Analysis",
-        href: "#",
+        href: "/analysis",
         icon: (active: boolean) => (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.5} strokeLinecap="round" strokeLinejoin="round" className="size-6">
                 <line x1="18" y1="20" x2="18" y2="10" />
@@ -54,6 +54,7 @@ const tabs = [
 
 const pathToKey: Record<string, string> = {
     "/": "home",
+    "/analysis": "analysis",
     "/budget": "budget",
     "/expense": "add",
     "/profile": "profile",
