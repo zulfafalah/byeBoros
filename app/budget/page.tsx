@@ -249,7 +249,7 @@ export default function BudgetPage() {
                                         <span className="font-bold dark:text-white">{cat.name}</span>
                                     </div>
                                     <div className="flex items-center bg-gray-50 dark:bg-white/5 rounded-lg px-2 py-1 border border-primary/5">
-                                        <span className="text-xs font-bold mr-1 opacity-50">Rp</span>
+                                        <span className="text-xs font-bold mr-1 text-gray-400 dark:text-gray-300">Rp</span>
                                         <input
                                             className="w-20 bg-transparent border-none p-0 text-sm font-extrabold focus:ring-0 focus:outline-none text-right dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                             type="number"
