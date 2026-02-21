@@ -54,7 +54,7 @@ body {
 /* ── Safe area insets for standalone PWA ───────────── */
 @supports (padding-top: env(safe-area-inset-top)) {
   .safe-top {
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(env(safe-area-inset-top) + 1rem);
   }
 
   .safe-bottom {
