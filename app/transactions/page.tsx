@@ -225,7 +225,7 @@ export default function TransactionsPage() {
     return (
         <div className="relative flex h-dvh w-full flex-col overflow-hidden max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
             {/* Header */}
-            <header className="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 ios-blur px-4 pt-12 pb-4">
+            <header className="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 ios-blur px-4 pt-6 pb-4">
                 <div className="flex items-center justify-between mb-4">
                     <Link
                         href="/"

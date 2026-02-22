@@ -25,7 +25,7 @@ export default function ProfilePage() {
     return (
         <div className="relative flex h-dvh w-full flex-col overflow-hidden max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl text-[#131811] dark:text-white">
             {/* Header */}
-            <header className="flex items-center justify-between px-4 pt-12 pb-4">
+            <header className="flex items-center justify-between px-4 pt-6 pb-4">
                 <h1 className="text-xl font-bold">{t("title")}</h1>
                 <button className="size-10 flex items-center justify-center rounded-full bg-card-light dark:bg-card-dark shadow-sm border border-border-light dark:border-border-dark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="size-5">

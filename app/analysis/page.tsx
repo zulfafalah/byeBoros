@@ -15,7 +15,7 @@ export default function AnalysisPage() {
     return (
         <div className="relative flex h-dvh w-full flex-col max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
             {/* ── Header ── */}
-            <header className="px-4 pt-12 pb-4 bg-background-light dark:bg-background-dark">
+            <header className="px-4 pt-6 pb-4 bg-background-light dark:bg-background-dark">
                 <div className="flex items-center justify-between mb-6">
                     <Link
                         href="/"

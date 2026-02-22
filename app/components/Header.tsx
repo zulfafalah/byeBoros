@@ -9,7 +9,7 @@ export default function Header() {
         hour < 12 ? t("goodMorning") : hour < 18 ? t("goodAfternoon") : t("goodEvening");
 
     return (
-        <header className="flex items-center justify-between px-6 mt-6 pt-12 pb-4 safe-top bg-background-light dark:bg-background-dark">
+        <header className="flex items-center justify-between px-6 pt-6 pb-4 safe-top bg-background-light dark:bg-background-dark">
             <div className="flex items-center gap-3">
                 {/* Avatar */}
                 <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-primary/30">
