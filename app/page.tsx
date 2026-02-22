@@ -11,7 +11,7 @@ export default function Home() {
       <Header />
 
       {/* Main Content (Scrollable) */}
-      <main className="flex-1 overflow-y-auto px-6 pb-28 scrollbar-hide">
+      <main className="flex-1 overflow-y-auto px-4 pb-28 scrollbar-hide">
         <BalanceSummary />
         <QuickActions />
         <TransactionList />

@@ -47,7 +47,7 @@ export default function ExpensePage() {
             </header>
 
             {/* Scrollable Form Content */}
-            <main className="flex-1 overflow-y-auto px-5 pt-6 pb-32 space-y-8 scrollbar-hide">
+            <main className="flex-1 overflow-y-auto px-4 pt-6 pb-32 space-y-8 scrollbar-hide">
                 {/* Amount Input (Large & Prominent) */}
                 <section className="text-center space-y-2">
                     <p className="text-sm font-semibold uppercase tracking-wider text-muted">

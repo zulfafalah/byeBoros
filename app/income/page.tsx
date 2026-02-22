@@ -59,7 +59,7 @@ export default function IncomePage() {
             </header>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto px-6 pt-8 pb-32 scrollbar-hide">
+            <main className="flex-1 overflow-y-auto px-4 pt-8 pb-32 scrollbar-hide">
                 <div className="space-y-8">
                     {/* Large Header */}
                     <div>

@@ -15,7 +15,7 @@ export default function AnalysisPage() {
     return (
         <div className="relative flex h-dvh w-full flex-col max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
             {/* ── Header ── */}
-            <header className="px-6 pt-12 pb-4 bg-background-light dark:bg-background-dark">
+            <header className="px-4 pt-12 pb-4 bg-background-light dark:bg-background-dark">
                 <div className="flex items-center justify-between mb-6">
                     <Link
                         href="/"
@@ -58,7 +58,7 @@ export default function AnalysisPage() {
             </header>
 
             {/* ── Scrollable Content ── */}
-            <main className="flex-1 overflow-y-auto px-6 pb-32 scrollbar-hide">
+            <main className="flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide">
                 {isExpense ? <ExpenseAnalysis /> : <IncomeAnalysis />}
             </main>
 
