@@ -70,6 +70,7 @@
     "Expense": {
         "title": "Tambah Pengeluaran",
         "howMuch": "Berapa?",
+        "tapToFill": "↑ Ketuk angka di atas untuk isi nominal",
         "whatFor": "Untuk apa?",
         "placeholder": "Uangnya ke mana?",
         "category": "Kategori",

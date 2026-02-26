@@ -70,6 +70,7 @@
     "Expense": {
         "title": "Add New Expense",
         "howMuch": "How much?",
+        "tapToFill": "↑ Tap the number above to enter amount",
         "whatFor": "What for?",
         "placeholder": "Where did the money go?",
         "category": "Category",

@@ -100,22 +100,30 @@ export default function ExpensePage() {
                     <p className="text-sm font-semibold uppercase tracking-wider text-muted">
                         {t("howMuch")}
                     </p>
-                    <div className="relative flex items-center justify-center">
-                        <span className="text-4xl font-bold text-primary mr-3">
-                            Rp
-                        </span>
-                        <input
-                            value={amount ? Number(amount).toLocaleString("id-ID") : ""}
-                            onChange={(e) => {
-                                const raw = e.target.value.replace(/\./g, "");
-                                if (raw === "" || /^\d+$/.test(raw)) setAmount(raw);
-                            }}
-                            style={{ width: `${Math.max(1, (amount ? Number(amount).toLocaleString("id-ID") : "0").length)}ch` }}
-                            className="text-5xl font-extrabold text-left bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-gray-200 dark:placeholder:text-gray-700 dark:text-white"
-                            placeholder="0"
-                            type="text"
-                            inputMode="numeric"
-                        />
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="relative flex items-center justify-center">
+                            <span className={`text-4xl font-bold mr-3 transition-colors duration-300 ${amount ? "text-primary" : "text-gray-300 dark:text-gray-600"}`}>
+                                Rp
+                            </span>
+                            <input
+                                value={amount ? Number(amount).toLocaleString("id-ID") : ""}
+                                onChange={(e) => {
+                                    const raw = e.target.value.replace(/\./g, "");
+                                    if (raw === "" || /^\d+$/.test(raw)) setAmount(raw);
+                                }}
+                                style={{ width: `${Math.max(1, (amount ? Number(amount).toLocaleString("id-ID") : "0").length)}ch` }}
+                                className="text-5xl font-extrabold text-left bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-gray-300 dark:placeholder:text-gray-600 dark:text-white"
+                                placeholder="0"
+                                type="text"
+                                inputMode="numeric"
+                            />
+                        </div>
+                        {/* Underline indicator */}
+                        <div className={`h-[3px] rounded-full transition-all duration-500 ${amount ? "w-0 opacity-0" : "w-32 opacity-100 animate-pulse bg-primary/50"}`} />
+                        {/* Hint text */}
+                        <p className={`text-xs font-medium transition-all duration-300 ${amount ? "opacity-0 -translate-y-1" : "opacity-100 translate-y-0 text-primary/60 dark:text-primary/50"}`}>
+                            {t("tapToFill")}
+                        </p>
                     </div>
                 </section>
 
