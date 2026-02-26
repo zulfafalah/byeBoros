@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { getUserFromToken, type JwtPayload } from "@/lib/auth";
 
 export default function Header() {
     const t = useTranslations("Header");
@@ -8,19 +10,34 @@ export default function Header() {
     const greeting =
         hour < 12 ? t("goodMorning") : hour < 18 ? t("goodAfternoon") : t("goodEvening");
 
+    const [user, setUser] = useState<JwtPayload | null>(null);
+    useEffect(() => { setUser(getUserFromToken()); }, []);
+
+    const displayName = user?.name ?? "User";
+    const initial = displayName.charAt(0).toUpperCase();
+
     return (
         <header className="flex items-center justify-between px-6 pt-6 pb-4 safe-top bg-background-light dark:bg-background-dark">
             <div className="flex items-center gap-3">
                 {/* Avatar */}
                 <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-primary/30">
-                    <span className="text-lg font-bold text-primary">A</span>
+                    {user?.picture ? (
+                        <img
+                            src={user.picture}
+                            alt={displayName}
+                            className="size-10 rounded-full object-cover"
+                            referrerPolicy="no-referrer"
+                        />
+                    ) : (
+                        <span className="text-lg font-bold text-primary">{initial}</span>
+                    )}
                 </div>
 
                 <div>
                     <p className="text-[10px] uppercase tracking-widest text-muted font-bold">
                         {greeting}
                     </p>
-                    <p className="text-sm font-bold dark:text-white">Herman Doe</p>
+                    <p className="text-sm font-bold dark:text-white">{displayName}</p>
                 </div>
             </div>
 

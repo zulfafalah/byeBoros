@@ -2,17 +2,8 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-
-type Transaction = {
-    id: number;
-    name: string;
-    date: string;
-    category: string;
-    amount: number;
-    icon: React.ReactNode;
-    iconBg: string;
-    iconColor: string;
-};
+import { useTransactions } from "@/lib/hooks/useTransactions";
+import type { TransactionItem } from "@/lib/api/types";
 
 /* ── SVG Icons ────────────────────────────────────── */
 const RestaurantIcon = () => (
@@ -39,61 +30,76 @@ const ShoppingIcon = () => (
     </svg>
 );
 
-const transactions: Transaction[] = [
-    {
-        id: 1,
-        name: "Starbucks Coffee",
-        date: "Today, 09:41 AM",
-        category: "Food",
-        amount: -55000,
+/* ── Category → icon/style mapping ────────────────── */
+const CATEGORY_STYLES: Record<string, { icon: React.ReactNode; iconBg: string; iconColor: string }> = {
+    Food: {
         icon: <RestaurantIcon />,
         iconBg: "bg-orange-100 dark:bg-orange-900/30",
         iconColor: "text-orange-600",
     },
-    {
-        id: 2,
-        name: "Monthly Rent",
-        date: "Yesterday",
-        category: "Housing",
-        amount: -12000000,
+    Housing: {
         icon: <HomeIcon />,
         iconBg: "bg-blue-100 dark:bg-blue-900/30",
         iconColor: "text-blue-600",
     },
-    {
-        id: 3,
-        name: "Salary Deposit",
-        date: "Aug 15",
-        category: "Income",
-        amount: 30000000,
+    Income: {
         icon: <WalletIcon />,
         iconBg: "bg-primary/20",
         iconColor: "text-primary",
     },
-    {
-        id: 4,
-        name: "Amazon.com",
-        date: "Aug 14",
-        category: "Shopping",
-        amount: -842000,
+    Shopping: {
         icon: <ShoppingIcon />,
         iconBg: "bg-purple-100 dark:bg-purple-900/30",
         iconColor: "text-purple-600",
     },
-];
+};
 
-function formatAmount(amount: number) {
-    const abs = Math.abs(amount).toLocaleString("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    });
-    return amount >= 0 ? `+${abs}` : `-${abs}`;
+const DEFAULT_STYLE = {
+    icon: <WalletIcon />,
+    iconBg: "bg-gray-100 dark:bg-gray-900/30",
+    iconColor: "text-gray-600",
+};
+
+function getCategoryStyle(category: string) {
+    return CATEGORY_STYLES[category] ?? DEFAULT_STYLE;
+}
+
+/* ── Skeleton loader ──────────────────────────────── */
+function TransactionSkeleton() {
+    return (
+        <div className="space-y-3">
+            {[1, 2, 3, 4].map((i) => (
+                <div
+                    key={i}
+                    className="flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark animate-pulse"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="size-10 rounded-lg bg-gray-200 dark:bg-zinc-700" />
+                        <div className="space-y-2">
+                            <div className="h-3 w-28 rounded bg-gray-200 dark:bg-zinc-700" />
+                            <div className="h-2 w-20 rounded bg-gray-200 dark:bg-zinc-700" />
+                        </div>
+                    </div>
+                    <div className="h-3 w-16 rounded bg-gray-200 dark:bg-zinc-700" />
+                </div>
+            ))}
+        </div>
+    );
 }
 
 export default function TransactionList() {
     const t = useTranslations("TransactionList");
+
+    const today = new Date().toISOString().split("T")[0]; // "2026-02-25"
+
+    const { transactions, isLoading, error } = useTransactions({
+        date: today,
+        spreadsheetId: "1jZp3nUe4dq1r2Uwz6p2m3K8OzJpSIKA7eFa8p5sOLqI",
+        sheetName: "Februari",
+    });
+
+    // Flatten all items from all groups for the "recent" view
+    const allItems: TransactionItem[] = transactions.flatMap((g) => g.items);
 
     return (
         <section>
@@ -104,35 +110,57 @@ export default function TransactionList() {
                 </Link>
             </div>
 
-            <div className="space-y-3">
-                {transactions.map((tx) => (
-                    <div
-                        key={tx.id}
-                        className="flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark transition-transform active:scale-[0.98]"
-                    >
-                        <div className="flex items-center gap-3">
+            {/* Loading state */}
+            {isLoading && <TransactionSkeleton />}
+
+            {/* Error state */}
+            {error && !isLoading && (
+                <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-center">
+                    <p className="text-sm text-red-600 dark:text-red-400 font-medium">{error}</p>
+                </div>
+            )}
+
+            {/* Empty state */}
+            {!isLoading && !error && allItems.length === 0 && (
+                <div className="p-8 text-center">
+                    <p className="text-sm text-muted font-medium">No transactions today</p>
+                </div>
+            )}
+
+            {/* Transaction list */}
+            {!isLoading && !error && allItems.length > 0 && (
+                <div className="space-y-3">
+                    {allItems.map((tx) => {
+                        const style = getCategoryStyle(tx.category);
+                        return (
                             <div
-                                className={`size-10 rounded-lg ${tx.iconBg} ${tx.iconColor} flex items-center justify-center`}
+                                key={tx.id}
+                                className="flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark transition-transform active:scale-[0.98]"
                             >
-                                {tx.icon}
-                            </div>
-                            <div>
-                                <p className="text-sm font-bold dark:text-white">{tx.name}</p>
-                                <p className="text-[11px] text-muted">
-                                    {tx.date} • {tx.category}
+                                <div className="flex items-center gap-3">
+                                    <div
+                                        className={`size-10 rounded-lg ${style.iconBg} ${style.iconColor} flex items-center justify-center`}
+                                    >
+                                        {style.icon}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-bold dark:text-white">{tx.transaction_name}</p>
+                                        <p className="text-[11px] text-muted">
+                                            {tx.time} • {tx.category}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <p
+                                    className={`text-sm font-extrabold ${tx.type === "income" ? "text-primary" : "text-expense-red"}`}
+                                >
+                                    {tx.amount_display}
                                 </p>
                             </div>
-                        </div>
-
-                        <p
-                            className={`text-sm font-extrabold ${tx.amount >= 0 ? "text-primary" : "text-expense-red"
-                                }`}
-                        >
-                            {formatAmount(tx.amount)}
-                        </p>
-                    </div>
-                ))}
-            </div>
+                        );
+                    })}
+                </div>
+            )}
         </section>
     );
 }
