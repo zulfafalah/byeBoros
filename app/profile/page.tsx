@@ -30,17 +30,6 @@ export default function ProfilePage() {
 
     return (
         <div className="relative flex h-dvh w-full flex-col overflow-hidden max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl text-[#131811] dark:text-white">
-            {/* Header */}
-            <header className="flex items-center justify-between px-4 pt-6 pb-4">
-                <h1 className="text-xl font-bold">{t("title")}</h1>
-                <button className="size-10 flex items-center justify-center rounded-full bg-card-light dark:bg-card-dark shadow-sm border border-border-light dark:border-border-dark">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                </button>
-            </header>
-
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide">
                 {/* Profile Section */}
@@ -164,7 +153,9 @@ export default function ProfilePage() {
                             </svg>
                         </button>
                         <a
-                            href="#"
+                            href="https://github.com/zulfafalah/#personal-space-"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="flex items-center justify-between p-4 border-b border-border-light dark:border-border-dark active:bg-zinc-50 dark:active:bg-zinc-800 transition-colors"
                         >
                             <div className="flex items-center gap-3">
