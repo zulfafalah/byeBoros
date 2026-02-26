@@ -1,6 +1,11 @@
 const TOKEN_KEY = "auth_token";
-const SPREADSHEET_ID_KEY = "spreadsheet_id";
+const SPREADSHEET_ID_KEY = "googleSheetId";
 const SHEET_NAME_KEY = "sheet_name";
+
+const INDONESIAN_MONTHS = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+];
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
@@ -36,9 +41,8 @@ export function getSpreadsheetId(): string | null {
   return localStorage.getItem(SPREADSHEET_ID_KEY);
 }
 
-export function getSheetName(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(SHEET_NAME_KEY);
+export function getSheetName(): string {
+  return INDONESIAN_MONTHS[new Date().getMonth()];
 }
 
 export function decodeJWT(token: string): JwtPayload | null {

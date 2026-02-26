@@ -6,8 +6,6 @@ import type { TransactionGroup } from "@/lib/api/types";
 
 interface UseTransactionsOptions {
   date: string;
-  spreadsheetId: string;
-  sheetName: string;
 }
 
 interface UseTransactionsReturn {
@@ -19,8 +17,6 @@ interface UseTransactionsReturn {
 
 export function useTransactions({
   date,
-  spreadsheetId,
-  sheetName,
 }: UseTransactionsOptions): UseTransactionsReturn {
   const [transactions, setTransactions] = useState<TransactionGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,14 +27,14 @@ export function useTransactions({
     setError(null);
 
     try {
-      const res = await getTransactions({ date, spreadsheetId, sheetName });
+      const res = await getTransactions({ date });
       setTransactions(res.data.transactions);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch transactions");
     } finally {
       setIsLoading(false);
     }
-  }, [date, spreadsheetId, sheetName]);
+  }, [date]);
 
   useEffect(() => {
     fetchTransactions();

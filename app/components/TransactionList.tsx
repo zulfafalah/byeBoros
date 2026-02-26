@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useTransactions } from "@/lib/hooks/useTransactions";
 import type { TransactionItem } from "@/lib/api/types";
 
+
 /* ── SVG Icons ────────────────────────────────────── */
 const RestaurantIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
@@ -90,12 +91,10 @@ function TransactionSkeleton() {
 export default function TransactionList() {
     const t = useTranslations("TransactionList");
 
-    const today = new Date().toISOString().split("T")[0]; // "2026-02-25"
+    const today = new Date().toISOString().split("T")[0];
 
     const { transactions, isLoading, error } = useTransactions({
         date: today,
-        spreadsheetId: "1jZp3nUe4dq1r2Uwz6p2m3K8OzJpSIKA7eFa8p5sOLqI",
-        sheetName: "Februari",
     });
 
     // Flatten all items from all groups for the "recent" view
