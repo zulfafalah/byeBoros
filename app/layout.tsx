@@ -5,6 +5,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import { cookies } from "next/headers";
 import RegisterSW from "./components/RegisterSW";
 import InstallPrompt from "./components/InstallPrompt";
+import AuthCallback from "./components/AuthCallback";
 import ThemeProvider from "./components/ThemeProvider";
 import "./globals.css";
 
@@ -63,6 +64,7 @@ export default async function RootLayout({
       <body className={`${manrope.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider initialDark={isDark}>
+            <AuthCallback />
             {children}
             <InstallPrompt />
           </ThemeProvider>

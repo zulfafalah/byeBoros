@@ -1,15 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { getGoogleLoginUrl, isTokenValid } from "@/lib/auth";
 
 export default function LoginPage() {
     const router = useRouter();
     const t = useTranslations("Login");
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (isTokenValid()) router.replace("/");
+    }, [router]);
 
     const handleGoogleLogin = () => {
-        // TODO: Implement actual Google authentication
-        router.push("/");
+        setIsLoading(true);
+        // Redirect to backend Google OAuth endpoint
+        window.location.href = getGoogleLoginUrl();
     };
 
     return (
@@ -45,7 +53,8 @@ export default function LoginPage() {
                     {/* Google Sign In Button */}
                     <button
                         onClick={handleGoogleLogin}
-                        className="w-full h-16 bg-white dark:bg-zinc-900 border border-border-light dark:border-border-dark rounded-3xl active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-sm cursor-pointer"
+                        disabled={isLoading}
+                        className="w-full h-16 bg-white dark:bg-zinc-900 border border-border-light dark:border-border-dark rounded-3xl active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <svg className="w-6 h-6" viewBox="0 0 24 24">
                             <path
@@ -65,7 +74,9 @@ export default function LoginPage() {
                                 fill="#EA4335"
                             />
                         </svg>
-                        <span className="text-base font-bold">{t("continueWithGoogle")}</span>
+                        <span className="text-base font-bold">
+                            {isLoading ? "Redirecting..." : t("continueWithGoogle")}
+                        </span>
                     </button>
 
                     {/* Divider */}
