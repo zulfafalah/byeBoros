@@ -1,22 +1,66 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { createExpense } from "@/lib/api/transactions";
 
 export default function ExpensePage() {
     const t = useTranslations("Expense");
+    const router = useRouter();
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
     const [category, setCategory] = useState("Food");
     const [priority, setPriority] = useState("Medium");
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const [note, setNote] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSave = () => {
-        // TODO: implement save logic
-        const expense = { amount, name, category, priority, date, note };
-        console.log("Saving expense:", expense);
+    // Map translated select labels → English API values
+    const categoryMap: Record<string, string> = {
+        [t("food")]: "Food",
+        [t("transport")]: "Transport",
+        [t("entertainment")]: "Entertainment",
+        [t("health")]: "Health",
+        [t("shopping")]: "Shopping",
+        [t("others")]: "Others",
+    };
+    const priorityMap: Record<string, string> = {
+        [t("low")]: "low",
+        [t("medium")]: "medium",
+        [t("high")]: "high",
+    };
+
+    const formatTransactionAt = (selectedDate: string): string => {
+        const now = new Date();
+        const [yyyy, mm, dd] = selectedDate.split("-");
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mi = String(now.getMinutes()).padStart(2, "0");
+        const ss = String(now.getSeconds()).padStart(2, "0");
+        return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
+    };
+
+    const handleSave = async () => {
+        if (!name || !amount) return;
+
+        setIsLoading(true);
+        try {
+            await createExpense({
+                description: name,
+                category: categoryMap[category] || category,
+                priority: (priorityMap[priority] || priority).toLowerCase(),
+                amount: Number(amount),
+                notes: note || undefined,
+                transaction_at: formatTransactionAt(date),
+            });
+            router.push("/");
+        } catch (err) {
+            console.error("Failed to save expense:", err);
+            alert(err instanceof Error ? err.message : "Failed to save expense");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -198,22 +242,30 @@ export default function ExpensePage() {
             <footer className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white/90 dark:bg-background-dark/90 ios-blur p-5 border-t border-border-light dark:border-border-dark">
                 <button
                     onClick={handleSave}
-                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-xl shadow-lg shadow-primary/20 text-black font-extrabold text-lg flex items-center justify-center gap-2"
+                    disabled={isLoading || !name || !amount}
+                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-xl shadow-lg shadow-primary/20 text-black font-extrabold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="size-6"
-                    >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    {t("saveExpense")}
+                    {isLoading ? (
+                        <svg className="animate-spin size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="size-6"
+                        >
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    )}
+                    {isLoading ? "Saving..." : t("saveExpense")}
                 </button>
             </footer>
         </div>

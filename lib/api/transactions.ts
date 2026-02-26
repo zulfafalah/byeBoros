@@ -31,3 +31,20 @@ export async function getTransactions({
 export async function createIncome(payload: CreateIncomePayload) {
   return api.post("/api/transaction/income", payload);
 }
+
+export interface CreateExpensePayload {
+  description: string;
+  category: string;
+  priority: string;
+  amount: number;
+  notes?: string;
+  transaction_at: string; // e.g. "22/02/2026 14:30:00"
+}
+
+/**
+ * Create a new expense transaction.
+ * Spreadsheet ID and sheet name are automatically injected by the API client.
+ */
+export async function createExpense(payload: CreateExpensePayload) {
+  return api.post("/api/transaction/expense", payload);
+}
