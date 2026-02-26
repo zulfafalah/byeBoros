@@ -1,16 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { createIncome } from "@/lib/api/transactions";
 
 export default function IncomePage() {
     const t = useTranslations("Income");
+    const router = useRouter();
     const QUICK_TAGS = [t("salary"), t("freelance"), t("gift"), t("dividends")];
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
     const [note, setNote] = useState("");
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleTagClick = (tag: string) => {
         setSelectedTag(selectedTag === tag ? null : tag);
@@ -21,10 +25,37 @@ export default function IncomePage() {
         }
     };
 
-    const handleSave = () => {
-        // TODO: implement save logic
-        const income = { amount, name, category: selectedTag, note: note || undefined };
-        console.log("Saving income:", income);
+    const formatTransactionAt = (): string => {
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2, "0");
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const yyyy = now.getFullYear();
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mi = String(now.getMinutes()).padStart(2, "0");
+        const ss = String(now.getSeconds()).padStart(2, "0");
+        return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
+    };
+
+    const handleSave = async () => {
+        if (!name || !amount || !selectedTag) return;
+
+        setIsLoading(true);
+        try {
+            await createIncome({
+                description: name,
+                category: selectedTag,
+                priority: "low",
+                amount: Number(amount),
+                notes: note || undefined,
+                transaction_at: formatTransactionAt(),
+            });
+            router.push("/");
+        } catch (err) {
+            console.error("Failed to save income:", err);
+            alert(err instanceof Error ? err.message : "Failed to save income");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -179,22 +210,30 @@ export default function IncomePage() {
             <footer className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto p-6 bg-gradient-to-t from-white dark:from-background-dark via-white/90 dark:via-background-dark/90 to-transparent">
                 <button
                     onClick={handleSave}
-                    className="w-full h-16 bg-primary hover:bg-primary/90 active:scale-[0.98] transition-all text-black rounded-2xl font-extrabold text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/20"
+                    disabled={isLoading || !name || !amount || !selectedTag}
+                    className="w-full h-16 bg-primary hover:bg-primary/90 active:scale-[0.98] transition-all text-black rounded-2xl font-extrabold text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="size-6"
-                    >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    {t("saveIncome")}
+                    {isLoading ? (
+                        <svg className="animate-spin size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="size-6"
+                        >
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    )}
+                    {isLoading ? t("saving") || "Saving..." : t("saveIncome")}
                 </button>
 
             </footer>
