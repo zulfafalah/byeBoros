@@ -12,6 +12,8 @@ export interface TransactionItem {
 export interface TransactionGroup {
   group_label: string;
   group_date: string;
+  total_expense: number;
+  total_income: number;
   items: TransactionItem[];
 }
 
