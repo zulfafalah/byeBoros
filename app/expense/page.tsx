@@ -1,31 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { createExpense } from "@/lib/api/transactions";
+import { getCategories, type CategoryItem } from "@/lib/api/category";
 
 export default function ExpensePage() {
     const t = useTranslations("Expense");
     const router = useRouter();
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
-    const [category, setCategory] = useState("Food");
+    const [category, setCategory] = useState("");
     const [priority, setPriority] = useState("Medium");
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const [note, setNote] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [categories, setCategories] = useState<CategoryItem[]>([]);
 
-    // Map translated select labels → English API values
-    const categoryMap: Record<string, string> = {
-        [t("food")]: "Food",
-        [t("transport")]: "Transport",
-        [t("entertainment")]: "Entertainment",
-        [t("health")]: "Health",
-        [t("shopping")]: "Shopping",
-        [t("others")]: "Others",
-    };
+    useEffect(() => {
+        getCategories()
+            .then((res) => {
+                setCategories(res.categories);
+                if (res.categories.length > 0) {
+                    setCategory(res.categories[0].sub_category_name);
+                }
+            })
+            .catch((err) => console.error("Failed to fetch categories:", err));
+    }, []);
     const priorityMap: Record<string, string> = {
         [t("low")]: "low",
         [t("medium")]: "medium",
@@ -48,7 +51,7 @@ export default function ExpensePage() {
         try {
             await createExpense({
                 description: name,
-                category: categoryMap[category] || category,
+                category: category,
                 priority: (priorityMap[priority] || priority).toLowerCase(),
                 amount: Number(amount),
                 notes: note || undefined,
@@ -140,12 +143,20 @@ export default function ExpensePage() {
                                 onChange={(e) => setCategory(e.target.value)}
                                 className="appearance-none block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-gray-900/50 h-14 px-4 pr-10 text-base focus:border-primary focus:ring-primary dark:text-white"
                             >
-                                <option>{t("food")}</option>
-                                <option>{t("transport")}</option>
-                                <option>{t("entertainment")}</option>
-                                <option>{t("health")}</option>
-                                <option>{t("shopping")}</option>
-                                <option>{t("others")}</option>
+                                {Object.entries(
+                                    categories.reduce<Record<string, CategoryItem[]>>((acc, item) => {
+                                        (acc[item.category_name] ??= []).push(item);
+                                        return acc;
+                                    }, {})
+                                ).map(([groupName, items]) => (
+                                    <optgroup key={groupName} label={groupName}>
+                                        {items.map((item) => (
+                                            <option key={item.sub_category_name} value={item.sub_category_name}>
+                                                {item.sub_category_name}
+                                            </option>
+                                        ))}
+                                    </optgroup>
+                                ))}
                             </select>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
