@@ -34,6 +34,7 @@
         "language": "Bahasa",
         "documentation": "Dokumentasi",
         "helpCenter": "Pusat Bantuan",
+        "settings": "Pengaturan",
         "logOut": "Keluar",
         "loginTitle": "Masuk untuk fitur lengkap",
         "loginSubtitle": "Lacak pengeluaran, atur anggaran, dan lihat analisis setelah masuk.",
@@ -113,5 +114,16 @@
         "title": "Analisis",
         "expenseAnalysis": "Analisis Pengeluaran",
         "incomeAnalysis": "Analisis Pemasukan"
+    },
+    "Settings": {
+        "title": "Pengaturan",
+        "googleSheet": "Google Sheet",
+        "googleSheetLink": "Link Google Sheet",
+        "googleSheetPlaceholder": "Tempel URL Google Sheet Anda di sini",
+        "googleSheetId": "ID Google Sheet",
+        "save": "Simpan",
+        "saved": "Tersimpan!",
+        "invalidLink": "Link Google Sheet tidak valid",
+        "description": "Hubungkan Google Sheet Anda untuk sinkronisasi data transaksi."
     }
 }

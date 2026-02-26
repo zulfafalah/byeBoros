@@ -34,6 +34,7 @@
         "language": "Language",
         "documentation": "Documentation",
         "helpCenter": "Help Center",
+        "settings": "Settings",
         "logOut": "Log Out",
         "loginTitle": "Sign in to unlock all features",
         "loginSubtitle": "Track expenses, manage budgets, and view analysis after logging in.",
@@ -113,5 +114,16 @@
         "title": "Analysis",
         "expenseAnalysis": "Expense Analysis",
         "incomeAnalysis": "Income Analysis"
+    },
+    "Settings": {
+        "title": "Settings",
+        "googleSheet": "Google Sheet",
+        "googleSheetLink": "Google Sheet Link",
+        "googleSheetPlaceholder": "Paste your Google Sheet URL here",
+        "googleSheetId": "Google Sheet ID",
+        "save": "Save",
+        "saved": "Saved!",
+        "invalidLink": "Invalid Google Sheet link",
+        "description": "Connect your Google Sheet to sync transaction data."
     }
 }
