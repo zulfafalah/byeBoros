@@ -21,6 +21,11 @@
   --font-display: var(--font-manrope), "Manrope", sans-serif;
 }
 
+/* ── Dark mode overrides ──────────────────────────── */
+.dark {
+  --color-muted: #c5d4be;
+}
+
 /* ── Base ─────────────────────────────────────────── */
 html {
   height: 100%;

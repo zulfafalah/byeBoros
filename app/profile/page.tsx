@@ -143,9 +143,9 @@ export default function ProfilePage() {
 
                     {/* Links */}
                     <div className="bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark overflow-hidden">
-                        <a
-                            href="#"
-                            className="flex items-center justify-between p-4 border-b border-border-light dark:border-border-dark active:bg-zinc-50 dark:active:bg-zinc-800 transition-colors"
+                        <button
+                            onClick={() => router.push("/documentation")}
+                            className="w-full flex items-center justify-between p-4 border-b border-border-light dark:border-border-dark active:bg-zinc-50 dark:active:bg-zinc-800 transition-colors cursor-pointer"
                         >
                             <div className="flex items-center gap-3">
                                 <div className="size-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
@@ -162,7 +162,7 @@ export default function ProfilePage() {
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-4 text-zinc-400">
                                 <polyline points="9 18 15 12 9 6" />
                             </svg>
-                        </a>
+                        </button>
                         <a
                             href="#"
                             className="flex items-center justify-between p-4 border-b border-border-light dark:border-border-dark active:bg-zinc-50 dark:active:bg-zinc-800 transition-colors"
