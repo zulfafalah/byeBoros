@@ -95,6 +95,8 @@
         "incomeSource": "Sumber Pemasukan",
         "sourcePlaceholder": "cth. Gaji Bulanan",
         "amount": "Jumlah",
+        "note": "Catatan (Opsional)",
+        "notePlaceholder": "Tambahkan detail...",
         "saveIncome": "Simpan Pemasukan",
         "salary": "Gaji",
         "freelance": "Freelance",

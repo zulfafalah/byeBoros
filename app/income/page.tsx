@@ -9,6 +9,7 @@ export default function IncomePage() {
     const QUICK_TAGS = [t("salary"), t("freelance"), t("gift"), t("dividends")];
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
+    const [note, setNote] = useState("");
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
     const handleTagClick = (tag: string) => {
@@ -22,7 +23,7 @@ export default function IncomePage() {
 
     const handleSave = () => {
         // TODO: implement save logic
-        const income = { amount, name, category: selectedTag };
+        const income = { amount, name, category: selectedTag, note: note || undefined };
         console.log("Saving income:", income);
     };
 
@@ -81,7 +82,7 @@ export default function IncomePage() {
                                 autoFocus
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full h-16 px-5 rounded-2xl bg-gray-50/50 dark:bg-white/5 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-xl font-semibold placeholder:text-gray-400 placeholder:font-normal dark:text-white"
+                                className="w-full h-16 px-5 rounded-2xl bg-gray-50/50 dark:bg-white/5 border border-border-light dark:border-border-dark focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-xl font-semibold placeholder:text-gray-400 placeholder:font-normal dark:text-white"
                                 placeholder={t("sourcePlaceholder")}
                                 type="text"
                             />
@@ -115,7 +116,7 @@ export default function IncomePage() {
                             <input
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                className="w-full h-24 pl-14 pr-14 rounded-2xl bg-gray-50/50 dark:bg-white/5 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-4xl font-extrabold placeholder:text-gray-300 dark:placeholder:text-gray-600 dark:text-white"
+                                className="w-full h-24 pl-14 pr-14 rounded-2xl bg-gray-50/50 dark:bg-white/5 border border-border-light dark:border-border-dark focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-4xl font-extrabold placeholder:text-gray-300 dark:placeholder:text-gray-600 dark:text-white"
                                 placeholder="0"
                                 type="number"
                                 inputMode="numeric"
@@ -155,6 +156,21 @@ export default function IncomePage() {
                                 {tag}
                             </button>
                         ))}
+                    </div>
+
+                    {/* Note Input (Optional) */}
+                    <div className="space-y-3">
+                        <label className="block text-xs font-bold uppercase tracking-widest text-muted ml-1">
+                            {t("note")}
+                        </label>
+                        <div className="relative group">
+                            <textarea
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
+                                className="w-full min-h-[100px] px-5 py-4 rounded-2xl bg-gray-50/50 dark:bg-white/5 border border-border-light dark:border-border-dark focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-base font-medium placeholder:text-gray-400 placeholder:font-normal dark:text-white resize-none"
+                                placeholder={t("notePlaceholder")}
+                            />
+                        </div>
                     </div>
                 </div>
             </main>

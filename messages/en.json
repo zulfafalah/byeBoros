@@ -95,6 +95,8 @@
         "incomeSource": "Income Source",
         "sourcePlaceholder": "e.g. Monthly Salary",
         "amount": "Amount",
+        "note": "Note (Optional)",
+        "notePlaceholder": "Add more details...",
         "saveIncome": "Save Income",
         "salary": "Salary",
         "freelance": "Freelance",
