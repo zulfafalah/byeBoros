@@ -1,20 +1,26 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import type { IncomeAnalysisData, AnalysisCategory } from "@/lib/api/analysis";
 
-/* ── Data ────────────────────────────────────────── */
-const totalIncome = 8540000;
-
-const categories = [
-    { name: "Salary", pct: 70, amount: 5978000, hex: "#22c55e", tw: "bg-income-green" },
-    { name: "Freelance", pct: 20, amount: 1708000, hex: "#14b8a6", tw: "bg-income-teal" },
-    { name: "Dividends", pct: 10, amount: 854000, hex: "#84cc16", tw: "bg-income-lime" },
+/* ── Color palette for chart segments ───────────── */
+const COLORS = [
+    { hex: "#22c55e", tw: "bg-income-green" },
+    { hex: "#14b8a6", tw: "bg-income-teal" },
+    { hex: "#84cc16", tw: "bg-income-lime" },
+    { hex: "#3b82f6", tw: "bg-accent-blue" },
+    { hex: "#a855f7", tw: "bg-accent-purple" },
+    { hex: "#f97316", tw: "bg-accent-orange" },
+    { hex: "#ec4899", tw: "bg-pink-500" },
+    { hex: "#eab308", tw: "bg-yellow-500" },
 ];
 
-const sources = [
-    { label: "Primary Salary", amount: 5978000, pct: 100, color: "bg-income-green", dot: "bg-income-green" },
-    { label: "Freelance Projects", amount: 1708000, pct: 28, color: "bg-income-teal", dot: "bg-income-teal" },
-    { label: "Investment Dividends", amount: 854000, pct: 14, color: "bg-income-lime", dot: "bg-income-lime" },
+const SOURCE_COLORS = [
+    { color: "bg-income-green", dot: "bg-income-green" },
+    { color: "bg-income-teal", dot: "bg-income-teal" },
+    { color: "bg-income-lime", dot: "bg-income-lime" },
+    { color: "bg-accent-blue", dot: "bg-accent-blue" },
+    { color: "bg-accent-purple", dot: "bg-accent-purple" },
 ];
 
 const periods = ["Day", "Month", "3 Months", "6 Months", "Year", "Custom"];
@@ -23,10 +29,15 @@ const periods = ["Day", "Month", "3 Months", "6 Months", "Year", "Custom"];
 const RADIUS = 90;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-function buildSegments(cats: typeof categories) {
+interface ChartCategory extends AnalysisCategory {
+    hex: string;
+    tw: string;
+}
+
+function buildSegments(cats: ChartCategory[]) {
     let offset = 0;
     return cats.map((cat) => {
-        const dash = (cat.pct / 100) * CIRCUMFERENCE;
+        const dash = (cat.percent / 100) * CIRCUMFERENCE;
         const gap = CIRCUMFERENCE - dash;
         const seg = { ...cat, dashArray: `${dash} ${gap}`, dashOffset: -offset };
         offset += dash;
@@ -36,11 +47,27 @@ function buildSegments(cats: typeof categories) {
 
 /* ═══════════════════════════════════════════════════ */
 
-export default function IncomeAnalysis() {
+interface Props {
+    data: IncomeAnalysisData | null;
+    loading?: boolean;
+}
+
+export default function IncomeAnalysis({ data, loading }: Props) {
     const [activePeriod, setActivePeriod] = useState("Month");
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
-    const segments = useMemo(() => buildSegments(categories), []);
+    const categories: ChartCategory[] = useMemo(() => {
+        if (!data) return [];
+        return data.chart.categories
+            .filter((c) => c.percent > 0)
+            .map((c, i) => ({
+                ...c,
+                hex: COLORS[i % COLORS.length].hex,
+                tw: COLORS[i % COLORS.length].tw,
+            }));
+    }, [data]);
+
+    const segments = useMemo(() => buildSegments(categories), [categories]);
 
     const formatCurrency = (value: number) =>
         new Intl.NumberFormat("id-ID").format(value);
@@ -50,6 +77,32 @@ export default function IncomeAnalysis() {
     };
 
     const selected = selectedIdx !== null ? categories[selectedIdx] : null;
+
+    const totalIncome = data?.summary.total_income ?? 0;
+    const topCategory = data?.top_category;
+    const dailyAverage = data?.daily_average;
+
+    // Build sources from categories for the "Source Consistency" section
+    const sources = useMemo(() => {
+        if (!data) return [];
+        const maxAmount = Math.max(...data.chart.categories.map((c) => c.amount), 1);
+        return data.chart.categories
+            .filter((c) => c.amount > 0)
+            .map((c, i) => ({
+                label: c.name,
+                amount: c.amount,
+                pct: Math.round((c.amount / maxAmount) * 100),
+                ...SOURCE_COLORS[i % SOURCE_COLORS.length],
+            }));
+    }, [data]);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <>
@@ -100,7 +153,7 @@ export default function IncomeAnalysis() {
                                 <>
                                     <span className="text-[10px] text-muted font-medium leading-tight">{selected.name}</span>
                                     <span className="text-base font-extrabold leading-tight mt-0.5 dark:text-white">Rp {formatCurrency(selected.amount)}</span>
-                                    <span className="text-[10px] font-bold mt-0.5" style={{ color: selected.hex }}>{selected.pct}%</span>
+                                    <span className="text-[10px] font-bold mt-0.5" style={{ color: selected.hex }}>{selected.percent}%</span>
                                 </>
                             ) : (
                                 <>
@@ -120,7 +173,7 @@ export default function IncomeAnalysis() {
                             >
                                 <span className={`size-3 rounded-full ${cat.tw}`} />
                                 <span className="text-xs font-bold dark:text-white">{cat.name}</span>
-                                <span className="text-xs text-muted ml-auto">{cat.pct}%</span>
+                                <span className="text-xs text-muted ml-auto">{cat.percent}%</span>
                             </button>
                         ))}
                     </div>
@@ -137,9 +190,9 @@ export default function IncomeAnalysis() {
                                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold dark:text-white">Salary</p>
+                        <p className="text-sm font-bold dark:text-white">{topCategory?.name ?? "-"}</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(5978000)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">{topCategory?.total_display ?? "Rp 0"}</p>
                 </div>
 
                 <div className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
@@ -150,35 +203,37 @@ export default function IncomeAnalysis() {
                                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold dark:text-white">Average</p>
+                        <p className="text-sm font-bold dark:text-white">{dailyAverage?.label ?? "Average"}</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(284600)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">{dailyAverage?.amount_display ?? "Rp 0"}</p>
                 </div>
             </div>
 
             {/* ── Source Consistency ── */}
-            <section className="mt-6 mb-8">
-                <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between dark:text-white">
-                    Source Consistency
-                    <span className="text-[10px] text-muted font-bold">THIS MONTH</span>
-                </h2>
-                <div className="space-y-3">
-                    {sources.map((s) => (
-                        <div key={s.label} className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                    <span className={`size-2 rounded-full ${s.dot}`} />
-                                    <span className="text-xs font-bold dark:text-white">{s.label}</span>
+            {sources.length > 0 && (
+                <section className="mt-6 mb-8">
+                    <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between dark:text-white">
+                        Source Consistency
+                        <span className="text-[10px] text-muted font-bold">THIS MONTH</span>
+                    </h2>
+                    <div className="space-y-3">
+                        {sources.map((s, i) => (
+                            <div key={s.label} className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        <span className={`size-2 rounded-full ${s.dot}`} />
+                                        <span className="text-xs font-bold dark:text-white">{s.label}</span>
+                                    </div>
+                                    <span className="text-xs font-extrabold dark:text-white">Rp {formatCurrency(s.amount)}</span>
                                 </div>
-                                <span className="text-xs font-extrabold dark:text-white">Rp {formatCurrency(s.amount)}</span>
+                                <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                                    <div className={`${s.color} h-full rounded-full transition-all`} style={{ width: `${s.pct}%` }} />
+                                </div>
                             </div>
-                            <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                                <div className={`${s.color} h-full rounded-full transition-all`} style={{ width: `${s.pct}%` }} />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                        ))}
+                    </div>
+                </section>
+            )}
         </>
     );
 }

@@ -1,21 +1,24 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import type { ExpenseAnalysisData, ExpenseChartCategory } from "@/lib/api/analysis";
 
-/* ── Data ────────────────────────────────────────── */
-const totalSpent = 4285000;
-
-const categories = [
-    { name: "Food & Drink", pct: 35, amount: 1499750, hex: "#46ec13", tw: "bg-primary" },
-    { name: "Transport", pct: 25, amount: 1071250, hex: "#3b82f6", tw: "bg-accent-blue" },
-    { name: "Rent", pct: 20, amount: 857000, hex: "#f97316", tw: "bg-accent-orange" },
-    { name: "Other", pct: 20, amount: 857000, hex: "#a855f7", tw: "bg-accent-purple" },
+/* ── Color palette for chart segments ───────────── */
+const COLORS = [
+    { hex: "#46ec13", tw: "bg-primary" },
+    { hex: "#3b82f6", tw: "bg-accent-blue" },
+    { hex: "#f97316", tw: "bg-accent-orange" },
+    { hex: "#a855f7", tw: "bg-accent-purple" },
+    { hex: "#ec4899", tw: "bg-pink-500" },
+    { hex: "#14b8a6", tw: "bg-teal-500" },
+    { hex: "#eab308", tw: "bg-yellow-500" },
+    { hex: "#ef4444", tw: "bg-red-500" },
 ];
 
-const priorities = [
-    { label: "High Priority", amount: 2850000, pct: 65, color: "bg-expense-red", dot: "bg-expense-red" },
-    { label: "Medium Priority", amount: 935000, pct: 25, color: "bg-accent-orange", dot: "bg-accent-orange" },
-    { label: "Low Priority", amount: 500000, pct: 10, color: "bg-primary", dot: "bg-primary" },
+const PRIORITY_COLORS = [
+    { color: "bg-expense-red", dot: "bg-expense-red" },
+    { color: "bg-accent-orange", dot: "bg-accent-orange" },
+    { color: "bg-primary", dot: "bg-primary" },
 ];
 
 const periods = ["Day", "Month", "3 Months", "6 Months", "Year", "Custom"];
@@ -24,10 +27,19 @@ const periods = ["Day", "Month", "3 Months", "6 Months", "Year", "Custom"];
 const RADIUS = 90;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-function buildSegments(cats: typeof categories) {
+interface ChartCategory {
+    name: string;
+    category_name: string;
+    amount: number;
+    percent: number;
+    hex: string;
+    tw: string;
+}
+
+function buildSegments(cats: ChartCategory[]) {
     let offset = 0;
     return cats.map((cat) => {
-        const dash = (cat.pct / 100) * CIRCUMFERENCE;
+        const dash = (cat.percent / 100) * CIRCUMFERENCE;
         const gap = CIRCUMFERENCE - dash;
         const seg = { ...cat, dashArray: `${dash} ${gap}`, dashOffset: -offset };
         offset += dash;
@@ -37,11 +49,30 @@ function buildSegments(cats: typeof categories) {
 
 /* ═══════════════════════════════════════════════════ */
 
-export default function ExpenseAnalysis() {
+interface Props {
+    data: ExpenseAnalysisData | null;
+    loading?: boolean;
+}
+
+export default function ExpenseAnalysis({ data, loading }: Props) {
     const [activePeriod, setActivePeriod] = useState("Month");
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
-    const segments = useMemo(() => buildSegments(categories), []);
+    const categories: ChartCategory[] = useMemo(() => {
+        if (!data) return [];
+        return data.chart.categories
+            .filter((c) => c.percent > 0)
+            .map((c, i) => ({
+                name: c.sub_category_name,
+                category_name: c.category_name,
+                amount: c.amount,
+                percent: c.percent,
+                hex: COLORS[i % COLORS.length].hex,
+                tw: COLORS[i % COLORS.length].tw,
+            }));
+    }, [data]);
+
+    const segments = useMemo(() => buildSegments(categories), [categories]);
 
     const formatCurrency = (value: number) =>
         new Intl.NumberFormat("id-ID").format(value);
@@ -51,6 +82,19 @@ export default function ExpenseAnalysis() {
     };
 
     const selected = selectedIdx !== null ? categories[selectedIdx] : null;
+
+    const totalSpent = data?.summary.total_spent ?? 0;
+    const topCategory = data?.top_category;
+    const dailyAverage = data?.daily_average;
+    const priorityDistribution = data?.priority_distribution;
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <>
@@ -101,7 +145,7 @@ export default function ExpenseAnalysis() {
                                 <>
                                     <span className="text-[10px] text-muted font-medium leading-tight">{selected.name}</span>
                                     <span className="text-base font-extrabold leading-tight mt-0.5 dark:text-white">Rp {formatCurrency(selected.amount)}</span>
-                                    <span className="text-[10px] font-bold mt-0.5" style={{ color: selected.hex }}>{selected.pct}%</span>
+                                    <span className="text-[10px] font-bold mt-0.5" style={{ color: selected.hex }}>{selected.percent}%</span>
                                 </>
                             ) : (
                                 <>
@@ -121,7 +165,7 @@ export default function ExpenseAnalysis() {
                             >
                                 <span className={`size-3 rounded-full ${cat.tw}`} />
                                 <span className="text-xs font-bold dark:text-white">{cat.name}</span>
-                                <span className="text-xs text-muted ml-auto">{cat.pct}%</span>
+                                <span className="text-xs text-muted ml-auto">{cat.percent}%</span>
                             </button>
                         ))}
                     </div>
@@ -139,9 +183,9 @@ export default function ExpenseAnalysis() {
                                 <line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold dark:text-white">Food</p>
+                        <p className="text-sm font-bold dark:text-white">{topCategory?.name ?? "-"}</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(1499000)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">{topCategory?.total_display ?? "Rp 0"}</p>
                 </div>
 
                 <div className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
@@ -152,35 +196,43 @@ export default function ExpenseAnalysis() {
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                             </svg>
                         </div>
-                        <p className="text-sm font-bold dark:text-white">Average</p>
+                        <p className="text-sm font-bold dark:text-white">{dailyAverage?.label ?? "Average"}</p>
                     </div>
-                    <p className="text-lg font-extrabold mt-2 dark:text-white">Rp {formatCurrency(142800)}</p>
+                    <p className="text-lg font-extrabold mt-2 dark:text-white">{dailyAverage?.amount_display ?? "Rp 0"}</p>
                 </div>
             </div>
 
             {/* ── Priority Distribution ── */}
-            <section className="mt-6 mb-8">
-                <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between dark:text-white">
-                    Priority Distribution
-                    <span className="text-[10px] text-muted font-bold">THIS MONTH</span>
-                </h2>
-                <div className="space-y-3">
-                    {priorities.map((p) => (
-                        <div key={p.label} className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                    <span className={`size-2 rounded-full ${p.dot}`} />
-                                    <span className="text-xs font-bold dark:text-white">{p.label}</span>
-                                </div>
-                                <span className="text-xs font-extrabold dark:text-white">Rp {formatCurrency(p.amount)}</span>
-                            </div>
-                            <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                                <div className={`${p.color} h-full rounded-full transition-all`} style={{ width: `${p.pct}%` }} />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+            {priorityDistribution && priorityDistribution.length > 0 && (
+                <section className="mt-6 mb-8">
+                    <h2 className="text-sm font-extrabold mb-4 flex items-center justify-between dark:text-white">
+                        Priority Distribution
+                        <span className="text-[10px] text-muted font-bold">THIS MONTH</span>
+                    </h2>
+                    <div className="space-y-3">
+                        {(() => {
+                            const totalPriority = priorityDistribution.reduce((sum, p) => sum + p.amount, 0) || 1;
+                            return priorityDistribution.map((p, i) => {
+                                const pct = Math.round((p.amount / totalPriority) * 100);
+                                return (
+                                    <div key={p.level} className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="flex items-center gap-2">
+                                                <span className={`size-2 rounded-full ${PRIORITY_COLORS[i % PRIORITY_COLORS.length].dot}`} />
+                                                <span className="text-xs font-bold dark:text-white">{p.label}</span>
+                                            </div>
+                                            <span className="text-xs font-extrabold dark:text-white">{p.amount_display}</span>
+                                        </div>
+                                        <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                                            <div className={`${PRIORITY_COLORS[i % PRIORITY_COLORS.length].color} h-full rounded-full transition-all`} style={{ width: `${pct}%` }} />
+                                        </div>
+                                    </div>
+                                );
+                            });
+                        })()}
+                    </div>
+                </section>
+            )}
         </>
     );
 }

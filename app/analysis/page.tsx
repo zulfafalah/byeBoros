@@ -1,16 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import BottomNav from "../components/BottomNav";
 import ExpenseAnalysis from "../components/ExpenseAnalysis";
 import IncomeAnalysis from "../components/IncomeAnalysis";
+import { getAnalysis } from "@/lib/api/analysis";
+import type { ExpenseAnalysisData, IncomeAnalysisData } from "@/lib/api/analysis";
 
 export default function AnalysisPage() {
     const t = useTranslations("Analysis");
     const [activeTab, setActiveTab] = useState<"expense" | "income">("expense");
     const isExpense = activeTab === "expense";
+
+    const [expenseData, setExpenseData] = useState<ExpenseAnalysisData | null>(null);
+    const [incomeData, setIncomeData] = useState<IncomeAnalysisData | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchAnalysis() {
+            try {
+                setLoading(true);
+                const res = await getAnalysis();
+                setExpenseData(res.data.expense);
+                setIncomeData(res.data.income);
+            } catch (err) {
+                console.error("Failed to fetch analysis:", err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchAnalysis();
+    }, []);
 
     return (
         <div className="relative flex h-dvh w-full flex-col max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
@@ -59,7 +81,10 @@ export default function AnalysisPage() {
 
             {/* ── Scrollable Content ── */}
             <main className="flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide">
-                {isExpense ? <ExpenseAnalysis /> : <IncomeAnalysis />}
+                {isExpense
+                    ? <ExpenseAnalysis data={expenseData} loading={loading} />
+                    : <IncomeAnalysis data={incomeData} loading={loading} />
+                }
             </main>
 
             {/* ── Bottom Nav ── */}
