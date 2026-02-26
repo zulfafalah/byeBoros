@@ -101,15 +101,19 @@ export default function ExpensePage() {
                         {t("howMuch")}
                     </p>
                     <div className="relative flex items-center justify-center">
-                        <span className="text-3xl font-bold text-primary mr-2">
+                        <span className="text-4xl font-bold text-primary mr-3">
                             Rp
                         </span>
                         <input
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            className="w-full max-w-[220px] text-5xl font-extrabold text-center bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-gray-200 dark:placeholder:text-gray-700 dark:text-white"
+                            value={amount ? Number(amount).toLocaleString("id-ID") : ""}
+                            onChange={(e) => {
+                                const raw = e.target.value.replace(/\./g, "");
+                                if (raw === "" || /^\d+$/.test(raw)) setAmount(raw);
+                            }}
+                            style={{ width: `${Math.max(1, (amount ? Number(amount).toLocaleString("id-ID") : "0").length)}ch` }}
+                            className="text-5xl font-extrabold text-left bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-gray-200 dark:placeholder:text-gray-700 dark:text-white"
                             placeholder="0"
-                            type="number"
+                            type="text"
                             inputMode="numeric"
                         />
                     </div>
