@@ -1,175 +1,259 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState, useEffect, useMemo, useCallback, ReactNode } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { getCategories, updateCategories, CategoryItem } from "@/lib/api/category";
 
-/* ── Icon library ────────────────────────────────── */
-const iconOptions: { name: string; icon: ReactNode }[] = [
-    {
-        name: "restaurant",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-                <line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" />
-            </svg>
-        ),
-    },
-    {
-        name: "car",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                <circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
-        ),
-    },
-    {
-        name: "movie",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
-                <line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" />
-                <line x1="2" y1="12" x2="22" y2="12" /><line x1="2" y1="7" x2="7" y2="7" />
-                <line x1="2" y1="17" x2="7" y2="17" /><line x1="17" y1="7" x2="22" y2="7" /><line x1="17" y1="17" x2="22" y2="17" />
-            </svg>
-        ),
-    },
-    {
-        name: "scissors",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <circle cx="6" cy="6" r="3" /><path d="M8.12 8.12L12 12" /><path d="M20 4L8.12 15.88" />
-                <circle cx="6" cy="18" r="3" /><path d="M14.8 14.8L20 20" />
-            </svg>
-        ),
-    },
-    {
-        name: "shopping",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                <line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-        ),
-    },
-    {
-        name: "health",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
-        ),
-    },
-    {
-        name: "home",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-        ),
-    },
-    {
-        name: "education",
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-            </svg>
-        ),
-    },
-];
-
-/* ── Color palette ───────────────────────────────── */
-const colorOptions = [
-    { name: "orange", text: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-500/10", ring: "ring-orange-500" },
-    { name: "blue", text: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10", ring: "ring-blue-500" },
-    { name: "purple", text: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10", ring: "ring-purple-500" },
-    { name: "pink", text: "text-pink-500", bg: "bg-pink-50 dark:bg-pink-500/10", ring: "ring-pink-500" },
-    { name: "green", text: "text-green-500", bg: "bg-green-50 dark:bg-green-500/10", ring: "ring-green-500" },
-    { name: "red", text: "text-red-500", bg: "bg-red-50 dark:bg-red-500/10", ring: "ring-red-500" },
-    { name: "teal", text: "text-teal-500", bg: "bg-teal-50 dark:bg-teal-500/10", ring: "ring-teal-500" },
-    { name: "amber", text: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10", ring: "ring-amber-500" },
-];
-
-/* ── Category type ───────────────────────────────── */
-interface Category {
-    name: string;
-    iconName: string;
-    icon: ReactNode;
-    color: string;
-    bgColor: string;
-    budget: number;
+/* ── Group helper ──────────────────────────────────── */
+interface CategoryGroup {
+    category_name: string;
+    items: CategoryItem[];
+    total: number;
 }
 
-const defaultCategories: Category[] = [
-    { name: "Food & Drinks", iconName: "restaurant", icon: iconOptions[0].icon, color: "text-orange-500", bgColor: "bg-orange-50 dark:bg-orange-500/10", budget: 500000 },
-    { name: "Transport", iconName: "car", icon: iconOptions[1].icon, color: "text-blue-500", bgColor: "bg-blue-50 dark:bg-blue-500/10", budget: 250000 },
-    { name: "Entertainment", iconName: "movie", icon: iconOptions[2].icon, color: "text-purple-500", bgColor: "bg-purple-50 dark:bg-purple-500/10", budget: 150000 },
-    { name: "Grooming", iconName: "scissors", icon: iconOptions[3].icon, color: "text-pink-500", bgColor: "bg-pink-50 dark:bg-pink-500/10", budget: 100000 },
-];
+function groupByCategory(items: CategoryItem[]): CategoryGroup[] {
+    const map = new Map<string, CategoryItem[]>();
+    for (const item of items) {
+        const list = map.get(item.category_name) ?? [];
+        list.push(item);
+        map.set(item.category_name, list);
+    }
+    return Array.from(map.entries()).map(([category_name, items]) => ({
+        category_name,
+        items,
+        total: items.reduce((sum, i) => sum + i.budget, 0),
+    }));
+}
 
-/* ═══════════════════════════════════════════════════ */
+/* ── SVG Icons ───────────────────────────────────────── */
+const svgIcon = (paths: ReactNode) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
+        {paths}
+    </svg>
+);
+
+const icons: Record<string, ReactNode> = {
+    restaurant: svgIcon(<><path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" /></>),
+    home: svgIcon(<><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></>),
+    car: svgIcon(<><rect x="1" y="3" width="15" height="13" rx="2" ry="2" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></>),
+    health: svgIcon(<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />),
+    phone: svgIcon(<><rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></>),
+    coffee: svgIcon(<><path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" /></>),
+    shopping: svgIcon(<><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></>),
+    briefcase: svgIcon(<><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></>),
+    users: svgIcon(<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></>),
+    movie: svgIcon(<><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" /><line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /><line x1="2" y1="7" x2="7" y2="7" /><line x1="2" y1="17" x2="7" y2="17" /><line x1="17" y1="7" x2="22" y2="7" /><line x1="17" y1="17" x2="22" y2="17" /></>),
+    education: svgIcon(<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></>),
+    wallet: svgIcon(<><rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" /></>),
+    family: svgIcon(<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></>),
+    default: svgIcon(<><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></>),
+};
+
+/* ── Category style mapping ──────────────────────────── */
+const categoryStyles: Record<string, { text: string; bg: string; iconKey: string }> = {
+    "Kebutuhan Harian": { text: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-500/10", iconKey: "restaurant" },
+    "Tempat Tinggal": { text: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10", iconKey: "home" },
+    "Transportasi": { text: "text-sky-500", bg: "bg-sky-50 dark:bg-sky-500/10", iconKey: "car" },
+    "Kesehatan": { text: "text-red-500", bg: "bg-red-50 dark:bg-red-500/10", iconKey: "health" },
+    "Komunikasi & Langganan": { text: "text-violet-500", bg: "bg-violet-50 dark:bg-violet-500/10", iconKey: "phone" },
+    "Makan di Luar / Nongkrong": { text: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10", iconKey: "coffee" },
+    "Belanja Pribadi": { text: "text-pink-500", bg: "bg-pink-50 dark:bg-pink-500/10", iconKey: "shopping" },
+    "Kerja / Produktivitas": { text: "text-indigo-500", bg: "bg-indigo-50 dark:bg-indigo-500/10", iconKey: "briefcase" },
+    "Sosial": { text: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10", iconKey: "users" },
+    "Hiburan": { text: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10", iconKey: "movie" },
+    "Pendidikan / Pengembangan Diri": { text: "text-cyan-500", bg: "bg-cyan-50 dark:bg-cyan-500/10", iconKey: "education" },
+    "Keuangan": { text: "text-green-500", bg: "bg-green-50 dark:bg-green-500/10", iconKey: "wallet" },
+    "Keluarga": { text: "text-rose-500", bg: "bg-rose-50 dark:bg-rose-500/10", iconKey: "family" },
+};
+
+const defaultStyle = { text: "text-gray-500", bg: "bg-gray-50 dark:bg-gray-500/10", iconKey: "default" };
+
+function getStyle(name: string) {
+    return categoryStyles[name] ?? defaultStyle;
+}
+
+/* ═══════════════════════════════════════════════════════ */
 
 export default function BudgetPage() {
     const t = useTranslations("Budget");
-    const [dailyLimit, setDailyLimit] = useState(45000);
-    const [monthlyLimit, setMonthlyLimit] = useState(1350000);
-    const [categoryList, setCategoryList] = useState<Category[]>(defaultCategories);
+
+    /* ── State ──────────────────────────────────── */
+    const [dailyBudget, setDailyBudget] = useState(0);
+    const [monthlyBudget, setMonthlyBudget] = useState(0);
+    const [categories, setCategories] = useState<CategoryItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+
+    /* toast state */
+    const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>({ show: false, type: "success", message: "" });
+
+    const showToast = useCallback((type: "success" | "error", message: string) => {
+        setToast({ show: true, type, message });
+        setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000);
+    }, []);
 
     /* modal state */
     const [showModal, setShowModal] = useState(false);
-    const [newName, setNewName] = useState("");
+    const [newCategoryName, setNewCategoryName] = useState("");
+    const [newSubCategoryName, setNewSubCategoryName] = useState("");
     const [newBudget, setNewBudget] = useState("");
-    const [selectedIcon, setSelectedIcon] = useState(0);
-    const [selectedColor, setSelectedColor] = useState(0);
 
-    const handleCategoryChange = (name: string, value: string) => {
-        setCategoryList((prev) =>
-            prev.map((c) => (c.name === name ? { ...c, budget: Number(value) || 0 } : c))
+    /* ── Fetch on mount ────────────────────────── */
+    useEffect(() => {
+        getCategories()
+            .then((res) => {
+                // Handle both wrapped { data: { ... } } and direct response
+                const data = (res as unknown as { data?: typeof res })?.data ?? res;
+                setDailyBudget(data.daily_budget);
+                setMonthlyBudget(data.monthly_budget);
+                setCategories(data.categories);
+                // Expand all groups initially
+                const names = new Set(data.categories.map((c: CategoryItem) => c.category_name));
+                setExpandedGroups(names);
+            })
+            .catch((err) => {
+                console.error("Failed to fetch categories:", err);
+                setError(err instanceof Error ? err.message : "Failed to load budget data");
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+    /* ── Grouped categories ────────────────────── */
+    const groups = useMemo(() => groupByCategory(categories), [categories]);
+
+    const totalBudget = useMemo(
+        () => categories.reduce((sum, c) => sum + c.budget, 0),
+        [categories]
+    );
+
+    /* ── Handlers ──────────────────────────────── */
+    const parseCurrency = (value: string): number => {
+        return Number(value.replace(/\./g, "")) || 0;
+    };
+
+    const handleBudgetChange = (categoryName: string, subCategoryName: string, value: string) => {
+        setCategories((prev) =>
+            prev.map((c) =>
+                c.category_name === categoryName && c.sub_category_name === subCategoryName
+                    ? { ...c, budget: parseCurrency(value) }
+                    : c
+            )
         );
     };
 
+    const toggleGroup = (name: string) => {
+        setExpandedGroups((prev) => {
+            const next = new Set(prev);
+            if (next.has(name)) next.delete(name);
+            else next.add(name);
+            return next;
+        });
+    };
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            await updateCategories({
+                daily_budget: dailyBudget,
+                monthly_budget: monthlyBudget,
+                categories,
+            });
+            showToast("success", "Budget berhasil disimpan!");
+        } catch (err) {
+            console.error("Failed to save budget:", err);
+            showToast("error", err instanceof Error ? err.message : "Gagal menyimpan budget");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const formatCurrency = (value: number) => new Intl.NumberFormat("id-ID").format(value);
+
     const openModal = () => {
-        setNewName("");
+        setNewCategoryName("");
+        setNewSubCategoryName("");
         setNewBudget("");
-        setSelectedIcon(0);
-        setSelectedColor(0);
         setShowModal(true);
     };
 
     const handleAddCategory = () => {
-        if (!newName.trim()) return;
-        const color = colorOptions[selectedColor];
-        const icon = iconOptions[selectedIcon];
-        const newCat: Category = {
-            name: newName.trim(),
-            iconName: icon.name,
-            icon: icon.icon,
-            color: color.text,
-            bgColor: color.bg,
+        if (!newCategoryName.trim() || !newSubCategoryName.trim()) return;
+        const newItem: CategoryItem = {
+            category_name: newCategoryName.trim(),
+            sub_category_name: newSubCategoryName.trim(),
             budget: Number(newBudget) || 0,
         };
-        setCategoryList((prev) => [...prev, newCat]);
+        setCategories((prev) => [...prev, newItem]);
+        setExpandedGroups((prev) => new Set(prev).add(newItem.category_name));
         setShowModal(false);
     };
 
-    const handleSave = () => {
-        const budget = {
-            dailyLimit,
-            monthlyLimit,
-            categories: categoryList.map((c) => ({ name: c.name, budget: c.budget })),
-        };
-        console.log("Saving budget:", budget);
-    };
+    /* existing category names for suggestions */
+    const existingCategoryNames = useMemo(
+        () => Array.from(new Set(categories.map((c) => c.category_name))),
+        [categories]
+    );
 
-    const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat("id-ID").format(value);
-    };
+    /* ── Loading state ─────────────────────────── */
+    if (loading) {
+        return (
+            <div className="relative flex min-h-dvh w-full flex-col max-w-[430px] mx-auto bg-white dark:bg-background-dark shadow-2xl items-center justify-center">
+                <svg className="animate-spin size-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                <p className="mt-3 text-sm text-muted font-medium">Loading budget...</p>
+            </div>
+        );
+    }
+
+    /* ── Error state ───────────────────────────── */
+    if (error) {
+        return (
+            <div className="relative flex min-h-dvh w-full flex-col max-w-[430px] mx-auto bg-white dark:bg-background-dark shadow-2xl items-center justify-center p-6">
+                <div className="text-4xl mb-4">⚠️</div>
+                <p className="text-sm text-red-500 font-medium text-center">{error}</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-6 py-2 bg-primary text-[#131811] font-bold rounded-xl text-sm"
+                >
+                    Retry
+                </button>
+            </div>
+        );
+    }
 
     return (
-        <div className="relative flex min-h-dvh w-full flex-col max-w-[430px] mx-auto bg-white dark:bg-background-dark shadow-2xl">
+        <div className="relative flex h-dvh w-full flex-col max-w-[430px] mx-auto bg-white dark:bg-background-dark shadow-2xl">
+            {/* Toast Notification */}
+            <div
+                className={`fixed top-0 left-0 right-0 z-[60] max-w-[430px] mx-auto transition-all duration-500 ease-out ${toast.show ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+                    }`}
+            >
+                <div className={`mx-4 mt-4 px-4 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 ${toast.type === "success"
+                    ? "bg-emerald-500 text-white shadow-emerald-500/30"
+                    : "bg-red-500 text-white shadow-red-500/30"
+                    }`}>
+                    <div className={`size-8 rounded-full flex items-center justify-center flex-shrink-0 ${toast.type === "success" ? "bg-white/20" : "bg-white/20"
+                        }`}>
+                        {toast.type === "success" ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" className="size-4">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" className="size-4">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        )}
+                    </div>
+                    <span className="text-sm font-bold">{toast.message}</span>
+                </div>
+            </div>
+
             {/* Header */}
             <header className="sticky top-0 z-10 flex items-center justify-between bg-white/80 dark:bg-background-dark/80 ios-blur px-4 py-4 border-b border-border-light dark:border-border-dark">
                 <Link
@@ -195,10 +279,11 @@ export default function BudgetPage() {
                                 <div className="flex items-center justify-center gap-1">
                                     <span className="text-xl font-extrabold text-primary">Rp</span>
                                     <input
-                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-20 text-center dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        type="number"
-                                        value={dailyLimit}
-                                        onChange={(e) => setDailyLimit(Number(e.target.value) || 0)}
+                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-24 text-center dark:text-white"
+                                        type="text"
+                                        inputMode="numeric"
+                                        value={formatCurrency(dailyBudget)}
+                                        onChange={(e) => setDailyBudget(parseCurrency(e.target.value))}
                                     />
                                 </div>
                             </div>
@@ -207,22 +292,23 @@ export default function BudgetPage() {
                                 <div className="flex items-center justify-center gap-1">
                                     <span className="text-xl font-extrabold text-primary">Rp</span>
                                     <input
-                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-28 text-center dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        type="number"
-                                        value={monthlyLimit}
-                                        onChange={(e) => setMonthlyLimit(Number(e.target.value) || 0)}
+                                        className="bg-transparent border-none text-2xl font-extrabold focus:ring-0 focus:outline-none p-0 w-32 text-center dark:text-white"
+                                        type="text"
+                                        inputMode="numeric"
+                                        value={formatCurrency(monthlyBudget)}
+                                        onChange={(e) => setMonthlyBudget(parseCurrency(e.target.value))}
                                     />
                                 </div>
                             </div>
                         </div>
                         <p className="text-[10px] text-[#131811]/40 dark:text-white/40 mt-4 text-center">
-                            {t("remainingBalance")} <span className="font-bold">Rp {formatCurrency(840000)}</span>
+                            Total Budget Kategori: <span className="font-bold">Rp {formatCurrency(totalBudget)}</span>
                         </p>
                     </div>
                 </section>
 
-                {/* Categories */}
-                <section className="space-y-4">
+                {/* Category Groups */}
+                <section className="space-y-3">
                     <div className="flex items-center justify-between px-1">
                         <h3 className="text-sm font-extrabold text-[#131811]/50 dark:text-white/50 uppercase tracking-widest">{t("categories")}</h3>
                         <button
@@ -238,29 +324,72 @@ export default function BudgetPage() {
                         </button>
                     </div>
 
-                    <div className="space-y-3">
-                        {categoryList.map((cat) => (
-                            <div key={cat.name} className="p-4 bg-white dark:bg-white/5 rounded-xl border border-primary/5 shadow-sm">
-                                <div className="flex items-center justify-between">
+                    {groups.map((group) => {
+                        const style = getStyle(group.category_name);
+                        const isExpanded = expandedGroups.has(group.category_name);
+
+                        return (
+                            <div key={group.category_name} className="bg-white dark:bg-white/5 rounded-xl border border-primary/5 shadow-sm overflow-hidden">
+                                {/* Group Header */}
+                                <button
+                                    onClick={() => toggleGroup(group.category_name)}
+                                    className="w-full flex items-center justify-between p-4 hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors"
+                                >
                                     <div className="flex items-center gap-3">
-                                        <div className={`size-10 rounded-lg ${cat.bgColor} flex items-center justify-center ${cat.color}`}>
-                                            {cat.icon}
+                                        <div className={`size-10 rounded-lg ${style.bg} flex items-center justify-center ${style.text}`}>
+                                            {icons[style.iconKey]}
                                         </div>
-                                        <span className="font-bold dark:text-white">{cat.name}</span>
+                                        <div className="text-left">
+                                            <span className="font-bold text-sm dark:text-white block">{group.category_name}</span>
+                                            <span className="text-[10px] text-muted">
+                                                {group.items.length} sub · Rp {formatCurrency(group.total)}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center bg-gray-50 dark:bg-white/5 rounded-lg px-2 py-1 border border-primary/5">
-                                        <span className="text-xs font-bold mr-1 text-gray-400 dark:text-gray-300">Rp</span>
-                                        <input
-                                            className="w-20 bg-transparent border-none p-0 text-sm font-extrabold focus:ring-0 focus:outline-none text-right dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                            type="number"
-                                            value={cat.budget}
-                                            onChange={(e) => handleCategoryChange(cat.name, e.target.value)}
-                                        />
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth={2}
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className={`size-4 text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                                    >
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </button>
+
+                                {/* Sub-category items */}
+                                {isExpanded && (
+                                    <div className="border-t border-primary/5">
+                                        {group.items.map((item, idx) => (
+                                            <div
+                                                key={`${item.category_name}-${item.sub_category_name}`}
+                                                className={`flex items-center justify-between px-4 py-3 ${idx < group.items.length - 1 ? "border-b border-primary/5" : ""}`}
+                                            >
+                                                <span className="text-sm dark:text-white/80 pl-13">
+                                                    {item.sub_category_name}
+                                                </span>
+                                                <div className="flex items-center bg-gray-50 dark:bg-white/5 rounded-lg px-2 py-1 border border-primary/5">
+                                                    <span className="text-xs font-bold mr-1 text-gray-400 dark:text-gray-300">Rp</span>
+                                                    <input
+                                                        className="w-24 bg-transparent border-none p-0 text-sm font-extrabold focus:ring-0 focus:outline-none text-right dark:text-white"
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        value={formatCurrency(item.budget)}
+                                                        onChange={(e) =>
+                                                            handleBudgetChange(item.category_name, item.sub_category_name, e.target.value)
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                </div>
+                                )}
                             </div>
-                        ))}
-                    </div>
+                        );
+                    })}
                 </section>
             </main>
 
@@ -268,13 +397,21 @@ export default function BudgetPage() {
             <footer className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white/90 dark:bg-background-dark/90 ios-blur border-t border-border-light dark:border-border-dark p-5">
                 <button
                     onClick={handleSave}
-                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-xl shadow-lg shadow-primary/20 text-[#131811] font-extrabold text-lg flex items-center justify-center gap-2"
+                    disabled={saving}
+                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-xl shadow-lg shadow-primary/20 text-[#131811] font-extrabold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="size-6">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    {t("saveBudget")}
+                    {saving ? (
+                        <svg className="animate-spin size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="size-6">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    )}
+                    {saving ? "Saving..." : t("saveBudget")}
                 </button>
             </footer>
 
@@ -302,16 +439,49 @@ export default function BudgetPage() {
                         <div className="space-y-2 mb-5">
                             <label className="text-sm font-bold text-muted">{t("categoryName")}</label>
                             <input
-                                value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
                                 className="block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-white/5 h-12 px-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400"
                                 placeholder={t("categoryNamePlaceholder")}
+                                type="text"
+                                list="category-suggestions"
+                            />
+                            <datalist id="category-suggestions">
+                                {existingCategoryNames.map((name) => (
+                                    <option key={name} value={name} />
+                                ))}
+                            </datalist>
+                            {/* Quick select existing categories */}
+                            <div className="flex flex-wrap gap-1.5 pt-1">
+                                {existingCategoryNames.map((name) => (
+                                    <button
+                                        key={name}
+                                        onClick={() => setNewCategoryName(name)}
+                                        className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-colors ${newCategoryName === name
+                                            ? "bg-primary/20 border-primary text-primary"
+                                            : "bg-gray-50/80 dark:bg-white/5 border-transparent text-muted hover:border-primary"
+                                            }`}
+                                    >
+                                        {name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Sub Category Name */}
+                        <div className="space-y-2 mb-5">
+                            <label className="text-sm font-bold text-muted">Sub Kategori</label>
+                            <input
+                                value={newSubCategoryName}
+                                onChange={(e) => setNewSubCategoryName(e.target.value)}
+                                className="block w-full rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-white/5 h-12 px-4 text-base focus:border-primary focus:ring-primary placeholder:text-gray-400"
+                                placeholder="Nama sub kategori"
                                 type="text"
                             />
                         </div>
 
                         {/* Budget Amount */}
-                        <div className="space-y-2 mb-5">
+                        <div className="space-y-2 mb-6">
                             <label className="text-sm font-bold text-muted">{t("budgetAmount")}</label>
                             <div className="flex items-center rounded-xl border border-border-light dark:border-border-dark bg-gray-50/50 dark:bg-white/5 h-12 px-4">
                                 <span className="text-sm font-bold text-primary mr-2">Rp</span>
@@ -326,60 +496,16 @@ export default function BudgetPage() {
                             </div>
                         </div>
 
-                        {/* Icon Picker */}
-                        <div className="space-y-2 mb-5">
-                            <label className="text-sm font-bold text-muted">{t("chooseIcon")}</label>
-                            <div className="grid grid-cols-8 gap-2">
-                                {iconOptions.map((opt, i) => (
-                                    <button
-                                        key={opt.name}
-                                        onClick={() => setSelectedIcon(i)}
-                                        className={`size-10 rounded-lg flex items-center justify-center transition-all ${selectedIcon === i
-                                            ? `${colorOptions[selectedColor].bg} ${colorOptions[selectedColor].text} ring-2 ${colorOptions[selectedColor].ring}`
-                                            : "bg-gray-100 dark:bg-white/5 text-gray-500"
-                                            }`}
-                                    >
-                                        {opt.icon}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Color Picker */}
-                        <div className="space-y-2 mb-6">
-                            <label className="text-sm font-bold text-muted">{t("chooseColor")}</label>
-                            <div className="flex gap-3">
-                                {colorOptions.map((c, i) => (
-                                    <button
-                                        key={c.name}
-                                        onClick={() => setSelectedColor(i)}
-                                        className={`size-8 rounded-full transition-all ${c.bg} ${selectedColor === i
-                                            ? `ring-2 ring-offset-2 ${c.ring}`
-                                            : ""
-                                            }`}
-                                    >
-                                        <span className={`block size-full rounded-full ${c.text}`}>
-                                            {selectedColor === i && (
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" className="size-full p-1.5">
-                                                    <polyline points="20 6 9 17 4 12" />
-                                                </svg>
-                                            )}
-                                        </span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
                         {/* Preview */}
-                        {newName.trim() && (
+                        {newCategoryName.trim() && newSubCategoryName.trim() && (
                             <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-primary/5 mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className={`size-10 rounded-lg ${colorOptions[selectedColor].bg} flex items-center justify-center ${colorOptions[selectedColor].text}`}>
-                                        {iconOptions[selectedIcon].icon}
+                                    <div className={`size-10 rounded-lg ${getStyle(newCategoryName).bg} flex items-center justify-center ${getStyle(newCategoryName).text}`}>
+                                        {icons[getStyle(newCategoryName).iconKey]}
                                     </div>
                                     <div>
-                                        <span className="font-bold block">{newName}</span>
-                                        <span className="text-xs text-muted">Rp {formatCurrency(Number(newBudget) || 0)}</span>
+                                        <span className="font-bold block text-sm">{newCategoryName}</span>
+                                        <span className="text-xs text-muted">{newSubCategoryName} · Rp {formatCurrency(Number(newBudget) || 0)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -395,7 +521,7 @@ export default function BudgetPage() {
                             </button>
                             <button
                                 onClick={handleAddCategory}
-                                disabled={!newName.trim()}
+                                disabled={!newCategoryName.trim() || !newSubCategoryName.trim()}
                                 className="flex-1 py-3.5 rounded-xl bg-primary text-[#131811] font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform disabled:opacity-40 disabled:active:scale-100"
                             >
                                 {t("addCategory")}

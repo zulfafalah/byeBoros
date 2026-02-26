@@ -22,6 +22,21 @@ export async function getCategories(): Promise<CategoryResponse> {
     });
 }
 
+export interface UpdateCategoryPayload {
+    daily_budget: number;
+    monthly_budget: number;
+    categories: CategoryItem[];
+}
+
+/**
+ * Update categories and budget limits in the Master Data sheet.
+ */
+export async function updateCategories(payload: UpdateCategoryPayload) {
+    return api.post("/api/category", payload, {
+        headers: { "X-Sheet-Name": "Master Data" },
+    });
+}
+
 export interface IncomeCategoryResponse {
     categories: string[];
 }
