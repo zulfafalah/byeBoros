@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useState, useEffect } from "react";
+import { getTransactions } from "@/lib/api/transactions";
+
 
 /* ── SVG Icons ────────────────────────────────────── */
 const ChevronLeftIcon = () => (
@@ -73,7 +76,7 @@ const RestaurantIcon = () => (
 
 /* ── Data Types ───────────────────────────────────── */
 type Transaction = {
-    id: number;
+    id: number | string;
     name: string;
     time: string;
     category: string;
@@ -84,128 +87,46 @@ type Transaction = {
     badge: string;
 };
 
-/* ── Transaction Data (grouped by date) ───────────── */
-const transactionGroups: { label: string; transactions: Transaction[] }[] = [
-    {
-        label: "Hari Ini",
-        transactions: [
-            {
-                id: 1,
-                name: "Tokopedia",
-                time: "14:45",
-                category: "Belanja",
-                amount: -999000,
-                icon: <ShoppingBagIcon />,
-                iconBg: "bg-red-50 dark:bg-red-500/10",
-                iconColor: "text-red-500",
-                badge: "PENGELUARAN",
-            },
-            {
-                id: 2,
-                name: "Gaji Bulanan",
-                time: "09:00",
-                category: "Pemasukan",
-                amount: 15000000,
-                icon: <WalletIcon />,
-                iconBg: "bg-primary/10",
-                iconColor: "text-primary",
-                badge: "PEMASUKAN",
-            },
-        ],
-    },
-    {
-        label: "Kemarin",
-        transactions: [
-            {
-                id: 3,
-                name: "Starbucks Coffee",
-                time: "16:12",
-                category: "Makanan & Minuman",
-                amount: -65000,
-                icon: <CoffeeIcon />,
-                iconBg: "bg-blue-50 dark:bg-blue-500/10",
-                iconColor: "text-blue-500",
-                badge: "PENGELUARAN",
-            },
-            {
-                id: 4,
-                name: "Grab Ride",
-                time: "11:30",
-                category: "Transportasi",
-                amount: -42000,
-                icon: <CarIcon />,
-                iconBg: "bg-orange-50 dark:bg-orange-500/10",
-                iconColor: "text-orange-500",
-                badge: "PENGELUARAN",
-            },
-        ],
-    },
-    {
-        label: "18 Feb 2026",
-        transactions: [
-            {
-                id: 5,
-                name: "Gym Membership",
-                time: "08:00",
-                category: "Kesehatan",
-                amount: -350000,
-                icon: <GymIcon />,
-                iconBg: "bg-purple-50 dark:bg-purple-500/10",
-                iconColor: "text-purple-500",
-                badge: "SUBSCRIPTION",
-            },
-            {
-                id: 6,
-                name: "Tiket Pesawat",
-                time: "23:45",
-                category: "Travel",
-                amount: -2450000,
-                icon: <FlightIcon />,
-                iconBg: "bg-indigo-50 dark:bg-indigo-500/10",
-                iconColor: "text-indigo-500",
-                badge: "PENGELUARAN",
-            },
-        ],
-    },
-    {
-        label: "15 Feb 2026",
-        transactions: [
-            {
-                id: 7,
-                name: "Bayar Kos",
-                time: "10:00",
-                category: "Tempat Tinggal",
-                amount: -3500000,
-                icon: <HomeIcon />,
-                iconBg: "bg-blue-50 dark:bg-blue-500/10",
-                iconColor: "text-blue-600",
-                badge: "PENGELUARAN",
-            },
-            {
-                id: 8,
-                name: "Warteg Makan Siang",
-                time: "12:30",
-                category: "Makanan",
-                amount: -25000,
-                icon: <RestaurantIcon />,
-                iconBg: "bg-orange-100 dark:bg-orange-900/30",
-                iconColor: "text-orange-600",
-                badge: "PENGELUARAN",
-            },
-            {
-                id: 9,
-                name: "Transfer dari Teman",
-                time: "15:00",
-                category: "Pemasukan",
-                amount: 500000,
-                icon: <WalletIcon />,
-                iconBg: "bg-primary/10",
-                iconColor: "text-primary",
-                badge: "PEMASUKAN",
-            },
-        ],
-    },
-];
+/* ── Category Icon Mapper ─────────────────────────── */
+function getCategoryDesign(category: string) {
+    const defaultDesign = { icon: <ShoppingBagIcon />, iconBg: "bg-gray-50 dark:bg-gray-800/10", iconColor: "text-gray-500" };
+    if (!category) return defaultDesign;
+
+    const lower = category.toLowerCase();
+
+    // Food & Groceries
+    if (lower.includes("makan") || lower.includes("minum") || lower.includes("restoran") || lower.includes("jajanan")) return { icon: <RestaurantIcon />, iconBg: "bg-orange-100 dark:bg-orange-900/30", iconColor: "text-orange-600" };
+    if (lower.includes("cafe") || lower.includes("coffee")) return { icon: <CoffeeIcon />, iconBg: "bg-amber-100 dark:bg-amber-900/30", iconColor: "text-amber-600" };
+    if (lower.includes("belanja") || lower.includes("groceries") || lower.includes("baju") || lower.includes("skincare") || lower.includes("gadget") || lower.includes("aksesoris")) return { icon: <ShoppingBagIcon />, iconBg: "bg-pink-50 dark:bg-pink-500/10", iconColor: "text-pink-500" };
+
+    // Housing & Living
+    if (lower.includes("sewa") || lower.includes("kpr") || lower.includes("listrik") || lower.includes("air") || lower.includes("kebersihan") || lower.includes("maintenance") || lower.includes("tinggal") || lower.includes("kos")) return { icon: <HomeIcon />, iconBg: "bg-blue-50 dark:bg-blue-500/10", iconColor: "text-blue-600" };
+
+    // Transportation
+    if (lower.includes("bensin") || lower.includes("bbm") || lower.includes("parkir") || lower.includes("tol") || lower.includes("transportasi") || lower.includes("service") || lower.includes("motor") || lower.includes("mobil")) return { icon: <CarIcon />, iconBg: "bg-teal-50 dark:bg-teal-500/10", iconColor: "text-teal-600" };
+    if (lower.includes("pesawat") || lower.includes("flight") || lower.includes("travel")) return { icon: <FlightIcon />, iconBg: "bg-indigo-50 dark:bg-indigo-500/10", iconColor: "text-indigo-500" };
+
+    // Health
+    if (lower.includes("obat") || lower.includes("vitamin") || lower.includes("bpjs") || lower.includes("asuransi kesehatan") || lower.includes("dokter") || lower.includes("sehat")) return { icon: <GymIcon />, iconBg: "bg-emerald-50 dark:bg-emerald-500/10", iconColor: "text-emerald-600" };
+
+    // Digital, Bills & Subscriptions
+    if (lower.includes("internet") || lower.includes("wifi") || lower.includes("pulsa") || lower.includes("paket data") || lower.includes("streaming") || lower.includes("cloud") || lower.includes("software")) return { icon: <WalletIcon />, iconBg: "bg-violet-50 dark:bg-violet-500/10", iconColor: "text-violet-600" };
+
+    // Work & Education
+    if (lower.includes("peralatan kerja") || lower.includes("coworking") || lower.includes("kursus") || lower.includes("buku") || lower.includes("workshop")) return { icon: <WalletIcon />, iconBg: "bg-cyan-50 dark:bg-cyan-500/10", iconColor: "text-cyan-600" };
+
+    // Entertainment, Hobbies
+    if (lower.includes("nonton") || lower.includes("hobi") || lower.includes("gym")) return { icon: <GymIcon />, iconBg: "bg-purple-50 dark:bg-purple-500/10", iconColor: "text-purple-500" };
+
+    // Social, Family & Charity
+    if (lower.includes("hadiah") || lower.includes("donasi") || lower.includes("kondangan") || lower.includes("thr") || lower.includes("orang tua") || lower.includes("adik") || lower.includes("kakak") || lower.includes("saudara")) return { icon: <ShoppingBagIcon />, iconBg: "bg-rose-50 dark:bg-rose-500/10", iconColor: "text-rose-500" };
+
+    // Financial & Income
+    if (lower.includes("cicilan") || lower.includes("piutang") || lower.includes("admin") || lower.includes("darurat")) return { icon: <WalletIcon />, iconBg: "bg-slate-100 dark:bg-slate-800/10", iconColor: "text-slate-600" };
+    if (lower.includes("gaji") || lower.includes("pemasukan") || lower.includes("income") || lower.includes("salary")) return { icon: <WalletIcon />, iconBg: "bg-primary/10", iconColor: "text-primary" };
+
+    return defaultDesign;
+}
 
 /* ── Helpers ──────────────────────────────────────── */
 function formatAmount(amount: number) {
@@ -221,6 +142,46 @@ function formatAmount(amount: number) {
 /* ── Page ─────────────────────────────────────────── */
 export default function TransactionsPage() {
     const t = useTranslations("Transactions");
+    const [transactionGroups, setTransactionGroups] = useState<{ label: string; transactions: Transaction[] }[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                // Fetch all transactions without date filter
+                const res = await getTransactions();
+
+                if (res?.data?.transactions) {
+                    const mappedGroups = res.data.transactions.map((group) => {
+                        return {
+                            label: group.group_label,
+                            transactions: group.items.map((item) => {
+                                const design = getCategoryDesign(item.category);
+                                return {
+                                    id: item.id,
+                                    name: item.transaction_name,
+                                    time: item.time,
+                                    category: item.category,
+                                    amount: item.amount,
+                                    icon: design.icon,
+                                    iconBg: design.iconBg,
+                                    iconColor: design.iconColor,
+                                    badge: item.type === "expense" ? "PENGELUARAN" : "PEMASUKAN"
+                                };
+                            })
+                        };
+                    });
+                    setTransactionGroups(mappedGroups);
+                }
+            } catch (error) {
+                console.error("Failed to fetch transactions:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTransactions();
+    }, []);
 
     return (
         <div className="relative flex h-dvh w-full flex-col overflow-hidden max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
@@ -269,46 +230,59 @@ export default function TransactionsPage() {
 
             {/* Scrollable Content */}
             <main className="flex-1 overflow-y-auto px-4 pb-8 space-y-6 scrollbar-hide">
-                {transactionGroups.map((group) => (
-                    <section key={group.label}>
-                        <h3 className="text-sm font-extrabold text-[#131811]/50 dark:text-white/50 uppercase tracking-widest mb-3 px-1">
-                            {group.label}
-                        </h3>
-                        <div className="space-y-3">
-                            {group.transactions.map((tx) => (
-                                <div
-                                    key={tx.id}
-                                    className="flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark shadow-sm transition-transform active:scale-[0.98]"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className={`size-12 rounded-xl ${tx.iconBg} ${tx.iconColor} flex items-center justify-center`}>
-                                            {tx.icon}
+                {isLoading ? (
+                    <div className="flex justify-center items-center h-32">
+                        <svg className="animate-spin size-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                    </div>
+                ) : transactionGroups.length === 0 ? (
+                    <div className="text-center text-muted font-medium py-10">
+                        {t("noTransactions") || "No transactions found."}
+                    </div>
+                ) : (
+                    transactionGroups.map((group) => (
+                        <section key={group.label}>
+                            <h3 className="text-sm font-extrabold text-[#131811]/50 dark:text-white/50 uppercase tracking-widest mb-3 px-1">
+                                {group.label}
+                            </h3>
+                            <div className="space-y-3">
+                                {group.transactions.map((tx) => (
+                                    <div
+                                        key={tx.id}
+                                        className="flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark shadow-sm transition-transform active:scale-[0.98]"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className={`size-12 rounded-xl ${tx.iconBg} ${tx.iconColor} flex items-center justify-center`}>
+                                                {tx.icon}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-base dark:text-white">{tx.name}</h4>
+                                                <p className="text-xs text-muted">
+                                                    {tx.category} • {tx.time}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-base dark:text-white">{tx.name}</h4>
-                                            <p className="text-xs text-muted">
-                                                {tx.category} • {tx.time}
+                                        <div className="text-right">
+                                            <p className={`font-extrabold text-base ${tx.amount >= 0 ? "text-primary" : "text-expense-red"}`}>
+                                                {formatAmount(tx.amount)}
                                             </p>
+                                            <span
+                                                className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${tx.amount >= 0
+                                                    ? "bg-primary/20 text-primary"
+                                                    : "bg-red-100 dark:bg-red-500/20 text-red-600"
+                                                    }`}
+                                            >
+                                                {tx.badge}
+                                            </span>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className={`font-extrabold text-base ${tx.amount >= 0 ? "text-primary" : "text-expense-red"}`}>
-                                            {formatAmount(tx.amount)}
-                                        </p>
-                                        <span
-                                            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${tx.amount >= 0
-                                                ? "bg-primary/20 text-primary"
-                                                : "bg-red-100 dark:bg-red-500/20 text-red-600"
-                                                }`}
-                                        >
-                                            {tx.badge}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                ))}
+                                ))}
+                            </div>
+                        </section>
+                    ))
+                )}
             </main>
         </div>
     );

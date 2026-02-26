@@ -2,7 +2,7 @@ import { api } from "./client";
 import type { TransactionResponse } from "./types";
 
 interface GetTransactionsParams {
-  date: string; // e.g. "2026-02-22"
+  date?: string; // e.g. "2026-02-22"
 }
 
 export interface CreateIncomePayload {
@@ -18,10 +18,9 @@ export interface CreateIncomePayload {
  * Fetch transactions for a given date.
  * Spreadsheet ID and sheet name are automatically injected by the API client.
  */
-export async function getTransactions({
-  date,
-}: GetTransactionsParams): Promise<TransactionResponse> {
-  return api.get<TransactionResponse>(`/api/transaction?date=${date}`);
+export async function getTransactions(params?: GetTransactionsParams): Promise<TransactionResponse> {
+  const query = params?.date ? `?date=${params.date}` : "";
+  return api.get<TransactionResponse>(`/api/transaction${query}`);
 }
 
 /**
