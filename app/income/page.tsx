@@ -1,20 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { createIncome } from "@/lib/api/transactions";
+import { getIncomeCategories } from "@/lib/api/category";
 
 export default function IncomePage() {
     const t = useTranslations("Income");
     const router = useRouter();
-    const QUICK_TAGS = [t("salary"), t("freelance"), t("gift"), t("dividends")];
+    const [quickTags, setQuickTags] = useState<string[]>([]);
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
     const [note, setNote] = useState("");
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        getIncomeCategories()
+            .then((res) => setQuickTags(res.categories))
+            .catch((err) => console.error("Failed to fetch income categories:", err));
+    }, []);
 
     const handleTagClick = (tag: string) => {
         setSelectedTag(selectedTag === tag ? null : tag);
@@ -175,7 +182,7 @@ export default function IncomePage() {
 
                     {/* Quick Selection Tags */}
                     <div className="flex flex-wrap gap-2 pt-2">
-                        {QUICK_TAGS.map((tag) => (
+                        {quickTags.map((tag) => (
                             <button
                                 key={tag}
                                 onClick={() => handleTagClick(tag)}

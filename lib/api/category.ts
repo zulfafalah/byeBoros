@@ -21,3 +21,16 @@ export async function getCategories(): Promise<CategoryResponse> {
         headers: { "X-Sheet-Name": "Master Data" },
     });
 }
+
+export interface IncomeCategoryResponse {
+    categories: string[];
+}
+
+/**
+ * Fetch income categories from the Master Data sheet.
+ */
+export async function getIncomeCategories(): Promise<IncomeCategoryResponse> {
+    return api.get<IncomeCategoryResponse>("/api/category/income", {
+        headers: { "X-Sheet-Name": "Master Data" },
+    });
+}
