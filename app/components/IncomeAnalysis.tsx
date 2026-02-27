@@ -23,7 +23,7 @@ const SOURCE_COLORS = [
     { color: "bg-accent-purple", dot: "bg-accent-purple" },
 ];
 
-const periods = ["Day", "Month", "3 Months", "6 Months", "Year", "Custom"];
+const periods = ["Day", "Month", "3 Months", "6 Months", "Year"];
 
 /* ── SVG donut helpers ───────────────────────────── */
 const RADIUS = 90;

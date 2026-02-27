@@ -21,7 +21,7 @@ const PRIORITY_COLORS = [
     { color: "bg-primary", dot: "bg-primary" },
 ];
 
-const periods = ["Day", "Month", "3 Months", "6 Months", "Year", "Custom"];
+const periods = ["Day", "Month", "3 Months", "6 Months", "Year"];
 
 /* ── SVG donut helpers ───────────────────────────── */
 const RADIUS = 90;
