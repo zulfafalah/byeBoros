@@ -18,9 +18,9 @@ export interface CreateIncomePayload {
  * Fetch transactions for a given date.
  * Spreadsheet ID and sheet name are automatically injected by the API client.
  */
-export async function getTransactions(params?: GetTransactionsParams): Promise<TransactionResponse> {
+export async function getTransactions(params?: GetTransactionsParams, options?: { headers?: Record<string, string> }): Promise<TransactionResponse> {
   const query = params?.date ? `?date=${params.date}` : "";
-  return api.get<TransactionResponse>(`/api/transaction${query}`);
+  return api.get<TransactionResponse>(`/api/transaction${query}`, options);
 }
 
 /**

@@ -149,11 +149,21 @@ export default function TransactionsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedTransaction, setSelectedTransaction] = useState<TransactionItem | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const today = new Date();
+    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+    const [currentYear, setCurrentYear] = useState(today.getFullYear());
     const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>({
         show: false,
         type: "success",
         message: "",
     });
+
+    const INDONESIAN_MONTHS = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
 
     const showToast = useCallback((type: "success" | "error", message: string) => {
         setToast({ show: true, type, message });
@@ -171,13 +181,73 @@ export default function TransactionsPage() {
     };
 
     const handleUpdateSuccess = () => {
+        const sheetName = INDONESIAN_MONTHS[currentMonth];
+        fetchTransactions(selectedDate || undefined, sheetName);
+    };
+
+    const handleDateSelect = (date: string) => {
+        setSelectedDate(date);
+        setIsDateModalOpen(false);
+        const sheetName = INDONESIAN_MONTHS[currentMonth];
+        fetchTransactions(date, sheetName);
+    };
+
+    const handleClearDateFilter = () => {
+        setSelectedDate(null);
+        // Reset to current month
+        const now = new Date();
+        setCurrentMonth(now.getMonth());
+        setCurrentYear(now.getFullYear());
+        setIsDateModalOpen(false);
         fetchTransactions();
     };
 
-    const fetchTransactions = async () => {
+    const handlePrevMonth = () => {
+        if (currentMonth === 0) {
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
+        } else {
+            setCurrentMonth(currentMonth - 1);
+        }
+    };
+
+    const handleNextMonth = () => {
+        if (currentMonth === 11) {
+            setCurrentMonth(0);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(currentMonth + 1);
+        }
+    };
+
+    // Generate calendar days for current month
+    const generateCalendarDays = () => {
+        const firstDay = new Date(currentYear, currentMonth, 1);
+        const lastDay = new Date(currentYear, currentMonth + 1, 0);
+        const firstDayOfWeek = firstDay.getDay();
+        const daysInMonth = lastDay.getDate();
+
+        const days: (number | null)[] = [];
+        
+        // Add empty cells for days before month starts
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            days.push(null);
+        }
+        
+        // Add all days of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+            days.push(day);
+        }
+        
+        return days;
+    };
+
+    const fetchTransactions = async (date?: string, sheetName?: string) => {
+        setIsLoading(true);
         try {
-            // Fetch all transactions without date filter
-            const res = await getTransactions();
+            // Fetch transactions with optional date filter and custom sheet name
+            const options = sheetName ? { headers: { "X-Sheet-Name": sheetName } } : undefined;
+            const res = await getTransactions(date ? { date } : undefined, options);
 
             if (res?.data?.transactions) {
                 const mappedGroups = res.data.transactions.map((group) => {
@@ -294,8 +364,15 @@ export default function TransactionsPage() {
                         <FilterIcon />
                         <span>{t("filter")}</span>
                     </button>
-                    <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
-                        <span>{t("date")}</span>
+                    <button 
+                        onClick={() => setIsDateModalOpen(true)}
+                        className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-4 font-medium text-sm active:scale-95 transition-transform ${
+                            selectedDate 
+                                ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                                : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark"
+                        }`}
+                    >
+                        <span>{selectedDate ? new Date(selectedDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : t("date")}</span>
                         <ChevronDownIcon />
                     </button>
                     <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
@@ -366,6 +443,104 @@ export default function TransactionsPage() {
                     ))
                 )}
             </main>
+
+            {/* Date Filter Modal - Calendar View */}
+            {isDateModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
+                    <div className="w-full max-w-[430px] bg-background-light dark:bg-background-dark rounded-t-3xl p-6 animate-slide-up max-h-[80vh] overflow-y-auto">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-extrabold dark:text-white">Pilih Tanggal</h2>
+                            <button
+                                onClick={() => setIsDateModalOpen(false)}
+                                className="size-8 rounded-full bg-card-light dark:bg-card-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-4 dark:text-white">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Clear Filter Button */}
+                        {selectedDate && (
+                            <button
+                                onClick={handleClearDateFilter}
+                                className="w-full mb-4 py-3 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 font-semibold text-sm active:scale-95 transition-transform"
+                            >
+                                Hapus Filter Tanggal
+                            </button>
+                        )}
+
+                        {/* Month Navigation */}
+                        <div className="flex items-center justify-between mb-6">
+                            <button
+                                onClick={handlePrevMonth}
+                                className="size-10 rounded-xl bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-5 dark:text-white">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                            </button>
+                            <div className="text-center">
+                                <h3 className="text-lg font-extrabold dark:text-white">
+                                    {INDONESIAN_MONTHS[currentMonth]} {currentYear}
+                                </h3>
+                                <p className="text-xs text-muted">Sheet: {INDONESIAN_MONTHS[currentMonth]}</p>
+                            </div>
+                            <button
+                                onClick={handleNextMonth}
+                                className="size-10 rounded-xl bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-5 dark:text-white">
+                                    <polyline points="9 18 15 12 9 6" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Calendar Grid */}
+                        <div className="space-y-3">
+                            {/* Day Headers */}
+                            <div className="grid grid-cols-7 gap-2 mb-2">
+                                {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((day) => (
+                                    <div key={day} className="text-center text-xs font-bold text-muted">
+                                        {day}
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Calendar Days */}
+                            <div className="grid grid-cols-7 gap-2">
+                                {generateCalendarDays().map((day, index) => {
+                                    if (day === null) {
+                                        return <div key={`empty-${index}`} />;
+                                    }
+
+                                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                                    const isSelected = selectedDate === dateStr;
+                                    const isToday = today.getDate() === day && today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+                                    return (
+                                        <button
+                                            key={day}
+                                            onClick={() => handleDateSelect(dateStr)}
+                                            className={`aspect-square rounded-xl flex items-center justify-center font-semibold text-sm transition-all active:scale-95 ${
+                                                isSelected
+                                                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                                    : isToday
+                                                    ? "bg-primary/20 text-primary border-2 border-primary"
+                                                    : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
+                                            }`}
+                                        >
+                                            {day}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Edit Transaction Modal */}
             <EditTransactionModal
