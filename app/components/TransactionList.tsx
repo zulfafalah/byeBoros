@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useTransactions } from "@/lib/hooks/useTransactions";
 import type { TransactionItem } from "@/lib/api/types";
+import EditTransactionModal from "./EditTransactionModal";
 
 
 /* ── SVG Icons ────────────────────────────────────── */
@@ -93,15 +95,93 @@ export default function TransactionList() {
 
     const today = new Date().toISOString().split("T")[0];
 
-    const { transactions, isLoading, error } = useTransactions({
+    const { transactions, isLoading, error, refetch } = useTransactions({
         date: today,
     });
+
+    const [selectedTransaction, setSelectedTransaction] = useState<TransactionItem | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>({
+        show: false,
+        type: "success",
+        message: "",
+    });
+
+    const showToast = useCallback((type: "success" | "error", message: string) => {
+        setToast({ show: true, type, message });
+        setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000);
+    }, []);
+
+    const handleTransactionClick = (tx: TransactionItem) => {
+        setSelectedTransaction(tx);
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setSelectedTransaction(null);
+    };
+
+    const handleUpdateSuccess = () => {
+        refetch();
+    };
 
     // Flatten all items from all groups for the "recent" view
     const allItems: TransactionItem[] = transactions.flatMap((g) => g.items);
 
     return (
-        <section>
+        <section className="relative">
+            {/* Toast Notification - Fixed at screen top */}
+            <div
+                className={`fixed top-0 left-0 right-0 z-[60] max-w-[430px] mx-auto transition-all duration-500 ease-out ${
+                    toast.show ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+                }`}
+            >
+                <div
+                    className={`mx-4 mt-4 px-4 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 ${
+                        toast.type === "success"
+                            ? "bg-emerald-500 text-white shadow-emerald-500/30"
+                            : "bg-red-500 text-white shadow-red-500/30"
+                    }`}
+                >
+                    <div
+                        className={`size-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                            toast.type === "success" ? "bg-white/20" : "bg-white/20"
+                        }`}
+                    >
+                        {toast.type === "success" ? (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="size-4"
+                            >
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        ) : (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="size-4"
+                            >
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        )}
+                    </div>
+                    <span className="text-sm font-bold">{toast.message}</span>
+                </div>
+            </div>
+
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold dark:text-white">{t("recentTransactions")}</h2>
                 <Link href="/transactions" className="text-primary text-sm font-bold active:opacity-70 transition-opacity">
@@ -132,9 +212,10 @@ export default function TransactionList() {
                     {allItems.map((tx) => {
                         const style = getCategoryStyle(tx.category);
                         return (
-                            <div
+                            <button
                                 key={tx.id}
-                                className="flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark transition-transform active:scale-[0.98]"
+                                onClick={() => handleTransactionClick(tx)}
+                                className="w-full flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark transition-transform active:scale-[0.98] hover:border-primary cursor-pointer"
                             >
                                 <div className="flex items-center gap-3">
                                     <div
@@ -142,7 +223,7 @@ export default function TransactionList() {
                                     >
                                         {style.icon}
                                     </div>
-                                    <div>
+                                    <div className="text-left">
                                         <p className="text-sm font-bold dark:text-white">{tx.transaction_name}</p>
                                         <p className="text-[11px] text-muted">
                                             {tx.time} • {tx.category}
@@ -155,11 +236,20 @@ export default function TransactionList() {
                                 >
                                     {tx.amount_display}
                                 </p>
-                            </div>
+                            </button>
                         );
                     })}
                 </div>
             )}
+
+            {/* Edit Transaction Modal */}
+            <EditTransactionModal
+                transaction={selectedTransaction}
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                onSuccess={handleUpdateSuccess}
+                showToast={showToast}
+            />
         </section>
     );
 }

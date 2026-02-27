@@ -47,3 +47,31 @@ export interface CreateExpensePayload {
 export async function createExpense(payload: CreateExpensePayload) {
   return api.post("/api/transaction/expense", payload);
 }
+
+export interface UpdateIncomePayload {
+  id: string;
+  type: "income";
+  description: string;
+  category: string;
+  amount: number;
+  transaction_at: string; // e.g. "27/02/2026 20:36:24"
+}
+
+export interface UpdateExpensePayload {
+  id: string;
+  type: "expense";
+  description: string;
+  category: string;
+  priority: string;
+  amount: number;
+  notes?: string;
+  transaction_at: string; // e.g. "27/02/2026 20:36:24"
+}
+
+/**
+ * Update an existing transaction (income or expense).
+ * Spreadsheet ID and sheet name are automatically injected by the API client.
+ */
+export async function updateTransaction(payload: UpdateIncomePayload | UpdateExpensePayload) {
+  return api.put("/api/transaction", payload);
+}

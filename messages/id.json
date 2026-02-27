@@ -65,7 +65,8 @@
         "filter": "Filter",
         "date": "Tanggal",
         "category": "Kategori",
-        "amount": "Jumlah"
+        "amount": "Jumlah",
+        "noTransactions": "Tidak ada transaksi ditemukan."
     },
     "Expense": {
         "title": "Tambah Pengeluaran",

@@ -65,7 +65,8 @@
         "filter": "Filter",
         "date": "Date",
         "category": "Category",
-        "amount": "Amount"
+        "amount": "Amount",
+        "noTransactions": "No transactions found."
     },
     "Expense": {
         "title": "Add New Expense",
