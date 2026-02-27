@@ -1,4 +1,4 @@
-const CACHE_NAME = 'byeboros-v1';
+const CACHE_NAME = 'byeboros-v2';
 const STATIC_ASSETS = [
     '/',
     '/manifest.json',
@@ -6,12 +6,19 @@ const STATIC_ASSETS = [
     '/icons/icon-512.png',
 ];
 
-// Install: cache static assets
+// Install: cache static assets (tolerant — never block install on cache failure)
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+        caches.open(CACHE_NAME).then((cache) =>
+            Promise.allSettled(
+                STATIC_ASSETS.map((url) =>
+                    cache.add(url).catch((err) => {
+                        console.warn('[SW] Failed to cache:', url, err);
+                    })
+                )
+            )
+        ).then(() => self.skipWaiting())
     );
-    self.skipWaiting();
 });
 
 // Activate: clean up old caches
