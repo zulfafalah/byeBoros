@@ -7,12 +7,13 @@ import BottomNav from "../components/BottomNav";
 import ExpenseAnalysis from "../components/ExpenseAnalysis";
 import IncomeAnalysis from "../components/IncomeAnalysis";
 import { getAnalysis } from "@/lib/api/analysis";
-import type { ExpenseAnalysisData, IncomeAnalysisData } from "@/lib/api/analysis";
+import type { ExpenseAnalysisData, IncomeAnalysisData, AnalysisPeriod } from "@/lib/api/analysis";
 
 export default function AnalysisPage() {
     const t = useTranslations("Analysis");
     const [activeTab, setActiveTab] = useState<"expense" | "income">("expense");
     const isExpense = activeTab === "expense";
+    const [activePeriod, setActivePeriod] = useState<AnalysisPeriod>("Month");
 
     const [expenseData, setExpenseData] = useState<ExpenseAnalysisData | null>(null);
     const [incomeData, setIncomeData] = useState<IncomeAnalysisData | null>(null);
@@ -22,7 +23,7 @@ export default function AnalysisPage() {
         async function fetchAnalysis() {
             try {
                 setLoading(true);
-                const res = await getAnalysis();
+                const res = await getAnalysis(activePeriod);
                 setExpenseData(res.data.expense);
                 setIncomeData(res.data.income);
             } catch (err) {
@@ -32,7 +33,7 @@ export default function AnalysisPage() {
             }
         }
         fetchAnalysis();
-    }, []);
+    }, [activePeriod]);
 
     return (
         <div className="relative flex h-dvh w-full flex-col max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
@@ -82,8 +83,8 @@ export default function AnalysisPage() {
             {/* ── Scrollable Content ── */}
             <main className="flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide">
                 {isExpense
-                    ? <ExpenseAnalysis data={expenseData} loading={loading} />
-                    : <IncomeAnalysis data={incomeData} loading={loading} />
+                    ? <ExpenseAnalysis data={expenseData} loading={loading} activePeriod={activePeriod} onPeriodChange={setActivePeriod} />
+                    : <IncomeAnalysis data={incomeData} loading={loading} activePeriod={activePeriod} onPeriodChange={setActivePeriod} />
                 }
             </main>
 

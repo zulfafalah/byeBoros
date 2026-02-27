@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import type { ExpenseAnalysisData, ExpenseChartCategory } from "@/lib/api/analysis";
+import type { ExpenseAnalysisData, ExpenseChartCategory, AnalysisPeriod } from "@/lib/api/analysis";
 
 /* ── Color palette for chart segments ───────────── */
 const COLORS = [
@@ -52,10 +52,11 @@ function buildSegments(cats: ChartCategory[]) {
 interface Props {
     data: ExpenseAnalysisData | null;
     loading?: boolean;
+    activePeriod: AnalysisPeriod;
+    onPeriodChange: (period: AnalysisPeriod) => void;
 }
 
-export default function ExpenseAnalysis({ data, loading }: Props) {
-    const [activePeriod, setActivePeriod] = useState("Month");
+export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodChange }: Props) {
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
     const categories: ChartCategory[] = useMemo(() => {
@@ -103,7 +104,7 @@ export default function ExpenseAnalysis({ data, loading }: Props) {
                 {periods.map((p) => (
                     <button
                         key={p}
-                        onClick={() => setActivePeriod(p)}
+                        onClick={() => onPeriodChange(p as AnalysisPeriod)}
                         className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all ${activePeriod === p
                             ? "bg-primary text-[#131811]"
                             : "bg-zinc-100 dark:bg-zinc-800 text-muted"
