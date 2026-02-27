@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import BottomNav from "../components/BottomNav";
 
-const TEMPLATE_URL = "https://docs.google.com/spreadsheets/d/1jZp3nUe4dq1r2Uwz6p2m3K8OzJpSIKA7eFa8p5sOLqI/edit";
+const TEMPLATE_URL = "https://docs.google.com/spreadsheets/d/1jZp3nUe4dq1r2Uwz6p2m3K8OzJpSIKA7eFa8p5sOLqI/export?format=xlsx";
 const SERVICE_ACCOUNT_EMAIL = "byeborosclient@byeboros.iam.gserviceaccount.com";
 
 export default function DocumentationPage() {
