@@ -43,6 +43,15 @@ export default function IncomePage() {
         return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
     };
 
+    const formatRupiah = (value: string): string => {
+        const digits = value.replace(/\D/g, "");
+        return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAmount(formatRupiah(e.target.value));
+    };
+
     const handleSave = async () => {
         if (!name || !amount || !selectedTag) return;
 
@@ -52,7 +61,7 @@ export default function IncomePage() {
                 description: name,
                 category: selectedTag,
                 priority: "low",
-                amount: Number(amount),
+                amount: Number(amount.replace(/\./g, "")),
                 notes: note || undefined,
                 transaction_at: formatTransactionAt(),
             });
@@ -153,12 +162,11 @@ export default function IncomePage() {
                             </div>
                             <input
                                 value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
+                                onChange={handleAmountChange}
                                 className="w-full h-24 pl-14 pr-14 rounded-2xl bg-gray-50/50 dark:bg-white/5 border border-border-light dark:border-border-dark focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-4xl font-extrabold placeholder:text-gray-300 dark:placeholder:text-gray-600 dark:text-white"
                                 placeholder="0"
-                                type="number"
+                                type="text"
                                 inputMode="numeric"
-                                step="0.01"
                             />
                             <div className="absolute right-4 top-1/2 -translate-y-1/2">
                                 <button className="size-8 rounded-lg bg-primary/20 flex items-center justify-center">
