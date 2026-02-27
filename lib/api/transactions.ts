@@ -3,6 +3,7 @@ import type { TransactionResponse } from "./types";
 
 interface GetTransactionsParams {
   date?: string; // e.g. "2026-02-22"
+  category?: string; // e.g. "Listrik"
 }
 
 export interface CreateIncomePayload {
@@ -15,11 +16,14 @@ export interface CreateIncomePayload {
 }
 
 /**
- * Fetch transactions for a given date.
+ * Fetch transactions for a given date and/or category.
  * Spreadsheet ID and sheet name are automatically injected by the API client.
  */
 export async function getTransactions(params?: GetTransactionsParams, options?: { headers?: Record<string, string> }): Promise<TransactionResponse> {
-  const query = params?.date ? `?date=${params.date}` : "";
+  const queryParams = new URLSearchParams();
+  if (params?.date) queryParams.append("date", params.date);
+  if (params?.category) queryParams.append("category", params.category);
+  const query = queryParams.toString() ? `?${queryParams.toString()}` : "";
   return api.get<TransactionResponse>(`/api/transaction${query}`, options);
 }
 

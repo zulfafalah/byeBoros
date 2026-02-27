@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getTransactions } from "@/lib/api/transactions";
 import type { TransactionItem } from "@/lib/api/types";
 import EditTransactionModal from "@/app/components/EditTransactionModal";
+import { getCategories, type CategoryItem } from "@/lib/api/category";
 
 
 /* ── SVG Icons ────────────────────────────────────── */
@@ -150,7 +151,10 @@ export default function TransactionsPage() {
     const [selectedTransaction, setSelectedTransaction] = useState<TransactionItem | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [categories, setCategories] = useState<CategoryItem[]>([]);
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -182,14 +186,28 @@ export default function TransactionsPage() {
 
     const handleUpdateSuccess = () => {
         const sheetName = INDONESIAN_MONTHS[currentMonth];
-        fetchTransactions(selectedDate || undefined, sheetName);
+        fetchTransactions(selectedDate || undefined, selectedCategory || undefined, sheetName);
     };
 
     const handleDateSelect = (date: string) => {
         setSelectedDate(date);
         setIsDateModalOpen(false);
         const sheetName = INDONESIAN_MONTHS[currentMonth];
-        fetchTransactions(date, sheetName);
+        fetchTransactions(date, selectedCategory || undefined, sheetName);
+    };
+
+    const handleCategorySelect = (category: string) => {
+        setSelectedCategory(category);
+        setIsCategoryModalOpen(false);
+        const sheetName = INDONESIAN_MONTHS[currentMonth];
+        fetchTransactions(selectedDate || undefined, category, sheetName);
+    };
+
+    const handleClearCategoryFilter = () => {
+        setSelectedCategory(null);
+        setIsCategoryModalOpen(false);
+        const sheetName = INDONESIAN_MONTHS[currentMonth];
+        fetchTransactions(selectedDate || undefined, undefined, sheetName);
     };
 
     const handleClearDateFilter = () => {
@@ -199,7 +217,7 @@ export default function TransactionsPage() {
         setCurrentMonth(now.getMonth());
         setCurrentYear(now.getFullYear());
         setIsDateModalOpen(false);
-        fetchTransactions();
+        fetchTransactions(undefined, selectedCategory || undefined);
     };
 
     const handlePrevMonth = () => {
@@ -242,12 +260,15 @@ export default function TransactionsPage() {
         return days;
     };
 
-    const fetchTransactions = async (date?: string, sheetName?: string) => {
+    const fetchTransactions = async (date?: string, category?: string, sheetName?: string) => {
         setIsLoading(true);
         try {
-            // Fetch transactions with optional date filter and custom sheet name
+            // Fetch transactions with optional date/category filter and custom sheet name
             const options = sheetName ? { headers: { "X-Sheet-Name": sheetName } } : undefined;
-            const res = await getTransactions(date ? { date } : undefined, options);
+            const params: any = {};
+            if (date) params.date = date;
+            if (category) params.category = category;
+            const res = await getTransactions(Object.keys(params).length > 0 ? params : undefined, options);
 
             if (res?.data?.transactions) {
                 const mappedGroups = res.data.transactions.map((group) => {
@@ -281,6 +302,14 @@ export default function TransactionsPage() {
 
     useEffect(() => {
         fetchTransactions();
+        // Fetch categories
+        getCategories().then(res => {
+            if (res?.categories) {
+                setCategories(res.categories);
+            }
+        }).catch(err => {
+            console.error("Failed to fetch categories:", err);
+        });
     }, []);
 
     return (
@@ -375,8 +404,15 @@ export default function TransactionsPage() {
                         <span>{selectedDate ? new Date(selectedDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : t("date")}</span>
                         <ChevronDownIcon />
                     </button>
-                    <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
-                        <span>{t("category")}</span>
+                    <button 
+                        onClick={() => setIsCategoryModalOpen(true)}
+                        className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-4 font-medium text-sm active:scale-95 transition-transform ${
+                            selectedCategory 
+                                ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                                : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark"
+                        }`}
+                    >
+                        <span>{selectedCategory || t("category")}</span>
                         <ChevronDownIcon />
                     </button>
                     <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
@@ -443,6 +479,79 @@ export default function TransactionsPage() {
                     ))
                 )}
             </main>
+
+            {/* Category Filter Modal */}
+            {isCategoryModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
+                    <div className="w-full max-w-[430px] bg-background-light dark:bg-background-dark rounded-t-3xl p-6 animate-slide-up max-h-[70vh] overflow-y-auto">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-extrabold dark:text-white">Pilih Kategori</h2>
+                            <button
+                                onClick={() => setIsCategoryModalOpen(false)}
+                                className="size-8 rounded-full bg-card-light dark:bg-card-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-4 dark:text-white">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Clear Filter Button */}
+                        {selectedCategory && (
+                            <button
+                                onClick={handleClearCategoryFilter}
+                                className="w-full mb-4 py-3 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 font-semibold text-sm active:scale-95 transition-transform"
+                            >
+                                Hapus Filter Kategori
+                            </button>
+                        )}
+
+                        {/* Category List */}
+                        <div className="space-y-2">
+                            {categories.length === 0 ? (
+                                <div className="text-center text-muted py-8">
+                                    Tidak ada kategori
+                                </div>
+                            ) : (
+                                categories.map((cat) => {
+                                    const categoryName = cat.sub_category_name || cat.category_name;
+                                    const isSelected = selectedCategory === categoryName;
+                                    
+                                    return (
+                                        <button
+                                            key={categoryName}
+                                            onClick={() => handleCategorySelect(categoryName)}
+                                            className={`w-full p-4 rounded-xl text-left font-semibold transition-all active:scale-95 ${
+                                                isSelected
+                                                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                                    : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
+                                            }`}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <div className="font-bold">{categoryName}</div>
+                                                    {cat.category_name !== categoryName && (
+                                                        <div className="text-xs opacity-70 mt-0.5">{cat.category_name}</div>
+                                                    )}
+                                                </div>
+                                                {cat.budget > 0 && (
+                                                    <div className={`text-xs px-2 py-1 rounded-lg ${
+                                                        isSelected ? "bg-white/20" : "bg-primary/10 text-primary"
+                                                    }`}>
+                                                        Budget: {cat.budget.toLocaleString('id-ID')}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </button>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Date Filter Modal - Calendar View */}
             {isDateModalOpen && (
