@@ -194,5 +194,8 @@
         "saved": "Tersimpan!",
         "invalidLink": "Link Google Sheet tidak valid",
         "description": "Hubungkan Google Sheet Anda untuk sinkronisasi data transaksi."
+    },
+    "Errors": {
+        "spreadsheetNotSet": "Link Google Sheet belum diatur. Silakan konfigurasi di Pengaturan Profil terlebih dahulu."
     }
 }

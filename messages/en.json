@@ -194,5 +194,8 @@
         "saved": "Saved!",
         "invalidLink": "Invalid Google Sheet link",
         "description": "Connect your Google Sheet to sync transaction data."
+    },
+    "Errors": {
+        "spreadsheetNotSet": "Google Sheet link is not set. Please configure it in Profile Settings first."
     }
 }

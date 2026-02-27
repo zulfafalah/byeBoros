@@ -1,6 +1,28 @@
 import { ApiError } from "./types";
 import { getToken, removeToken, getSpreadsheetId, getSheetName, API_URL } from "../auth";
 
+// Helper to get localized error message
+function getLocalizedErrorMessage(key: string): string {
+  if (typeof window === "undefined") {
+    // Server-side: default to English
+    const messages = { spreadsheetNotSet: "Google Sheet link is not set. Please configure it in Profile Settings first." };
+    return messages[key as keyof typeof messages] || key;
+  }
+  
+  // Client-side: get locale from cookie
+  const locale = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("locale="))
+    ?.split("=")[1] || "en";
+
+  const messages: Record<string, Record<string, string>> = {
+    en: { spreadsheetNotSet: "Google Sheet link is not set. Please configure it in Profile Settings first." },
+    id: { spreadsheetNotSet: "Link Google Sheet belum diatur. Silakan konfigurasi di Pengaturan Profil terlebih dahulu." },
+  };
+
+  return messages[locale]?.[key] || messages.en[key] || key;
+}
+
 type RequestOptions = Omit<RequestInit, "body" | "headers"> & {
   body?: unknown;
   /** Extra headers merged with defaults */
@@ -68,7 +90,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     if (!getSpreadsheetId()) {
       throw new ApiError(
         response.status,
-        "Google Sheet link is not set. Please configure it in Profile Settings first.",
+        getLocalizedErrorMessage("spreadsheetNotSet"),
         errorBody
       );
     }
