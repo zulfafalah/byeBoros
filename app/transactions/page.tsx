@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getTransactions } from "@/lib/api/transactions";
+import type { TransactionItem } from "@/lib/api/types";
+import EditTransactionModal from "@/app/components/EditTransactionModal";
 
 
 /* ── SVG Icons ────────────────────────────────────── */
@@ -85,6 +87,7 @@ type Transaction = {
     iconBg: string;
     iconColor: string;
     badge: string;
+    originalData: TransactionItem; // Add reference to original data
 };
 
 /* ── Category Icon Mapper ─────────────────────────── */
@@ -144,47 +147,125 @@ export default function TransactionsPage() {
     const t = useTranslations("Transactions");
     const [transactionGroups, setTransactionGroups] = useState<{ label: string; transactions: Transaction[] }[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedTransaction, setSelectedTransaction] = useState<TransactionItem | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>({
+        show: false,
+        type: "success",
+        message: "",
+    });
+
+    const showToast = useCallback((type: "success" | "error", message: string) => {
+        setToast({ show: true, type, message });
+        setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000);
+    }, []);
+
+    const handleTransactionClick = (tx: Transaction) => {
+        setSelectedTransaction(tx.originalData);
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setSelectedTransaction(null);
+    };
+
+    const handleUpdateSuccess = () => {
+        fetchTransactions();
+    };
+
+    const fetchTransactions = async () => {
+        try {
+            // Fetch all transactions without date filter
+            const res = await getTransactions();
+
+            if (res?.data?.transactions) {
+                const mappedGroups = res.data.transactions.map((group) => {
+                    return {
+                        label: group.group_label,
+                        transactions: group.items.map((item) => {
+                            const design = getCategoryDesign(item.category);
+                            return {
+                                id: item.id,
+                                name: item.transaction_name,
+                                time: item.time,
+                                category: item.category,
+                                amount: item.amount,
+                                icon: design.icon,
+                                iconBg: design.iconBg,
+                                iconColor: design.iconColor,
+                                badge: item.type === "expense" ? "PENGELUARAN" : "PEMASUKAN",
+                                originalData: item // Store original TransactionItem
+                            };
+                        })
+                    };
+                });
+                setTransactionGroups(mappedGroups);
+            }
+        } catch (error) {
+            console.error("Failed to fetch transactions:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchTransactions = async () => {
-            try {
-                // Fetch all transactions without date filter
-                const res = await getTransactions();
-
-                if (res?.data?.transactions) {
-                    const mappedGroups = res.data.transactions.map((group) => {
-                        return {
-                            label: group.group_label,
-                            transactions: group.items.map((item) => {
-                                const design = getCategoryDesign(item.category);
-                                return {
-                                    id: item.id,
-                                    name: item.transaction_name,
-                                    time: item.time,
-                                    category: item.category,
-                                    amount: item.amount,
-                                    icon: design.icon,
-                                    iconBg: design.iconBg,
-                                    iconColor: design.iconColor,
-                                    badge: item.type === "expense" ? "PENGELUARAN" : "PEMASUKAN"
-                                };
-                            })
-                        };
-                    });
-                    setTransactionGroups(mappedGroups);
-                }
-            } catch (error) {
-                console.error("Failed to fetch transactions:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchTransactions();
     }, []);
 
     return (
         <div className="relative flex h-dvh w-full flex-col overflow-hidden max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
+            {/* Toast Notification - Fixed at screen top */}
+            <div
+                className={`fixed top-0 left-0 right-0 z-[60] max-w-[430px] mx-auto transition-all duration-500 ease-out ${
+                    toast.show ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+                }`}
+            >
+                <div
+                    className={`mx-4 mt-4 px-4 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 ${
+                        toast.type === "success"
+                            ? "bg-emerald-500 text-white shadow-emerald-500/30"
+                            : "bg-red-500 text-white shadow-red-500/30"
+                    }`}
+                >
+                    <div
+                        className={`size-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                            toast.type === "success" ? "bg-white/20" : "bg-white/20"
+                        }`}
+                    >
+                        {toast.type === "success" ? (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="size-4"
+                            >
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        ) : (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="size-4"
+                            >
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        )}
+                    </div>
+                    <span className="text-sm font-bold">{toast.message}</span>
+                </div>
+            </div>
+
             {/* Header */}
             <header className="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 ios-blur px-4 pt-6 pb-4">
                 <div className="flex items-center justify-between mb-4">
@@ -249,15 +330,16 @@ export default function TransactionsPage() {
                             </h3>
                             <div className="space-y-3">
                                 {group.transactions.map((tx) => (
-                                    <div
+                                    <button
                                         key={tx.id}
-                                        className="flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark shadow-sm transition-transform active:scale-[0.98]"
+                                        onClick={() => handleTransactionClick(tx)}
+                                        className="w-full flex items-center justify-between p-4 bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark shadow-sm transition-transform active:scale-[0.98] hover:border-primary cursor-pointer"
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className={`size-12 rounded-xl ${tx.iconBg} ${tx.iconColor} flex items-center justify-center`}>
                                                 {tx.icon}
                                             </div>
-                                            <div>
+                                            <div className="text-left">
                                                 <h4 className="font-bold text-base dark:text-white">{tx.name}</h4>
                                                 <p className="text-xs text-muted">
                                                     {tx.category} • {tx.time}
@@ -277,13 +359,22 @@ export default function TransactionsPage() {
                                                 {tx.badge}
                                             </span>
                                         </div>
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
                         </section>
                     ))
                 )}
             </main>
+
+            {/* Edit Transaction Modal */}
+            <EditTransactionModal
+                transaction={selectedTransaction}
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                onSuccess={handleUpdateSuccess}
+                showToast={showToast}
+            />
         </div>
     );
 }
