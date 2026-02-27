@@ -200,5 +200,13 @@
     },
     "Errors": {
         "spreadsheetNotSet": "Google Sheet link is not set. Please configure it in Profile Settings first."
+    },
+    "WelcomePopup": {
+        "title": "Welcome to ByeBoros!",
+        "body": "Before you dive in, here are two quick things to get you started:",
+        "step1": "Login with your Google account to unlock all features — transaction tracking, budgets, and analysis.",
+        "step2": "Head to your Profile page and read the Documentation to understand how the app works.",
+        "cta": "Go to Profile",
+        "skip": "Got it, skip for now"
     }
 }

@@ -7,6 +7,7 @@ import RegisterSW from "./components/RegisterSW";
 import InstallPrompt from "./components/InstallPrompt";
 import AuthCallback from "./components/AuthCallback";
 import ThemeProvider from "./components/ThemeProvider";
+import WelcomePopup from "./components/WelcomePopup";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -66,6 +67,7 @@ export default async function RootLayout({
           <ThemeProvider initialDark={isDark}>
             <AuthCallback />
             {children}
+            <WelcomePopup />
             <InstallPrompt />
           </ThemeProvider>
         </NextIntlClientProvider>

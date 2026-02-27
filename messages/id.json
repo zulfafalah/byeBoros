@@ -200,5 +200,13 @@
     },
     "Errors": {
         "spreadsheetNotSet": "Link Google Sheet belum diatur. Silakan konfigurasi di Pengaturan Profil terlebih dahulu."
+    },
+    "WelcomePopup": {
+        "title": "Selamat Datang di ByeBoros!",
+        "body": "Sebelum mulai, ada dua hal penting yang perlu kamu lakukan:",
+        "step1": "Login dengan akun Google kamu untuk membuka semua fitur — pencatatan transaksi, anggaran, dan analisis keuangan.",
+        "step2": "Buka halaman Profil dan baca Dokumentasi untuk memahami cara menggunakan aplikasi ini.",
+        "cta": "Ke Halaman Profil",
+        "skip": "Mengerti, lewati dulu"
     }
 }
