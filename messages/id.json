@@ -65,7 +65,9 @@
         "filter": "Filter",
         "date": "Tanggal",
         "category": "Kategori",
-        "amount": "Jumlah",
+        "type": "Tipe",
+        "income": "Pemasukan",
+        "expense": "Pengeluaran",
         "noTransactions": "Tidak ada transaksi ditemukan."
     },
     "Expense": {

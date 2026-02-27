@@ -152,8 +152,10 @@ export default function TransactionsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedType, setSelectedType] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -186,28 +188,28 @@ export default function TransactionsPage() {
 
     const handleUpdateSuccess = () => {
         const sheetName = INDONESIAN_MONTHS[currentMonth];
-        fetchTransactions(selectedDate || undefined, selectedCategory || undefined, sheetName);
+        fetchTransactions(selectedDate || undefined, selectedCategory || undefined, selectedType || undefined, sheetName);
     };
 
     const handleDateSelect = (date: string) => {
         setSelectedDate(date);
         setIsDateModalOpen(false);
         const sheetName = INDONESIAN_MONTHS[currentMonth];
-        fetchTransactions(date, selectedCategory || undefined, sheetName);
+        fetchTransactions(date, selectedCategory || undefined, selectedType || undefined, sheetName);
     };
 
     const handleCategorySelect = (category: string) => {
         setSelectedCategory(category);
         setIsCategoryModalOpen(false);
         const sheetName = INDONESIAN_MONTHS[currentMonth];
-        fetchTransactions(selectedDate || undefined, category, sheetName);
+        fetchTransactions(selectedDate || undefined, category, selectedType || undefined, sheetName);
     };
 
     const handleClearCategoryFilter = () => {
         setSelectedCategory(null);
         setIsCategoryModalOpen(false);
         const sheetName = INDONESIAN_MONTHS[currentMonth];
-        fetchTransactions(selectedDate || undefined, undefined, sheetName);
+        fetchTransactions(selectedDate || undefined, undefined, selectedType || undefined, sheetName);
     };
 
     const handleClearDateFilter = () => {
@@ -217,7 +219,21 @@ export default function TransactionsPage() {
         setCurrentMonth(now.getMonth());
         setCurrentYear(now.getFullYear());
         setIsDateModalOpen(false);
-        fetchTransactions(undefined, selectedCategory || undefined);
+        fetchTransactions(undefined, selectedCategory || undefined, selectedType || undefined);
+    };
+
+    const handleTypeSelect = (type: string) => {
+        setSelectedType(type);
+        setIsTypeModalOpen(false);
+        const sheetName = INDONESIAN_MONTHS[currentMonth];
+        fetchTransactions(selectedDate || undefined, selectedCategory || undefined, type, sheetName);
+    };
+
+    const handleClearTypeFilter = () => {
+        setSelectedType(null);
+        setIsTypeModalOpen(false);
+        const sheetName = INDONESIAN_MONTHS[currentMonth];
+        fetchTransactions(selectedDate || undefined, selectedCategory || undefined, undefined, sheetName);
     };
 
     const handlePrevMonth = () => {
@@ -260,14 +276,15 @@ export default function TransactionsPage() {
         return days;
     };
 
-    const fetchTransactions = async (date?: string, category?: string, sheetName?: string) => {
+    const fetchTransactions = async (date?: string, category?: string, type?: string, sheetName?: string) => {
         setIsLoading(true);
         try {
-            // Fetch transactions with optional date/category filter and custom sheet name
+            // Fetch transactions with optional date/category/type filter and custom sheet name
             const options = sheetName ? { headers: { "X-Sheet-Name": sheetName } } : undefined;
             const params: any = {};
             if (date) params.date = date;
             if (category) params.category = category;
+            if (type) params.type = type;
             const res = await getTransactions(Object.keys(params).length > 0 ? params : undefined, options);
 
             if (res?.data?.transactions) {
@@ -415,8 +432,15 @@ export default function TransactionsPage() {
                         <span>{selectedCategory || t("category")}</span>
                         <ChevronDownIcon />
                     </button>
-                    <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-card-light dark:bg-card-dark px-4 text-[#131811] dark:text-white border border-border-light dark:border-border-dark font-medium text-sm active:scale-95 transition-transform">
-                        <span>{t("amount")}</span>
+                    <button 
+                        onClick={() => setIsTypeModalOpen(true)}
+                        className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-4 font-medium text-sm active:scale-95 transition-transform ${
+                            selectedType 
+                                ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                                : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark"
+                        }`}
+                    >
+                        <span>{selectedType ? (selectedType === 'income' ? t("income") : t("expense")) : t("type")}</span>
                         <ChevronDownIcon />
                     </button>
                 </div>
@@ -548,6 +572,88 @@ export default function TransactionsPage() {
                                     );
                                 })
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Type Filter Modal */}
+            {isTypeModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
+                    <div className="w-full max-w-[430px] bg-background-light dark:bg-background-dark rounded-t-3xl p-6 animate-slide-up">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-extrabold dark:text-white">Pilih Tipe</h2>
+                            <button
+                                onClick={() => setIsTypeModalOpen(false)}
+                                className="size-8 rounded-full bg-card-light dark:bg-card-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-4 dark:text-white">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Clear Filter Button */}
+                        {selectedType && (
+                            <button
+                                onClick={handleClearTypeFilter}
+                                className="w-full mb-4 py-3 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 font-semibold text-sm active:scale-95 transition-transform"
+                            >
+                                Hapus Filter Tipe
+                            </button>
+                        )}
+
+                        {/* Type Options */}
+                        <div className="space-y-3">
+                            <button
+                                onClick={() => handleTypeSelect('income')}
+                                className={`w-full p-4 rounded-xl text-left font-bold transition-all active:scale-95 ${
+                                    selectedType === 'income'
+                                        ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                        : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
+                                }`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={`size-10 rounded-xl flex items-center justify-center ${
+                                        selectedType === 'income' ? 'bg-white/20' : 'bg-primary/10'
+                                    }`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`size-5 ${selectedType === 'income' ? 'text-white' : 'text-primary'}`}>
+                                            <line x1="12" y1="19" x2="12" y2="5" />
+                                            <polyline points="5 12 12 5 19 12" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div className="font-extrabold">Pemasukan</div>
+                                        <div className="text-xs opacity-70 mt-0.5">Income</div>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => handleTypeSelect('expense')}
+                                className={`w-full p-4 rounded-xl text-left font-bold transition-all active:scale-95 ${
+                                    selectedType === 'expense'
+                                        ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                        : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
+                                }`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={`size-10 rounded-xl flex items-center justify-center ${
+                                        selectedType === 'expense' ? 'bg-white/20' : 'bg-red-500/10'
+                                    }`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`size-5 ${selectedType === 'expense' ? 'text-white' : 'text-red-600'}`}>
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <polyline points="19 12 12 19 5 12" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div className="font-extrabold">Pengeluaran</div>
+                                        <div className="text-xs opacity-70 mt-0.5">Expense</div>
+                                    </div>
+                                </div>
+                            </button>
                         </div>
                     </div>
                 </div>

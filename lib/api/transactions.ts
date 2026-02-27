@@ -4,6 +4,7 @@ import type { TransactionResponse } from "./types";
 interface GetTransactionsParams {
   date?: string; // e.g. "2026-02-22"
   category?: string; // e.g. "Listrik"
+  type?: string; // e.g. "income" or "expense"
 }
 
 export interface CreateIncomePayload {
@@ -23,6 +24,7 @@ export async function getTransactions(params?: GetTransactionsParams, options?: 
   const queryParams = new URLSearchParams();
   if (params?.date) queryParams.append("date", params.date);
   if (params?.category) queryParams.append("category", params.category);
+  if (params?.type) queryParams.append("type", params.type);
   const query = queryParams.toString() ? `?${queryParams.toString()}` : "";
   return api.get<TransactionResponse>(`/api/transaction${query}`, options);
 }
