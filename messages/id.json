@@ -5,8 +5,8 @@
         "goodEvening": "Selamat Malam"
     },
     "BalanceSummary": {
-        "todaysBalance": "Saldo Hari Ini",
-        "fromYesterday": "+2,4% dari kemarin"
+        "todaysBalance": "Pengeluaran Hari Ini",
+        "totalExpenses": "Total pengeluaran hari ini"
     },
     "QuickActions": {
         "addIncome": "Tambah Pemasukan",

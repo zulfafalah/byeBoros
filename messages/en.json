@@ -5,8 +5,8 @@
         "goodEvening": "Good Evening"
     },
     "BalanceSummary": {
-        "todaysBalance": "Today's Balance",
-        "fromYesterday": "+2.4% from yesterday"
+        "todaysBalance": "Today's Expenses",
+        "totalExpenses": "Total expenses today"
     },
     "QuickActions": {
         "addIncome": "Add Income",
