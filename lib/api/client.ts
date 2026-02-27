@@ -64,6 +64,15 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     } catch {
       errorBody = await response.text();
     }
+
+    if (!getSpreadsheetId()) {
+      throw new ApiError(
+        response.status,
+        "Google Sheet link is not set. Please configure it in Profile Settings first.",
+        errorBody
+      );
+    }
+
     throw new ApiError(response.status, `Request failed: ${response.statusText}`, errorBody);
   }
 
