@@ -8,6 +8,7 @@ import InstallPrompt from "./components/InstallPrompt";
 import AuthCallback from "./components/AuthCallback";
 import ThemeProvider from "./components/ThemeProvider";
 import WelcomePopup from "./components/WelcomePopup";
+import SplashScreen from "./components/SplashScreen";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -29,7 +30,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "ByeBoros — Financial Dashboard",
+  title: "ByeBoros — Open Source Financial Dashboard",
   description:
     "Track your income, expenses, and financial goals with ByeBoros.",
   manifest: "/manifest.json",
@@ -46,6 +47,11 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "ByeBoros",
+    startupImage: [
+      {
+        url: "/logo_byeboros.jpg",
+      },
+    ],
   },
 };
 
@@ -65,6 +71,7 @@ export default async function RootLayout({
       <body className={`${manrope.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider initialDark={isDark}>
+            <SplashScreen />
             <AuthCallback />
             {children}
             <WelcomePopup />
