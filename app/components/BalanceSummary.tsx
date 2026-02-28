@@ -5,7 +5,7 @@ import { useTransactions } from "@/lib/hooks/useTransactions";
 
 export default function BalanceSummary() {
     const t = useTranslations("BalanceSummary");
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" });
 
     const { transactions, isLoading, error } = useTransactions({
         date: today,
