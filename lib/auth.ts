@@ -1,4 +1,5 @@
 const TOKEN_KEY = "auth_token";
+const REFRESH_TOKEN_KEY = "refresh_token";
 const SPREADSHEET_ID_KEY = "googleSheetId";
 const SHEET_NAME_KEY = "sheet_name";
 
@@ -36,6 +37,47 @@ export function removeToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+export function setRefreshToken(token: string) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(REFRESH_TOKEN_KEY, token);
+}
+
+export function getRefreshToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+}
+
+export function removeRefreshToken() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
+export async function refreshAccessToken(): Promise<boolean> {
+  const refreshToken = getRefreshToken();
+  const accessToken = getToken();
+  if (!refreshToken || !accessToken) return false;
+
+  try {
+    const response = await fetch(`${API_URL}/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+
+    if (!response.ok) return false;
+
+    const data = await response.json() as { access_token: string; refresh_token: string };
+    setToken(data.access_token);
+    setRefreshToken(data.refresh_token);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function getSpreadsheetId(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(SPREADSHEET_ID_KEY);
@@ -69,6 +111,7 @@ export function getUserFromToken(): JwtPayload | null {
 export function logout() {
   if (typeof window === "undefined") return;
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
   localStorage.removeItem(SPREADSHEET_ID_KEY);
   localStorage.removeItem(SHEET_NAME_KEY);
   window.location.href = "/login";
@@ -76,9 +119,12 @@ export function logout() {
 
 export function handleAuthCallback(): boolean {
   if (typeof window === "undefined") return false;
-  const token = new URLSearchParams(window.location.search).get("token");
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
+  const refreshToken = params.get("refresh_token");
   if (token) {
     setToken(token);
+    if (refreshToken) setRefreshToken(refreshToken);
     window.history.replaceState({}, document.title, window.location.pathname);
     return true;
   }

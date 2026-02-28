@@ -1,5 +1,5 @@
 import { ApiError } from "./types";
-import { getToken, removeToken, getSpreadsheetId, getSheetName, API_URL } from "../auth";
+import { getToken, removeToken, getSpreadsheetId, getSheetName, API_URL, refreshAccessToken } from "../auth";
 
 // Helper to get localized error message
 function getLocalizedErrorMessage(key: string): string {
@@ -74,7 +74,23 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   });
 
   if (response.status === 401) {
+    // Attempt to silently refresh the access token and retry once
+    const refreshed = await refreshAccessToken();
+    if (refreshed) {
+      const newToken = getToken();
+      if (newToken) headers["Authorization"] = `Bearer ${newToken}`;
+      const retryResponse = await fetch(url, {
+        ...fetchOptions,
+        headers,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      if (retryResponse.ok) {
+        if (retryResponse.status === 204) return undefined as T;
+        return retryResponse.json() as Promise<T>;
+      }
+    }
     removeToken();
+    if (typeof window !== "undefined") window.location.href = "/login";
     throw new ApiError(401, "Unauthorized");
   }
 
