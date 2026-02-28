@@ -186,6 +186,8 @@ export default function TransactionsPage() {
         setSelectedTransaction(null);
     };
 
+    const isCurrentMonth = currentMonth === today.getMonth() && currentYear === today.getFullYear();
+
     const handleUpdateSuccess = () => {
         const sheetName = INDONESIAN_MONTHS[currentMonth];
         fetchTransactions(selectedDate || undefined, selectedCategory || undefined, selectedType || undefined, sheetName);
@@ -318,8 +320,18 @@ export default function TransactionsPage() {
     };
 
     useEffect(() => {
-        fetchTransactions();
-        // Fetch categories
+        const sheetName = INDONESIAN_MONTHS[currentMonth];
+        fetchTransactions(
+            selectedDate || undefined,
+            selectedCategory || undefined,
+            selectedType || undefined,
+            sheetName
+        );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentMonth, currentYear]);
+
+    useEffect(() => {
+        // Fetch categories once
         getCategories().then(res => {
             if (res?.categories) {
                 setCategories(res.categories);
@@ -384,16 +396,49 @@ export default function TransactionsPage() {
 
             {/* Header */}
             <header className="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 ios-blur px-4 pt-6 pb-4">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
+                    {/* Back Button */}
                     <Link
                         href="/"
                         className="flex items-center justify-center size-10 rounded-full bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark shadow-sm active:scale-95 transition-transform"
                     >
                         <ChevronLeftIcon />
                     </Link>
-                    <h1 className="text-xl font-extrabold tracking-tight dark:text-white">
-                        {t("title")}
-                    </h1>
+
+                    {/* Center: Title + Month Navigator */}
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={handlePrevMonth}
+                            className="size-7 rounded-lg flex items-center justify-center active:scale-95 transition-transform text-muted hover:text-foreground"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="size-3.5">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                        </button>
+                        <div className="flex flex-col items-center min-w-[130px]">
+                            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted leading-none mb-0.5">
+                                {t("title")}
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-base font-extrabold dark:text-white tracking-tight">
+                                    {INDONESIAN_MONTHS[currentMonth]} {currentYear}
+                                </span>
+                                {!isCurrentMonth && (
+                                    <span className="size-1.5 rounded-full bg-amber-400 inline-block" title="Bukan bulan ini" />
+                                )}
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleNextMonth}
+                            className="size-7 rounded-lg flex items-center justify-center active:scale-95 transition-transform text-muted hover:text-foreground"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="size-3.5">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* Add Button */}
                     <Link
                         href="/expense"
                         className="flex items-center justify-center size-10 rounded-full bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark shadow-sm active:scale-95 transition-transform"
