@@ -157,7 +157,7 @@ export default function TransactionsPage() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryItem[]>([]);
-    const today = new Date();
+    const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
     const [toast, setToast] = useState<{ show: boolean; type: "success" | "error"; message: string }>({
@@ -217,7 +217,7 @@ export default function TransactionsPage() {
     const handleClearDateFilter = () => {
         setSelectedDate(null);
         // Reset to current month
-        const now = new Date();
+        const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
         setCurrentMonth(now.getMonth());
         setCurrentYear(now.getFullYear());
         setIsDateModalOpen(false);

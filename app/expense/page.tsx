@@ -14,7 +14,9 @@ export default function ExpensePage() {
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
     const [priority, setPriority] = useState("Medium");
-    const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+    const [date, setDate] = useState(
+        new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" })
+    );
     const [note, setNote] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState<CategoryItem[]>([]);

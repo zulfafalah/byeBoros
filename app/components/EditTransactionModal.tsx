@@ -50,8 +50,8 @@ export default function EditTransactionModal({
       setCategory(transaction.category);
       // Always use absolute value for amount (no negative numbers)
       setAmount(String(Math.abs(transaction.amount)));
-      // Set to current datetime in YYYY-MM-DDTHH:MM format for datetime-local input
-      const now = new Date();
+      // Set to current datetime in YYYY-MM-DDTHH:MM format for datetime-local input (Jakarta timezone)
+      const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
       const yyyy = now.getFullYear();
       const mm = String(now.getMonth() + 1).padStart(2, "0");
       const dd = String(now.getDate()).padStart(2, "0");
