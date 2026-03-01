@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -18,6 +18,11 @@ export default function ExpensePage() {
     const [note, setNote] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState<CategoryItem[]>([]);
+    const amountRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        amountRef.current?.focus();
+    }, []);
 
     useEffect(() => {
         getCategories()
@@ -116,6 +121,7 @@ export default function ExpensePage() {
                                 placeholder="0"
                                 type="text"
                                 inputMode="numeric"
+                                ref={amountRef}
                             />
                         </div>
                         {/* Underline indicator */}
