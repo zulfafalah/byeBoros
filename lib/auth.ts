@@ -112,8 +112,6 @@ export function logout() {
   if (typeof window === "undefined") return;
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
-  localStorage.removeItem(SPREADSHEET_ID_KEY);
-  localStorage.removeItem(SHEET_NAME_KEY);
   window.location.href = "/login";
 }
 
