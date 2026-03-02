@@ -96,7 +96,7 @@ export default function AnalysisPage() {
             <main className="flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide">
                 {isExpense
                     ? <ExpenseAnalysis data={expenseData} loading={loading} activePeriod={activePeriod} onPeriodChange={handlePeriodChange} onDaySelect={handleDaySelect} selectedDay={selectedDay} />
-                    : <IncomeAnalysis data={incomeData} loading={loading} activePeriod={activePeriod} onPeriodChange={handlePeriodChange} />
+                    : <IncomeAnalysis data={incomeData} loading={loading} activePeriod={activePeriod} onPeriodChange={handlePeriodChange} onDaySelect={handleDaySelect} selectedDay={selectedDay} />
                 }
             </main>
 
