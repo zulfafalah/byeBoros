@@ -13,7 +13,19 @@ export default function AnalysisPage() {
     const t = useTranslations("Analysis");
     const [activeTab, setActiveTab] = useState<"expense" | "income">("expense");
     const isExpense = activeTab === "expense";
-    const [activePeriod, setActivePeriod] = useState<AnalysisPeriod>("Month");
+    const [activePeriod, setActivePeriod] = useState<AnalysisPeriod>("Day");
+    const [selectedDay, setSelectedDay] = useState<string>(() => {
+        const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    });
+
+    const handleDaySelect = (date: string) => {
+        setSelectedDay(date);
+    };
+
+    const handlePeriodChange = (period: AnalysisPeriod) => {
+        setActivePeriod(period);
+    };
 
     const [expenseData, setExpenseData] = useState<ExpenseAnalysisData | null>(null);
     const [incomeData, setIncomeData] = useState<IncomeAnalysisData | null>(null);
@@ -23,7 +35,7 @@ export default function AnalysisPage() {
         async function fetchAnalysis() {
             try {
                 setLoading(true);
-                const res = await getAnalysis(activePeriod);
+                const res = await getAnalysis(activePeriod, activePeriod === "Day" ? selectedDay : undefined);
                 setExpenseData(res.data.expense);
                 setIncomeData(res.data.income);
             } catch (err) {
@@ -33,7 +45,7 @@ export default function AnalysisPage() {
             }
         }
         fetchAnalysis();
-    }, [activePeriod]);
+    }, [activePeriod, selectedDay]);
 
     return (
         <div className="relative flex h-dvh w-full flex-col max-w-[430px] mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
@@ -83,8 +95,8 @@ export default function AnalysisPage() {
             {/* ── Scrollable Content ── */}
             <main className="flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide">
                 {isExpense
-                    ? <ExpenseAnalysis data={expenseData} loading={loading} activePeriod={activePeriod} onPeriodChange={setActivePeriod} />
-                    : <IncomeAnalysis data={incomeData} loading={loading} activePeriod={activePeriod} onPeriodChange={setActivePeriod} />
+                    ? <ExpenseAnalysis data={expenseData} loading={loading} activePeriod={activePeriod} onPeriodChange={handlePeriodChange} onDaySelect={handleDaySelect} selectedDay={selectedDay} />
+                    : <IncomeAnalysis data={incomeData} loading={loading} activePeriod={activePeriod} onPeriodChange={handlePeriodChange} />
                 }
             </main>
 

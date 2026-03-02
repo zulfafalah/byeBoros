@@ -21,7 +21,32 @@ const PRIORITY_COLORS = [
     { color: "bg-primary", dot: "bg-primary" },
 ];
 
-const periods = ["Day", "Month", "3 Months", "6 Months", "Year"];
+const periods = ["Day", "Month", "3 Months", "6 Months", "Year"] as const;
+
+const INDONESIAN_MONTHS = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+];
+
+const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+function getToday() {
+    return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+}
+
+function formatDayLabel(dateStr: string) {
+    const [, m, d] = dateStr.split("-");
+    return `${parseInt(d)} ${SHORT_MONTHS[parseInt(m) - 1]}`;
+}
+
+function generateCalendarDays(year: number, month: number) {
+    const firstDayOfWeek = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const days: (number | null)[] = [];
+    for (let i = 0; i < firstDayOfWeek; i++) days.push(null);
+    for (let d = 1; d <= daysInMonth; d++) days.push(d);
+    return days;
+}
 
 /* ── SVG donut helpers ───────────────────────────── */
 const RADIUS = 90;
@@ -54,10 +79,46 @@ interface Props {
     loading?: boolean;
     activePeriod: AnalysisPeriod;
     onPeriodChange: (period: AnalysisPeriod) => void;
+    /** Called when user picks a specific date from the Day calendar */
+    onDaySelect?: (date: string) => void;
+    /** The currently selected day date string (YYYY-MM-DD) */
+    selectedDay?: string;
 }
 
-export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodChange }: Props) {
+export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodChange, onDaySelect, selectedDay }: Props) {
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+
+    // Calendar state for "Day" picker
+    const today = getToday();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    const activeDayStr = selectedDay ?? todayStr;
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [calMonth, setCalMonth] = useState(today.getMonth());
+    const [calYear, setCalYear] = useState(today.getFullYear());
+
+    const handleOpenCalendar = () => {
+        // Navigate calendar to the currently active day
+        const [y, m] = activeDayStr.split("-").map(Number);
+        setCalYear(y);
+        setCalMonth(m - 1);
+        setIsCalendarOpen(true);
+    };
+
+    const handleDateSelect = (dateStr: string) => {
+        setIsCalendarOpen(false);
+        onPeriodChange("Day");
+        onDaySelect?.(dateStr);
+    };
+
+    const handleCalPrevMonth = () => {
+        if (calMonth === 0) { setCalMonth(11); setCalYear(calYear - 1); }
+        else setCalMonth(calMonth - 1);
+    };
+
+    const handleCalNextMonth = () => {
+        if (calMonth === 11) { setCalMonth(0); setCalYear(calYear + 1); }
+        else setCalMonth(calMonth + 1);
+    };
 
     const categories: ChartCategory[] = useMemo(() => {
         if (!data) return [];
@@ -101,18 +162,23 @@ export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodC
         <>
             {/* Period pills */}
             <div className="flex overflow-x-auto gap-3 py-4 scrollbar-hide -mx-6 px-6">
-                {periods.map((p) => (
-                    <button
-                        key={p}
-                        onClick={() => onPeriodChange(p as AnalysisPeriod)}
-                        className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all ${activePeriod === p
-                            ? "bg-primary text-[#131811]"
-                            : "bg-zinc-100 dark:bg-zinc-800 text-muted"
-                            }`}
-                    >
-                        {p}
-                    </button>
-                ))}
+                {periods.map((p) => {
+                    const isDay = p === "Day";
+                    const label = isDay ? formatDayLabel(activeDayStr) : p;
+                    const isActive = activePeriod === p;
+                    return (
+                        <button
+                            key={p}
+                            onClick={() => isDay ? handleOpenCalendar() : onPeriodChange(p as AnalysisPeriod)}
+                            className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all ${isActive
+                                ? "bg-primary text-[#131811]"
+                                : "bg-zinc-100 dark:bg-zinc-800 text-muted"
+                                }`}
+                        >
+                            {label}
+                        </button>
+                    );
+                })}
             </div>
 
             {/* ── Donut Chart Section ── */}
@@ -122,7 +188,7 @@ export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodC
                         <svg viewBox="0 0 200 200" className="size-full -rotate-90">
                             {segments.map((seg, i) => (
                                 <circle
-                                    key={seg.name}
+                                    key={`${seg.name}-${i}`}
                                     cx="100"
                                     cy="100"
                                     r={RADIUS}
@@ -160,13 +226,13 @@ export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodC
                     <div className="grid grid-cols-2 w-full gap-4 mt-8">
                         {categories.map((cat, i) => (
                             <button
-                                key={cat.name}
+                                key={`${cat.name}-${i}`}
                                 onClick={() => handleSegmentClick(i)}
-                                className={`flex items-center gap-2 transition-opacity ${selectedIdx !== null && selectedIdx !== i ? "opacity-40" : ""}`}
+                                className={`flex items-center gap-2 min-w-0 transition-opacity ${selectedIdx !== null && selectedIdx !== i ? "opacity-40" : ""}`}
                             >
-                                <span className={`size-3 rounded-full ${cat.tw}`} />
-                                <span className="text-xs font-bold dark:text-white">{cat.name}</span>
-                                <span className="text-xs text-muted ml-auto">{cat.percent}%</span>
+                                <span className={`size-3 shrink-0 rounded-full ${cat.tw}`} />
+                                <span className="text-xs font-bold dark:text-white truncate">{cat.name}</span>
+                                <span className="text-xs text-muted ml-auto shrink-0">{cat.percent}%</span>
                             </button>
                         ))}
                     </div>
@@ -216,7 +282,7 @@ export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodC
                             return priorityDistribution.map((p, i) => {
                                 const pct = Math.round((p.amount / totalPriority) * 100);
                                 return (
-                                    <div key={p.level} className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
+                                    <div key={`${p.level}-${i}`} className="p-4 bg-card-light dark:bg-zinc-900 rounded-2xl border border-border-light dark:border-border-dark">
                                         <div className="flex items-center justify-between mb-2">
                                             <div className="flex items-center gap-2">
                                                 <span className={`size-2 rounded-full ${PRIORITY_COLORS[i % PRIORITY_COLORS.length].dot}`} />
@@ -233,6 +299,97 @@ export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodC
                         })()}
                     </div>
                 </section>
+            )}
+
+            {/* ── Day Calendar Modal ── */}
+            {isCalendarOpen && (
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => setIsCalendarOpen(false)}>
+                    <div
+                        className="w-full max-w-[430px] bg-background-light dark:bg-background-dark rounded-t-3xl p-6 animate-slide-up max-h-[80vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-extrabold dark:text-white">Pilih Tanggal</h2>
+                            <button
+                                onClick={() => setIsCalendarOpen(false)}
+                                className="size-8 rounded-full bg-card-light dark:bg-card-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-4 dark:text-white">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Reset to today */}
+                        {activeDayStr !== todayStr && (
+                            <button
+                                onClick={() => handleDateSelect(todayStr)}
+                                className="w-full mb-4 py-3 rounded-xl bg-primary/10 text-primary font-semibold text-sm active:scale-95 transition-transform"
+                            >
+                                Kembali ke Hari Ini
+                            </button>
+                        )}
+
+                        {/* Month Navigation */}
+                        <div className="flex items-center justify-between mb-6">
+                            <button
+                                onClick={handleCalPrevMonth}
+                                className="size-10 rounded-xl bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-5 dark:text-white">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                            </button>
+                            <h3 className="text-lg font-extrabold dark:text-white">
+                                {INDONESIAN_MONTHS[calMonth]} {calYear}
+                            </h3>
+                            <button
+                                onClick={handleCalNextMonth}
+                                className="size-10 rounded-xl bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark flex items-center justify-center active:scale-95 transition-transform"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-5 dark:text-white">
+                                    <polyline points="9 18 15 12 9 6" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Calendar Grid */}
+                        <div>
+                            {/* Day Headers */}
+                            <div className="grid grid-cols-7 gap-2 mb-2">
+                                {["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"].map((d) => (
+                                    <div key={d} className="text-center text-xs font-bold text-muted">{d}</div>
+                                ))}
+                            </div>
+                            {/* Calendar Days */}
+                            <div className="grid grid-cols-7 gap-2">
+                                {generateCalendarDays(calYear, calMonth).map((day, idx) => {
+                                    if (day === null) return <div key={`e-${idx}`} />;
+                                    const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                                    const isSelected = activeDayStr === dateStr;
+                                    const isToday = today.getDate() === day && today.getMonth() === calMonth && today.getFullYear() === calYear;
+                                    return (
+                                        <button
+                                            key={day}
+                                            onClick={() => handleDateSelect(dateStr)}
+                                            className={`aspect-square rounded-xl flex items-center justify-center font-semibold text-sm transition-all active:scale-95 ${
+                                                isSelected
+                                                    ? "bg-primary text-[#131811] shadow-lg shadow-primary/20"
+                                                    : isToday
+                                                    ? "bg-primary/20 text-primary border-2 border-primary"
+                                                    : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
+                                            }`}
+                                        >
+                                            {day}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
         </>
     );

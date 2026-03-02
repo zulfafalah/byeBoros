@@ -77,8 +77,12 @@ export type AnalysisPeriod = "Day" | "Month" | "3 Months" | "6 Months" | "Year";
  * Fetch analysis data (expense + income).
  * Spreadsheet ID and sheet name are automatically injected by the API client.
  * @param period - Optional time period filter (defaults to "Month" on the server)
+ * @param date   - Optional specific date (YYYY-MM-DD). Used when period is "Day".
  */
-export async function getAnalysis(period?: AnalysisPeriod): Promise<AnalysisResponse> {
-    const query = period ? `?period=${encodeURIComponent(period)}` : "";
+export async function getAnalysis(period?: AnalysisPeriod, date?: string): Promise<AnalysisResponse> {
+    const params = new URLSearchParams();
+    if (period) params.set("period", period);
+    if (date) params.set("date", date);
+    const query = params.toString() ? `?${params.toString()}` : "";
     return api.get<AnalysisResponse>(`/api/analysis${query}`);
 }
