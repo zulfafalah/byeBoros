@@ -63,7 +63,7 @@ export default function DocumentationPage() {
                             <div className="flex gap-4">
                                 {/* Left: connector */}
                                 <div className="flex flex-col items-center">
-                                    <div className="size-8 rounded-full bg-primary flex items-center justify-center text-[#131811] text-xs font-extrabold shrink-0 shadow-sm">1</div>
+                                    <div className="size-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-xs font-extrabold shrink-0 shadow-sm">1</div>
                                     <div className="w-0.5 flex-1 bg-primary/40 dark:bg-primary/30 mt-2" />
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" className="size-3 text-primary/50 dark:text-primary/40 mb-1 shrink-0">
                                         <path d="M5 0 L5 8 M2 5 L5 8 L8 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
@@ -81,7 +81,7 @@ export default function DocumentationPage() {
                                         href={TEMPLATE_URL}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-[#131811] text-xs font-bold shadow-sm active:scale-[0.98] transition-all"
+                                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary text-xs font-bold shadow-sm active:scale-[0.98] transition-all"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-3.5">
                                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -100,7 +100,7 @@ export default function DocumentationPage() {
                             <div className="flex gap-4">
                                 {/* Left: connector */}
                                 <div className="flex flex-col items-center">
-                                    <div className="size-8 rounded-full bg-primary flex items-center justify-center text-[#131811] text-xs font-extrabold shrink-0 shadow-sm">2</div>
+                                    <div className="size-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-xs font-extrabold shrink-0 shadow-sm">2</div>
                                     <div className="w-0.5 flex-1 bg-primary/40 dark:bg-primary/30 mt-2" />
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" className="size-3 text-primary/50 dark:text-primary/40 mb-1 shrink-0">
                                         <path d="M5 0 L5 8 M2 5 L5 8 L8 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
@@ -145,7 +145,7 @@ export default function DocumentationPage() {
                             <div className="flex gap-4">
                                 {/* Left: no connector below */}
                                 <div className="flex flex-col items-center">
-                                    <div className="size-8 rounded-full bg-primary flex items-center justify-center text-[#131811] text-xs font-extrabold shrink-0 shadow-sm">3</div>
+                                    <div className="size-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-xs font-extrabold shrink-0 shadow-sm">3</div>
                                 </div>
                                 {/* Right: content */}
                                 <div className="flex-1 space-y-3 min-w-0">

@@ -9,7 +9,7 @@ export default function QuickActions() {
     return (
         <section className="grid grid-cols-2 gap-4 mb-10">
             {/* Add Income */}
-            <Link href="/income" className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-primary text-[#131811] font-bold transition-transform active:scale-95 shadow-lg shadow-primary/20">
+            <Link href="/income" className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-primary text-on-primary font-bold transition-transform active:scale-95 shadow-lg shadow-primary/20">
                 <div className="size-10 rounded-full bg-white/30 flex items-center justify-center">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

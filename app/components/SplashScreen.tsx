@@ -73,13 +73,13 @@ export default function SplashScreen() {
         >
           <p
             className="splash-title text-2xl font-bold tracking-tight"
-            style={{ color: "#ff6b34", fontFamily: "var(--font-display)" }}
+            style={{ color: "var(--color-primary)", fontFamily: "var(--font-display)" }}
           >
             ByeBoros
           </p>
           <p
             className="text-sm text-center mt-1"
-            style={{ color: "#6b8961" }}
+            style={{ color: "var(--color-primary-mid)" }}
           >
             Open Source Financial Dashboard
           </p>
@@ -97,7 +97,7 @@ export default function SplashScreen() {
                 width: 6,
                 height: 6,
                 borderRadius: "50%",
-                backgroundColor: "#46ec13",
+                backgroundColor: "var(--color-primary)",
                 display: "inline-block",
                 animation: `splashDot 1s ease-in-out ${i * 0.2}s infinite`,
               }}

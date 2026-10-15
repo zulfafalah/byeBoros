@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import RegisterSW from "./components/RegisterSW";
 import InstallPrompt from "./components/InstallPrompt";
 import AuthCallback from "./components/AuthCallback";
-import ThemeProvider from "./components/ThemeProvider";
+import ThemeProvider, { type PaletteId } from "./components/ThemeProvider";
 import WelcomePopup from "./components/WelcomePopup";
 import SplashScreen from "./components/SplashScreen";
 import "./globals.css";
@@ -65,12 +65,15 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const theme = cookieStore.get("theme")?.value;
   const isDark = theme === "dark";
+  const paletteCookie = cookieStore.get("palette")?.value;
+  const palette: PaletteId =
+    paletteCookie === "green" || paletteCookie === "pink" ? paletteCookie : "default";
 
   return (
-    <html lang={locale} className={isDark ? "dark" : ""}>
+    <html lang={locale} className={isDark ? "dark" : ""} data-palette={palette}>
       <body className={`${manrope.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider initialDark={isDark}>
+          <ThemeProvider initialDark={isDark} initialPalette={palette}>
             <SplashScreen />
             <AuthCallback />
             {children}

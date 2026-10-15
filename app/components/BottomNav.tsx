@@ -74,8 +74,8 @@ export default function BottomNav() {
                     if (tab.key === "add") {
                         return (
                             <Link key={tab.key} href="/expense" className="relative -top-8">
-                                <div className="size-14 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/40 border-4 border-background-light dark:border-background-dark transition-transform active:scale-90">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={3} className="size-7">
+                                <div className="size-14 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg shadow-primary/40 border-4 border-background-light dark:border-background-dark transition-transform active:scale-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="size-7">
                                         <line x1="12" y1="5" x2="12" y2="19" />
                                         <line x1="5" y1="12" x2="19" y2="12" />
                                     </svg>
@@ -90,7 +90,7 @@ export default function BottomNav() {
                         <Link
                             key={tab.key}
                             href={tab.href}
-                            className={`flex flex-col items-center gap-1 transition-colors ${isActive ? "text-[#1B5E20] dark:text-[#66BB6A]" : "text-muted"
+                            className={`flex flex-col items-center gap-1 transition-colors ${isActive ? "text-primary" : "text-muted"
                                 }`}
                         >
                             {tab.icon(isActive)}

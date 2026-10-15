@@ -196,7 +196,13 @@
         "save": "Save",
         "saved": "Saved!",
         "invalidLink": "Invalid Google Sheet link",
-        "description": "Connect your Google Sheet to sync transaction data."
+        "description": "Connect your Google Sheet to sync transaction data.",
+        "appearance": "Appearance",
+        "colorPalette": "Color Palette",
+        "colorPaletteDesc": "Choose the accent color used across the app.",
+        "paletteClassic": "Classic",
+        "paletteGreen": "Green",
+        "palettePink": "Pastel"
     },
     "Errors": {
         "spreadsheetNotSet": "Google Sheet link is not set. Please configure it in Profile Settings first."

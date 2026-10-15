@@ -5,22 +5,22 @@ import type { IncomeAnalysisData, AnalysisCategory, AnalysisPeriod } from "@/lib
 
 /* ── Color palette for chart segments ───────────── */
 const COLORS = [
-    { hex: "#22c55e", tw: "bg-income-green" },
-    { hex: "#14b8a6", tw: "bg-income-teal" },
-    { hex: "#84cc16", tw: "bg-income-lime" },
-    { hex: "#3b82f6", tw: "bg-accent-blue" },
-    { hex: "#a855f7", tw: "bg-accent-purple" },
-    { hex: "#f97316", tw: "bg-accent-orange" },
-    { hex: "#ec4899", tw: "bg-pink-500" },
-    { hex: "#eab308", tw: "bg-yellow-500" },
+    { hex: "var(--chart-1)", tw: "bg-[var(--chart-1)]" },
+    { hex: "var(--chart-2)", tw: "bg-[var(--chart-2)]" },
+    { hex: "var(--chart-3)", tw: "bg-[var(--chart-3)]" },
+    { hex: "var(--chart-4)", tw: "bg-[var(--chart-4)]" },
+    { hex: "var(--chart-5)", tw: "bg-[var(--chart-5)]" },
+    { hex: "var(--chart-6)", tw: "bg-[var(--chart-6)]" },
+    { hex: "var(--chart-7)", tw: "bg-[var(--chart-7)]" },
+    { hex: "var(--chart-8)", tw: "bg-[var(--chart-8)]" },
 ];
 
 const SOURCE_COLORS = [
-    { color: "bg-income-green", dot: "bg-income-green" },
-    { color: "bg-income-teal", dot: "bg-income-teal" },
-    { color: "bg-income-lime", dot: "bg-income-lime" },
-    { color: "bg-accent-blue", dot: "bg-accent-blue" },
-    { color: "bg-accent-purple", dot: "bg-accent-purple" },
+    { color: "bg-[var(--chart-1)]", dot: "bg-[var(--chart-1)]" },
+    { color: "bg-[var(--chart-2)]", dot: "bg-[var(--chart-2)]" },
+    { color: "bg-[var(--chart-3)]", dot: "bg-[var(--chart-3)]" },
+    { color: "bg-[var(--chart-4)]", dot: "bg-[var(--chart-4)]" },
+    { color: "bg-[var(--chart-5)]", dot: "bg-[var(--chart-5)]" },
 ];
 
 const periods = ["Day", "Month", "3 Months", "6 Months", "Year"] as const;
@@ -178,7 +178,7 @@ export default function IncomeAnalysis({ data, loading, activePeriod, onPeriodCh
                             key={p}
                             onClick={() => isDay ? handleOpenCalendar() : onPeriodChange(p as AnalysisPeriod)}
                             className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all ${isActive
-                                ? "bg-primary text-[#131811]"
+                                ? "bg-primary text-on-primary"
                                 : "bg-zinc-100 dark:bg-zinc-800 text-muted"
                                 }`}
                         >
@@ -376,7 +376,7 @@ export default function IncomeAnalysis({ data, loading, activePeriod, onPeriodCh
                                             onClick={() => handleDateSelect(dateStr)}
                                             className={`aspect-square rounded-xl flex items-center justify-center font-semibold text-sm transition-all active:scale-95 ${
                                                 isSelected
-                                                    ? "bg-primary text-[#131811] shadow-lg shadow-primary/20"
+                                                    ? "bg-primary text-on-primary shadow-lg shadow-primary/20"
                                                     : isToday
                                                     ? "bg-primary/20 text-primary border-2 border-primary"
                                                     : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"

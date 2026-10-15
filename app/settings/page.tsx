@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import BottomNav from "../components/BottomNav";
+import { useTheme, type PaletteId } from "../components/ThemeProvider";
+
+const PALETTES: { id: PaletteId; labelKey: string; colors: string[] }[] = [
+    { id: "default", labelKey: "paletteClassic", colors: ["#46ec13", "#3b82f6", "#f97316", "#a855f7"] },
+    { id: "green", labelKey: "paletteGreen", colors: ["#5c7057", "#89a482", "#acc5a6", "#d1edd3"] },
+    { id: "pink", labelKey: "palettePink", colors: ["#ffced8", "#ffdddd", "#fff4de", "#ffe8c4"] },
+];
 
 function extractSheetId(url: string): string | null {
     // Matches Google Sheet URLs like:
@@ -17,6 +24,7 @@ function extractSheetId(url: string): string | null {
 export default function SettingsPage() {
     const router = useRouter();
     const t = useTranslations("Settings");
+    const { palette, setPalette } = useTheme();
     const [sheetLink, setSheetLink] = useState("");
     const [sheetId, setSheetId] = useState("");
     const [error, setError] = useState("");
@@ -85,6 +93,51 @@ export default function SettingsPage() {
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide">
+                {/* Appearance Section */}
+                <section className="mt-4">
+                    <div className="bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark p-5 space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="size-5 text-primary">
+                                    <circle cx="13.5" cy="6.5" r="2.5" />
+                                    <circle cx="17.5" cy="10.5" r="2.5" />
+                                    <circle cx="8.5" cy="7.5" r="2.5" />
+                                    <circle cx="6.5" cy="12.5" r="2.5" />
+                                    <path d="M12 2a10 10 0 0 0 0 20 2 2 0 0 0 0-4 2 2 0 0 1 0-4h4a4 4 0 0 0 4-4 8 8 0 0 0-8-8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 className="text-base font-extrabold tracking-tight">{t("appearance")}</h2>
+                                <p className="text-xs text-muted mt-0.5">{t("colorPaletteDesc")}</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            {PALETTES.map((p) => {
+                                const active = palette === p.id;
+                                return (
+                                    <button
+                                        key={p.id}
+                                        onClick={() => setPalette(p.id)}
+                                        className={`rounded-xl border p-3 text-left transition-all active:scale-[0.98] ${
+                                            active
+                                                ? "border-primary ring-1 ring-primary bg-primary/5"
+                                                : "border-border-light dark:border-border-dark"
+                                        }`}
+                                    >
+                                        <div className="flex gap-1.5 mb-2">
+                                            {p.colors.map((c) => (
+                                                <span key={c} className="size-5 rounded-full" style={{ backgroundColor: c }} />
+                                            ))}
+                                        </div>
+                                        <span className="text-sm font-bold">{t(p.labelKey)}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+
                 {/* Google Sheet Section */}
                 <section className="mt-4">
                     <div className="bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark p-5 space-y-5">
@@ -139,7 +192,7 @@ export default function SettingsPage() {
                             className={`w-full h-12 rounded-xl font-bold text-sm shadow-lg active:scale-[0.98] transition-all cursor-pointer ${
                                 saved
                                     ? "bg-green-500 text-white shadow-green-500/20"
-                                    : "bg-primary text-[#131811] shadow-primary/20"
+                                    : "bg-primary text-on-primary shadow-primary/20"
                             }`}
                         >
                             {saved ? (

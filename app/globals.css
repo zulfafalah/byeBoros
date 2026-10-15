@@ -2,28 +2,134 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme inline {
+@theme {
+  /* ── Default palette (classic neon) ─────────────── */
   --color-primary: #46ec13;
-  --color-background-light: #f6f8f6;
-  --color-background-dark: #142210;
-  --color-expense-red: #ff4b4b;
+  --color-on-primary: #131811;
+  --color-primary-deep: #46ec13;
+  --color-primary-mid: #3b82f6;
+  --color-primary-soft: #f97316;
+  --color-primary-pale: #a855f7;
   --color-muted: #6b8961;
-  --color-card-light: #ffffff;
-  --color-card-dark: #18181b;
-  --color-border-light: #f1f4f0;
-  --color-border-dark: #27272a;
   --color-accent-blue: #3b82f6;
   --color-accent-purple: #a855f7;
   --color-accent-orange: #f97316;
   --color-income-green: #22c55e;
   --color-income-teal: #14b8a6;
   --color-income-lime: #84cc16;
+
+  /* ── Chart series ───────────────────────────────── */
+  --chart-1: #46ec13;
+  --chart-2: #3b82f6;
+  --chart-3: #f97316;
+  --chart-4: #a855f7;
+  --chart-5: #ec4899;
+  --chart-6: #14b8a6;
+  --chart-7: #eab308;
+  --chart-8: #ef4444;
+
+  /* ── Structural ─────────────────────────────────── */
+  --color-background-light: #f6f8f6;
+  --color-background-dark: #142210;
+  --color-expense-red: #ff4b4b;
+  --color-card-light: #ffffff;
+  --color-card-dark: #18181b;
+  --color-border-light: #f1f4f0;
+  --color-border-dark: #27272a;
   --font-display: var(--font-manrope), "Manrope", sans-serif;
 }
 
-/* ── Dark mode overrides ──────────────────────────── */
+/* ── Default palette: dark mode ───────────────────── */
 .dark {
   --color-muted: #c5d4be;
+}
+
+/* ── Palette: green ───────────────────────────────── */
+html[data-palette="green"] {
+  --color-primary: #5c7057;
+  --color-on-primary: #ffffff;
+  --color-primary-deep: #5c7057;
+  --color-primary-mid: #89a482;
+  --color-primary-soft: #acc5a6;
+  --color-primary-pale: #d1edd3;
+  --color-muted: #5c7057;
+  --color-border-light: #e2ece1;
+  --color-accent-blue: #89a482;
+  --color-accent-purple: #acc5a6;
+  --color-accent-orange: #5c7057;
+  --color-income-green: #5c7057;
+  --color-income-teal: #89a482;
+  --color-income-lime: #acc5a6;
+  --chart-1: #5c7057;
+  --chart-2: #89a482;
+  --chart-3: #acc5a6;
+  --chart-4: #d1edd3;
+  --chart-5: #5c7057;
+  --chart-6: #89a482;
+  --chart-7: #acc5a6;
+  --chart-8: #d1edd3;
+}
+
+html[data-palette="green"].dark {
+  --color-primary: #acc5a6;
+  --color-on-primary: #131811;
+  --color-muted: #89a482;
+  --color-primary-deep: #acc5a6;
+  --color-primary-mid: #89a482;
+  --color-primary-soft: #acc5a6;
+  --color-primary-pale: #d1edd3;
+  --chart-1: #d1edd3;
+  --chart-2: #acc5a6;
+  --chart-3: #89a482;
+  --chart-4: #5c7057;
+  --chart-5: #d1edd3;
+  --chart-6: #acc5a6;
+  --chart-7: #89a482;
+  --chart-8: #5c7057;
+}
+
+/* ── Palette: pink ────────────────────────────────── */
+html[data-palette="pink"] {
+  --color-primary: #ffced8;
+  --color-on-primary: #131811;
+  --color-primary-deep: #ffced8;
+  --color-primary-mid: #ffdddd;
+  --color-primary-soft: #fff4de;
+  --color-primary-pale: #ffe8c4;
+  --color-muted: #b5838d;
+  --color-border-light: #ffe4e9;
+  --color-accent-blue: #ffced8;
+  --color-accent-purple: #ffdddd;
+  --color-accent-orange: #ffe8c4;
+  --color-income-green: #ffced8;
+  --color-income-teal: #ffdddd;
+  --color-income-lime: #ffe8c4;
+  --chart-1: #ffced8;
+  --chart-2: #ffdddd;
+  --chart-3: #fff4de;
+  --chart-4: #ffe8c4;
+  --chart-5: #ffced8;
+  --chart-6: #ffdddd;
+  --chart-7: #fff4de;
+  --chart-8: #ffe8c4;
+}
+
+html[data-palette="pink"].dark {
+  --color-primary: #ffced8;
+  --color-on-primary: #131811;
+  --color-muted: #ffdddd;
+  --color-primary-deep: #ffced8;
+  --color-primary-mid: #ffdddd;
+  --color-primary-soft: #fff4de;
+  --color-primary-pale: #ffe8c4;
+  --chart-1: #ffe8c4;
+  --chart-2: #fff4de;
+  --chart-3: #ffdddd;
+  --chart-4: #ffced8;
+  --chart-5: #ffe8c4;
+  --chart-6: #fff4de;
+  --chart-7: #ffdddd;
+  --chart-8: #ffced8;
 }
 
 /* ── Base ─────────────────────────────────────────── */
@@ -69,10 +175,10 @@ body {
 
 /* ── Donut chart gradient ─────────────────────────── */
 .donut-chart {
-  background: conic-gradient(#46ec13 0% 35%,
-      #3b82f6 35% 60%,
-      #f97316 60% 80%,
-      #a855f7 80% 100%);
+  background: conic-gradient(var(--chart-1) 0% 35%,
+      var(--chart-2) 35% 60%,
+      var(--chart-3) 60% 80%,
+      var(--chart-4) 80% 100%);
 }
 
 /* ── Dark mode circular reveal transition ─────── */
