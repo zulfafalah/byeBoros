@@ -93,40 +93,40 @@ type Transaction = {
 
 /* ── Category Icon Mapper ─────────────────────────── */
 function getCategoryDesign(category: string) {
-    const defaultDesign = { icon: <ShoppingBagIcon />, iconBg: "bg-gray-50 dark:bg-gray-800/10", iconColor: "text-gray-500" };
+    const defaultDesign = { icon: <ShoppingBagIcon />, iconBg: "bg-muted/10", iconColor: "text-muted" };
     if (!category) return defaultDesign;
 
     const lower = category.toLowerCase();
 
     // Food & Groceries
-    if (lower.includes("makan") || lower.includes("minum") || lower.includes("restoran") || lower.includes("jajanan")) return { icon: <RestaurantIcon />, iconBg: "bg-orange-100 dark:bg-orange-900/30", iconColor: "text-orange-600" };
-    if (lower.includes("cafe") || lower.includes("coffee")) return { icon: <CoffeeIcon />, iconBg: "bg-amber-100 dark:bg-amber-900/30", iconColor: "text-amber-600" };
-    if (lower.includes("belanja") || lower.includes("groceries") || lower.includes("baju") || lower.includes("skincare") || lower.includes("gadget") || lower.includes("aksesoris")) return { icon: <ShoppingBagIcon />, iconBg: "bg-pink-50 dark:bg-pink-500/10", iconColor: "text-pink-500" };
+    if (lower.includes("makan") || lower.includes("minum") || lower.includes("restoran") || lower.includes("jajanan")) return { icon: <RestaurantIcon />, iconBg: "bg-[var(--chart-3)]/15", iconColor: "text-[var(--chart-3)]" };
+    if (lower.includes("cafe") || lower.includes("coffee")) return { icon: <CoffeeIcon />, iconBg: "bg-[var(--chart-7)]/15", iconColor: "text-[var(--chart-7)]" };
+    if (lower.includes("belanja") || lower.includes("groceries") || lower.includes("baju") || lower.includes("skincare") || lower.includes("gadget") || lower.includes("aksesoris")) return { icon: <ShoppingBagIcon />, iconBg: "bg-[var(--chart-5)]/15", iconColor: "text-[var(--chart-5)]" };
 
     // Housing & Living
-    if (lower.includes("sewa") || lower.includes("kpr") || lower.includes("listrik") || lower.includes("air") || lower.includes("kebersihan") || lower.includes("maintenance") || lower.includes("tinggal") || lower.includes("kos")) return { icon: <HomeIcon />, iconBg: "bg-blue-50 dark:bg-blue-500/10", iconColor: "text-blue-600" };
+    if (lower.includes("sewa") || lower.includes("kpr") || lower.includes("listrik") || lower.includes("air") || lower.includes("kebersihan") || lower.includes("maintenance") || lower.includes("tinggal") || lower.includes("kos")) return { icon: <HomeIcon />, iconBg: "bg-[var(--chart-2)]/15", iconColor: "text-[var(--chart-2)]" };
 
     // Transportation
-    if (lower.includes("bensin") || lower.includes("bbm") || lower.includes("parkir") || lower.includes("tol") || lower.includes("transportasi") || lower.includes("service") || lower.includes("motor") || lower.includes("mobil")) return { icon: <CarIcon />, iconBg: "bg-teal-50 dark:bg-teal-500/10", iconColor: "text-teal-600" };
-    if (lower.includes("pesawat") || lower.includes("flight") || lower.includes("travel")) return { icon: <FlightIcon />, iconBg: "bg-indigo-50 dark:bg-indigo-500/10", iconColor: "text-indigo-500" };
+    if (lower.includes("bensin") || lower.includes("bbm") || lower.includes("parkir") || lower.includes("tol") || lower.includes("transportasi") || lower.includes("service") || lower.includes("motor") || lower.includes("mobil")) return { icon: <CarIcon />, iconBg: "bg-[var(--chart-6)]/15", iconColor: "text-[var(--chart-6)]" };
+    if (lower.includes("pesawat") || lower.includes("flight") || lower.includes("travel")) return { icon: <FlightIcon />, iconBg: "bg-[var(--chart-4)]/15", iconColor: "text-[var(--chart-4)]" };
 
     // Health
-    if (lower.includes("obat") || lower.includes("vitamin") || lower.includes("bpjs") || lower.includes("asuransi kesehatan") || lower.includes("dokter") || lower.includes("sehat")) return { icon: <GymIcon />, iconBg: "bg-emerald-50 dark:bg-emerald-500/10", iconColor: "text-emerald-600" };
+    if (lower.includes("obat") || lower.includes("vitamin") || lower.includes("bpjs") || lower.includes("asuransi kesehatan") || lower.includes("dokter") || lower.includes("sehat")) return { icon: <GymIcon />, iconBg: "bg-[var(--chart-1)]/15", iconColor: "text-[var(--chart-1)]" };
 
     // Digital, Bills & Subscriptions
-    if (lower.includes("internet") || lower.includes("wifi") || lower.includes("pulsa") || lower.includes("paket data") || lower.includes("streaming") || lower.includes("cloud") || lower.includes("software")) return { icon: <WalletIcon />, iconBg: "bg-violet-50 dark:bg-violet-500/10", iconColor: "text-violet-600" };
+    if (lower.includes("internet") || lower.includes("wifi") || lower.includes("pulsa") || lower.includes("paket data") || lower.includes("streaming") || lower.includes("cloud") || lower.includes("software")) return { icon: <WalletIcon />, iconBg: "bg-[var(--chart-8)]/15", iconColor: "text-[var(--chart-8)]" };
 
     // Work & Education
-    if (lower.includes("peralatan kerja") || lower.includes("coworking") || lower.includes("kursus") || lower.includes("buku") || lower.includes("workshop")) return { icon: <WalletIcon />, iconBg: "bg-cyan-50 dark:bg-cyan-500/10", iconColor: "text-cyan-600" };
+    if (lower.includes("peralatan kerja") || lower.includes("coworking") || lower.includes("kursus") || lower.includes("buku") || lower.includes("workshop")) return { icon: <WalletIcon />, iconBg: "bg-[var(--chart-6)]/15", iconColor: "text-[var(--chart-6)]" };
 
     // Entertainment, Hobbies
-    if (lower.includes("nonton") || lower.includes("hobi") || lower.includes("gym")) return { icon: <GymIcon />, iconBg: "bg-purple-50 dark:bg-purple-500/10", iconColor: "text-purple-500" };
+    if (lower.includes("nonton") || lower.includes("hobi") || lower.includes("gym")) return { icon: <GymIcon />, iconBg: "bg-[var(--chart-4)]/15", iconColor: "text-[var(--chart-4)]" };
 
     // Social, Family & Charity
-    if (lower.includes("hadiah") || lower.includes("donasi") || lower.includes("kondangan") || lower.includes("thr") || lower.includes("orang tua") || lower.includes("adik") || lower.includes("kakak") || lower.includes("saudara")) return { icon: <ShoppingBagIcon />, iconBg: "bg-rose-50 dark:bg-rose-500/10", iconColor: "text-rose-500" };
+    if (lower.includes("hadiah") || lower.includes("donasi") || lower.includes("kondangan") || lower.includes("thr") || lower.includes("orang tua") || lower.includes("adik") || lower.includes("kakak") || lower.includes("saudara")) return { icon: <ShoppingBagIcon />, iconBg: "bg-[var(--chart-5)]/15", iconColor: "text-[var(--chart-5)]" };
 
     // Financial & Income
-    if (lower.includes("cicilan") || lower.includes("piutang") || lower.includes("admin") || lower.includes("darurat")) return { icon: <WalletIcon />, iconBg: "bg-slate-100 dark:bg-slate-800/10", iconColor: "text-slate-600" };
+    if (lower.includes("cicilan") || lower.includes("piutang") || lower.includes("admin") || lower.includes("darurat")) return { icon: <WalletIcon />, iconBg: "bg-[var(--chart-2)]/15", iconColor: "text-[var(--chart-2)]" };
     if (lower.includes("gaji") || lower.includes("pemasukan") || lower.includes("income") || lower.includes("salary")) return { icon: <WalletIcon />, iconBg: "bg-primary/10", iconColor: "text-primary" };
 
     return defaultDesign;
