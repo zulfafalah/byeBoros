@@ -228,7 +228,7 @@ export default function BudgetPage() {
                 <p className="text-sm text-red-500 font-medium text-center">{error}</p>
                 <button
                     onClick={() => window.location.reload()}
-                    className="mt-4 px-6 py-2 bg-primary text-[#131811] font-bold rounded-xl text-sm"
+                    className="mt-4 px-6 py-2 bg-primary text-on-primary font-bold rounded-xl text-sm"
                 >
                     Retry
                 </button>
@@ -408,7 +408,7 @@ export default function BudgetPage() {
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-xl shadow-lg shadow-primary/20 text-[#131811] font-extrabold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
+                    className="w-full bg-primary hover:opacity-90 active:scale-[0.98] transition-all py-4 rounded-xl shadow-lg shadow-primary/20 text-on-primary font-extrabold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
                 >
                     {saving ? (
                         <svg className="animate-spin size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -532,7 +532,7 @@ export default function BudgetPage() {
                             <button
                                 onClick={handleAddCategory}
                                 disabled={!newCategoryName.trim() || !newSubCategoryName.trim()}
-                                className="flex-1 py-3.5 rounded-xl bg-primary text-[#131811] font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform disabled:opacity-40 disabled:active:scale-100"
+                                className="flex-1 py-3.5 rounded-xl bg-primary text-on-primary font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform disabled:opacity-40 disabled:active:scale-100"
                             >
                                 {t("addCategory")}
                             </button>

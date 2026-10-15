@@ -110,7 +110,7 @@ export default function InstallPrompt() {
                     {!isIOS && (
                         <button
                             onClick={handleInstall}
-                            className="bg-[#46ec13] text-black text-xs font-semibold px-3 py-1.5 rounded-lg whitespace-nowrap"
+                            className="bg-primary text-on-primary text-xs font-semibold px-3 py-1.5 rounded-lg whitespace-nowrap"
                         >
                             Install
                         </button>

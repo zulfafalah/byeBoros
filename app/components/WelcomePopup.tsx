@@ -106,7 +106,7 @@ export default function WelcomePopup() {
                     <Link
                         href="/profile"
                         onClick={dismiss}
-                        className="w-full rounded-2xl bg-primary py-3 text-center text-sm font-semibold text-[#131811] transition active:scale-95"
+                        className="w-full rounded-2xl bg-primary py-3 text-center text-sm font-semibold text-on-primary transition active:scale-95"
                     >
                         {t("cta")}
                     </Link>

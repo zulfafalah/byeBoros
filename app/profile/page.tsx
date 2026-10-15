@@ -252,7 +252,7 @@ export default function ProfilePage() {
                             </button>
                             <button
                                 onClick={confirmLanguage}
-                                className="flex-1 py-3.5 rounded-xl bg-primary text-[#131811] font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform"
+                                className="flex-1 py-3.5 rounded-xl bg-primary text-on-primary font-bold text-sm shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform"
                             >
                                 {t("confirm")}
                             </button>

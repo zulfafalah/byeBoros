@@ -451,7 +451,7 @@ export default function TransactionsPage() {
 
                 {/* Quick Filters */}
                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                    <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-white font-semibold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                    <button className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-on-primary font-semibold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">
                         <FilterIcon />
                         <span>{t("filter")}</span>
                     </button>
@@ -459,7 +459,7 @@ export default function TransactionsPage() {
                         onClick={() => setIsDateModalOpen(true)}
                         className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-4 font-medium text-sm active:scale-95 transition-transform ${
                             selectedDate 
-                                ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                                ? "bg-primary text-on-primary shadow-lg shadow-primary/20" 
                                 : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark"
                         }`}
                     >
@@ -470,7 +470,7 @@ export default function TransactionsPage() {
                         onClick={() => setIsCategoryModalOpen(true)}
                         className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-4 font-medium text-sm active:scale-95 transition-transform ${
                             selectedCategory 
-                                ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                                ? "bg-primary text-on-primary shadow-lg shadow-primary/20" 
                                 : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark"
                         }`}
                     >
@@ -481,7 +481,7 @@ export default function TransactionsPage() {
                         onClick={() => setIsTypeModalOpen(true)}
                         className={`flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl px-4 font-medium text-sm active:scale-95 transition-transform ${
                             selectedType 
-                                ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                                ? "bg-primary text-on-primary shadow-lg shadow-primary/20" 
                                 : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark"
                         }`}
                     >
@@ -594,7 +594,7 @@ export default function TransactionsPage() {
                                             onClick={() => handleCategorySelect(categoryName)}
                                             className={`w-full p-4 rounded-xl text-left font-semibold transition-all active:scale-95 ${
                                                 isSelected
-                                                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                                    ? "bg-primary text-on-primary shadow-lg shadow-primary/20"
                                                     : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
                                             }`}
                                         >
@@ -607,7 +607,7 @@ export default function TransactionsPage() {
                                                 </div>
                                                 {cat.budget > 0 && (
                                                     <div className={`text-xs px-2 py-1 rounded-lg ${
-                                                        isSelected ? "bg-white/20" : "bg-primary/10 text-primary"
+                                                        isSelected ? "bg-on-primary/20" : "bg-primary/10 text-primary"
                                                     }`}>
                                                         Budget: {cat.budget.toLocaleString('id-ID')}
                                                     </div>
@@ -656,15 +656,15 @@ export default function TransactionsPage() {
                                 onClick={() => handleTypeSelect('income')}
                                 className={`w-full p-4 rounded-xl text-left font-bold transition-all active:scale-95 ${
                                     selectedType === 'income'
-                                        ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                        ? "bg-primary text-on-primary shadow-lg shadow-primary/20"
                                         : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
                                 }`}
                             >
                                 <div className="flex items-center gap-3">
                                     <div className={`size-10 rounded-xl flex items-center justify-center ${
-                                        selectedType === 'income' ? 'bg-white/20' : 'bg-primary/10'
+                                        selectedType === 'income' ? 'bg-on-primary/20' : 'bg-primary/10'
                                     }`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`size-5 ${selectedType === 'income' ? 'text-white' : 'text-primary'}`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`size-5 ${selectedType === 'income' ? 'text-on-primary' : 'text-primary'}`}>
                                             <line x1="12" y1="19" x2="12" y2="5" />
                                             <polyline points="5 12 12 5 19 12" />
                                         </svg>
@@ -680,15 +680,15 @@ export default function TransactionsPage() {
                                 onClick={() => handleTypeSelect('expense')}
                                 className={`w-full p-4 rounded-xl text-left font-bold transition-all active:scale-95 ${
                                     selectedType === 'expense'
-                                        ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                        ? "bg-primary text-on-primary shadow-lg shadow-primary/20"
                                         : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"
                                 }`}
                             >
                                 <div className="flex items-center gap-3">
                                     <div className={`size-10 rounded-xl flex items-center justify-center ${
-                                        selectedType === 'expense' ? 'bg-white/20' : 'bg-red-500/10'
+                                        selectedType === 'expense' ? 'bg-on-primary/20' : 'bg-red-500/10'
                                     }`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`size-5 ${selectedType === 'expense' ? 'text-white' : 'text-red-600'}`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`size-5 ${selectedType === 'expense' ? 'text-on-primary' : 'text-red-600'}`}>
                                             <line x1="12" y1="5" x2="12" y2="19" />
                                             <polyline points="19 12 12 19 5 12" />
                                         </svg>
@@ -786,7 +786,7 @@ export default function TransactionsPage() {
                                             onClick={() => handleDateSelect(dateStr)}
                                             className={`aspect-square rounded-xl flex items-center justify-center font-semibold text-sm transition-all active:scale-95 ${
                                                 isSelected
-                                                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                                    ? "bg-primary text-on-primary shadow-lg shadow-primary/20"
                                                     : isToday
                                                     ? "bg-primary/20 text-primary border-2 border-primary"
                                                     : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"

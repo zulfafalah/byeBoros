@@ -5,20 +5,20 @@ import type { ExpenseAnalysisData, ExpenseChartCategory, AnalysisPeriod } from "
 
 /* ── Color palette for chart segments ───────────── */
 const COLORS = [
-    { hex: "#46ec13", tw: "bg-primary" },
-    { hex: "#3b82f6", tw: "bg-accent-blue" },
-    { hex: "#f97316", tw: "bg-accent-orange" },
-    { hex: "#a855f7", tw: "bg-accent-purple" },
-    { hex: "#ec4899", tw: "bg-pink-500" },
-    { hex: "#14b8a6", tw: "bg-teal-500" },
-    { hex: "#eab308", tw: "bg-yellow-500" },
-    { hex: "#ef4444", tw: "bg-red-500" },
+    { hex: "var(--chart-1)", tw: "bg-[var(--chart-1)]" },
+    { hex: "var(--chart-2)", tw: "bg-[var(--chart-2)]" },
+    { hex: "var(--chart-3)", tw: "bg-[var(--chart-3)]" },
+    { hex: "var(--chart-4)", tw: "bg-[var(--chart-4)]" },
+    { hex: "var(--chart-5)", tw: "bg-[var(--chart-5)]" },
+    { hex: "var(--chart-6)", tw: "bg-[var(--chart-6)]" },
+    { hex: "var(--chart-7)", tw: "bg-[var(--chart-7)]" },
+    { hex: "var(--chart-8)", tw: "bg-[var(--chart-8)]" },
 ];
 
 const PRIORITY_COLORS = [
     { color: "bg-expense-red", dot: "bg-expense-red" },
-    { color: "bg-accent-orange", dot: "bg-accent-orange" },
-    { color: "bg-primary", dot: "bg-primary" },
+    { color: "bg-[var(--chart-3)]", dot: "bg-[var(--chart-3)]" },
+    { color: "bg-[var(--chart-1)]", dot: "bg-[var(--chart-1)]" },
 ];
 
 const periods = ["Day", "Month", "3 Months", "6 Months", "Year"] as const;
@@ -171,7 +171,7 @@ export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodC
                             key={p}
                             onClick={() => isDay ? handleOpenCalendar() : onPeriodChange(p as AnalysisPeriod)}
                             className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all ${isActive
-                                ? "bg-primary text-[#131811]"
+                                ? "bg-primary text-on-primary"
                                 : "bg-zinc-100 dark:bg-zinc-800 text-muted"
                                 }`}
                         >
@@ -376,7 +376,7 @@ export default function ExpenseAnalysis({ data, loading, activePeriod, onPeriodC
                                             onClick={() => handleDateSelect(dateStr)}
                                             className={`aspect-square rounded-xl flex items-center justify-center font-semibold text-sm transition-all active:scale-95 ${
                                                 isSelected
-                                                    ? "bg-primary text-[#131811] shadow-lg shadow-primary/20"
+                                                    ? "bg-primary text-on-primary shadow-lg shadow-primary/20"
                                                     : isToday
                                                     ? "bg-primary/20 text-primary border-2 border-primary"
                                                     : "bg-card-light dark:bg-card-dark text-[#131811] dark:text-white border border-border-light dark:border-border-dark hover:border-primary"

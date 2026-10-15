@@ -2,14 +2,20 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
+export type PaletteId = "default" | "green" | "pink";
+
 type ThemeContextType = {
     darkMode: boolean;
     toggleDarkMode: (e?: React.MouseEvent) => void;
+    palette: PaletteId;
+    setPalette: (palette: PaletteId) => void;
 };
 
 const ThemeContext = createContext<ThemeContextType>({
     darkMode: false,
     toggleDarkMode: () => { },
+    palette: "default",
+    setPalette: () => { },
 });
 
 export function useTheme() {
@@ -21,8 +27,17 @@ type DocumentWithVT = Document & {
     startViewTransition?: (callback: () => void) => { ready: Promise<void> };
 };
 
-export default function ThemeProvider({ children, initialDark = false }: { children: ReactNode; initialDark?: boolean }) {
+export default function ThemeProvider({
+    children,
+    initialDark = false,
+    initialPalette = "default",
+}: {
+    children: ReactNode;
+    initialDark?: boolean;
+    initialPalette?: PaletteId;
+}) {
     const [darkMode, setDarkMode] = useState(initialDark);
+    const [palette, setPaletteState] = useState<PaletteId>(initialPalette);
 
     // Sync cookie & theme-color meta tag whenever darkMode changes
     useEffect(() => {
@@ -34,6 +49,14 @@ export default function ThemeProvider({ children, initialDark = false }: { child
             el.setAttribute("content", themeColor);
         });
     }, [darkMode]);
+
+    // Apply palette attribute & persist choice
+    useEffect(() => {
+        document.documentElement.dataset.palette = palette;
+        document.cookie = `palette=${palette};path=/;max-age=31536000`;
+    }, [palette]);
+
+    const setPalette = (next: PaletteId) => setPaletteState(next);
 
     const toggleDarkMode = (e?: React.MouseEvent) => {
         const isDark = !darkMode;
@@ -65,7 +88,7 @@ export default function ThemeProvider({ children, initialDark = false }: { child
     };
 
     return (
-        <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+        <ThemeContext.Provider value={{ darkMode, toggleDarkMode, palette, setPalette }}>
             {children}
         </ThemeContext.Provider>
     );

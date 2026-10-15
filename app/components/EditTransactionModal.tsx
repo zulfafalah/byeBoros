@@ -295,7 +295,7 @@ export default function EditTransactionModal({
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 h-12 rounded-xl font-semibold bg-primary text-white hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 h-12 rounded-xl font-semibold bg-primary text-on-primary hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Saving..." : "Save Changes"}
             </button>
