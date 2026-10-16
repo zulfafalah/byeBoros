@@ -107,7 +107,12 @@ export default function ExpensePage() {
                 <h1 className="text-lg font-bold tracking-tight dark:text-white">
                     {t("title")}
                 </h1>
-                <VoiceButton lang={speechLang} onResult={handleVoice} />
+                <VoiceButton
+                    lang={speechLang}
+                    autoSave
+                    onResult={handleVoice}
+                    onSaved={() => router.push("/")}
+                />
             </header>
 
             {/* Scrollable Form Content */}

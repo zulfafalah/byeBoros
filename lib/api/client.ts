@@ -41,8 +41,10 @@ type RequestOptions = Omit<RequestInit, "body" | "headers"> & {
 async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { body, headers: extraHeaders, skipAuth, ...fetchOptions } = options;
 
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    ...(isForm ? {} : { "Content-Type": "application/json" }),
     ...extraHeaders,
   };
 
@@ -67,10 +69,12 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
   const url = endpoint.startsWith("http") ? endpoint : `${API_URL}${endpoint}`;
 
+  const serialize = () => (body ? (isForm ? (body as FormData) : JSON.stringify(body)) : undefined);
+
   const response = await fetch(url, {
     ...fetchOptions,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: serialize(),
   });
 
   if (response.status === 401) {
@@ -82,7 +86,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
       const retryResponse = await fetch(url, {
         ...fetchOptions,
         headers,
-        body: body ? JSON.stringify(body) : undefined,
+        body: serialize(),
       });
       if (retryResponse.ok) {
         if (retryResponse.status === 204) return undefined as T;
@@ -129,6 +133,11 @@ export const api = {
 
   post<T>(endpoint: string, body?: unknown, options?: RequestOptions) {
     return request<T>(endpoint, { ...options, method: "POST", body });
+  },
+
+  /** POST multipart/form-data (Content-Type is set by the browser). */
+  postForm<T>(endpoint: string, form: FormData, options?: RequestOptions) {
+    return request<T>(endpoint, { ...options, method: "POST", body: form });
   },
 
   put<T>(endpoint: string, body?: unknown, options?: RequestOptions) {

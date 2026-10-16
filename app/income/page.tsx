@@ -121,7 +121,12 @@ export default function IncomePage() {
                 <h1 className="text-base font-bold leading-tight tracking-tight dark:text-white">
                     {t("title")}
                 </h1>
-                <VoiceButton lang={speechLang} onResult={handleVoice} />
+                <VoiceButton
+                    lang={speechLang}
+                    autoSave
+                    onResult={handleVoice}
+                    onSaved={() => router.push("/")}
+                />
             </header>
 
             {/* Main Content */}

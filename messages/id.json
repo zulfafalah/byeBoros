@@ -207,6 +207,7 @@
     "Voice": {
         "label": "Input suara",
         "listening": "Mendengarkan…",
+        "processing": "Memproses…",
         "unsupported": "Input suara tidak didukung di browser ini"
     },
     "Errors": {
