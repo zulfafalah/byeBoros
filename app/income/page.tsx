@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { createIncome } from "@/lib/api/transactions";
 import { getIncomeCategories } from "@/lib/api/category";
+import VoiceButton from "../components/VoiceButton";
+import type { ParsedVoiceTransaction } from "@/lib/voice/parse";
 
 export default function IncomePage() {
     const t = useTranslations("Income");
+    const locale = useLocale();
     const router = useRouter();
     const [quickTags, setQuickTags] = useState<string[]>([]);
     const [amount, setAmount] = useState("");
@@ -74,6 +77,21 @@ export default function IncomePage() {
         }
     };
 
+    const handleVoice = (parsed: ParsedVoiceTransaction) => {
+        if (parsed.amount) setAmount(formatRupiah(String(parsed.amount)));
+        if (parsed.description) {
+            setName(parsed.description);
+            const spoken = parsed.description.toLowerCase();
+            const match = quickTags.find((tag) => {
+                const lowerTag = tag.toLowerCase();
+                return spoken.includes(lowerTag) || lowerTag.includes(spoken);
+            });
+            if (match) setSelectedTag(match);
+        }
+    };
+
+    const speechLang = locale === "id" ? "id-ID" : "en-US";
+
     return (
         <div className="relative flex min-h-dvh w-full flex-col max-w-[430px] mx-auto bg-white dark:bg-background-dark shadow-2xl overflow-hidden">
             {/* Decorative background blurs */}
@@ -103,7 +121,7 @@ export default function IncomePage() {
                 <h1 className="text-base font-bold leading-tight tracking-tight dark:text-white">
                     {t("title")}
                 </h1>
-                <div className="size-10" /> {/* Spacer for symmetry */}
+                <VoiceButton lang={speechLang} onResult={handleVoice} />
             </header>
 
             {/* Main Content */}

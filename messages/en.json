@@ -204,6 +204,11 @@
         "paletteGreen": "Green",
         "palettePink": "Pastel"
     },
+    "Voice": {
+        "label": "Voice input",
+        "listening": "Listening…",
+        "unsupported": "Voice input isn't supported on this browser"
+    },
     "Errors": {
         "spreadsheetNotSet": "Google Sheet link is not set. Please configure it in Profile Settings first."
     },
