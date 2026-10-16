@@ -3,12 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { createExpense } from "@/lib/api/transactions";
 import { getCategories, type CategoryItem } from "@/lib/api/category";
+import VoiceButton from "../components/VoiceButton";
+import type { ParsedVoiceTransaction } from "@/lib/voice/parse";
 
 export default function ExpensePage() {
     const t = useTranslations("Expense");
+    const locale = useLocale();
     const router = useRouter();
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
@@ -73,6 +76,13 @@ export default function ExpensePage() {
         }
     };
 
+    const handleVoice = (parsed: ParsedVoiceTransaction) => {
+        if (parsed.amount) setAmount(String(parsed.amount));
+        if (parsed.description) setName(parsed.description);
+    };
+
+    const speechLang = locale === "id" ? "id-ID" : "en-US";
+
     return (
         <div className="relative flex min-h-dvh w-full flex-col max-w-[430px] mx-auto bg-white dark:bg-background-dark shadow-2xl">
             {/* Header */}
@@ -97,7 +107,7 @@ export default function ExpensePage() {
                 <h1 className="text-lg font-bold tracking-tight dark:text-white">
                     {t("title")}
                 </h1>
-                <div className="size-10" /> {/* Spacer for symmetry */}
+                <VoiceButton lang={speechLang} onResult={handleVoice} />
             </header>
 
             {/* Scrollable Form Content */}

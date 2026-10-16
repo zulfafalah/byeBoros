@@ -204,6 +204,11 @@
         "paletteGreen": "Hijau",
         "palettePink": "Pastel"
     },
+    "Voice": {
+        "label": "Input suara",
+        "listening": "Mendengarkan…",
+        "unsupported": "Input suara tidak didukung di browser ini"
+    },
     "Errors": {
         "spreadsheetNotSet": "Link Google Sheet belum diatur. Silakan konfigurasi di Pengaturan Profil terlebih dahulu."
     },
