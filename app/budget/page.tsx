@@ -52,22 +52,22 @@ const icons: Record<string, ReactNode> = {
 
 /* ── Category style mapping ──────────────────────────── */
 const categoryStyles: Record<string, { text: string; bg: string; iconKey: string }> = {
-    "Kebutuhan Harian": { text: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-500/10", iconKey: "restaurant" },
-    "Tempat Tinggal": { text: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10", iconKey: "home" },
-    "Transportasi": { text: "text-sky-500", bg: "bg-sky-50 dark:bg-sky-500/10", iconKey: "car" },
-    "Kesehatan": { text: "text-red-500", bg: "bg-red-50 dark:bg-red-500/10", iconKey: "health" },
-    "Komunikasi & Langganan": { text: "text-violet-500", bg: "bg-violet-50 dark:bg-violet-500/10", iconKey: "phone" },
-    "Makan di Luar / Nongkrong": { text: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10", iconKey: "coffee" },
-    "Belanja Pribadi": { text: "text-pink-500", bg: "bg-pink-50 dark:bg-pink-500/10", iconKey: "shopping" },
-    "Kerja / Produktivitas": { text: "text-indigo-500", bg: "bg-indigo-50 dark:bg-indigo-500/10", iconKey: "briefcase" },
-    "Sosial": { text: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10", iconKey: "users" },
-    "Hiburan": { text: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10", iconKey: "movie" },
-    "Pendidikan / Pengembangan Diri": { text: "text-cyan-500", bg: "bg-cyan-50 dark:bg-cyan-500/10", iconKey: "education" },
-    "Keuangan": { text: "text-green-500", bg: "bg-green-50 dark:bg-green-500/10", iconKey: "wallet" },
-    "Keluarga": { text: "text-rose-500", bg: "bg-rose-50 dark:bg-rose-500/10", iconKey: "family" },
+    "Kebutuhan Harian": { text: "text-[var(--chart-1)]", bg: "bg-[var(--chart-1)]/15", iconKey: "restaurant" },
+    "Tempat Tinggal": { text: "text-[var(--chart-2)]", bg: "bg-[var(--chart-2)]/15", iconKey: "home" },
+    "Transportasi": { text: "text-[var(--chart-3)]", bg: "bg-[var(--chart-3)]/15", iconKey: "car" },
+    "Kesehatan": { text: "text-[var(--chart-4)]", bg: "bg-[var(--chart-4)]/15", iconKey: "health" },
+    "Komunikasi & Langganan": { text: "text-[var(--chart-5)]", bg: "bg-[var(--chart-5)]/15", iconKey: "phone" },
+    "Makan di Luar / Nongkrong": { text: "text-[var(--chart-6)]", bg: "bg-[var(--chart-6)]/15", iconKey: "coffee" },
+    "Belanja Pribadi": { text: "text-[var(--chart-7)]", bg: "bg-[var(--chart-7)]/15", iconKey: "shopping" },
+    "Kerja / Produktivitas": { text: "text-[var(--chart-8)]", bg: "bg-[var(--chart-8)]/15", iconKey: "briefcase" },
+    "Sosial": { text: "text-[var(--chart-1)]", bg: "bg-[var(--chart-1)]/15", iconKey: "users" },
+    "Hiburan": { text: "text-[var(--chart-2)]", bg: "bg-[var(--chart-2)]/15", iconKey: "movie" },
+    "Pendidikan / Pengembangan Diri": { text: "text-[var(--chart-3)]", bg: "bg-[var(--chart-3)]/15", iconKey: "education" },
+    "Keuangan": { text: "text-[var(--chart-4)]", bg: "bg-[var(--chart-4)]/15", iconKey: "wallet" },
+    "Keluarga": { text: "text-[var(--chart-5)]", bg: "bg-[var(--chart-5)]/15", iconKey: "family" },
 };
 
-const defaultStyle = { text: "text-gray-500", bg: "bg-gray-50 dark:bg-gray-500/10", iconKey: "default" };
+const defaultStyle = { text: "text-muted", bg: "bg-muted/10", iconKey: "default" };
 
 function getStyle(name: string) {
     return categoryStyles[name] ?? defaultStyle;
