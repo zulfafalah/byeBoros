@@ -207,6 +207,7 @@
     "Voice": {
         "label": "Voice input",
         "listening": "Listening…",
+        "processing": "Processing…",
         "unsupported": "Voice input isn't supported on this browser"
     },
     "Errors": {
