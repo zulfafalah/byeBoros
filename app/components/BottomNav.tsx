@@ -3,10 +3,13 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useTheme } from "./ThemeProvider";
+import RecordExpenseButton from "./RecordExpenseButton";
 
 export default function BottomNav() {
     const pathname = usePathname();
     const t = useTranslations("BottomNav");
+    const { voiceEntry } = useTheme();
 
     const tabs = [
         {
@@ -72,6 +75,9 @@ export default function BottomNav() {
             <div className="flex items-center justify-between max-w-md mx-auto">
                 {tabs.map((tab) => {
                     if (tab.key === "add") {
+                        if (voiceEntry) {
+                            return <RecordExpenseButton key={tab.key} />;
+                        }
                         return (
                             <Link key={tab.key} href="/expense" className="relative -top-8">
                                 <div className="size-14 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg shadow-primary/40 border-4 border-background-light dark:border-background-dark transition-transform active:scale-90">

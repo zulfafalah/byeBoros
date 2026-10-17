@@ -202,12 +202,15 @@
         "colorPaletteDesc": "Choose the accent color used across the app.",
         "paletteClassic": "Classic",
         "paletteGreen": "Green",
-        "palettePink": "Pastel"
+        "palettePink": "Pastel",
+        "voiceEntry": "Quick record button",
+        "voiceEntryDesc": "Show a record button in the middle of the bottom bar to log an expense by voice."
     },
     "Voice": {
         "label": "Voice input",
         "listening": "Listening…",
         "processing": "Processing…",
+        "recordExpense": "Record expense",
         "unsupported": "Voice input isn't supported on this browser"
     },
     "Errors": {

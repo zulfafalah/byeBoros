@@ -68,12 +68,13 @@ export default async function RootLayout({
   const paletteCookie = cookieStore.get("palette")?.value;
   const palette: PaletteId =
     paletteCookie === "green" || paletteCookie === "pink" ? paletteCookie : "default";
+  const voiceEntry = cookieStore.get("voiceEntry")?.value !== "0";
 
   return (
     <html lang={locale} className={isDark ? "dark" : ""} data-palette={palette}>
       <body className={`${manrope.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider initialDark={isDark} initialPalette={palette}>
+          <ThemeProvider initialDark={isDark} initialPalette={palette} initialVoiceEntry={voiceEntry}>
             <SplashScreen />
             <AuthCallback />
             {children}

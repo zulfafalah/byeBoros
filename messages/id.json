@@ -202,12 +202,15 @@
         "colorPaletteDesc": "Pilih warna aksen yang dipakai di seluruh aplikasi.",
         "paletteClassic": "Klasik",
         "paletteGreen": "Hijau",
-        "palettePink": "Pastel"
+        "palettePink": "Pastel",
+        "voiceEntry": "Tombol rekam cepat",
+        "voiceEntryDesc": "Tampilkan tombol rekam di tengah bar bawah untuk mencatat pengeluaran lewat suara."
     },
     "Voice": {
         "label": "Input suara",
         "listening": "Mendengarkan…",
         "processing": "Memproses…",
+        "recordExpense": "Rekam pengeluaran",
         "unsupported": "Input suara tidak didukung di browser ini"
     },
     "Errors": {

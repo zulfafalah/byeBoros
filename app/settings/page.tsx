@@ -24,7 +24,7 @@ function extractSheetId(url: string): string | null {
 export default function SettingsPage() {
     const router = useRouter();
     const t = useTranslations("Settings");
-    const { palette, setPalette } = useTheme();
+    const { palette, setPalette, voiceEntry, setVoiceEntry } = useTheme();
     const [sheetLink, setSheetLink] = useState("");
     const [sheetId, setSheetId] = useState("");
     const [error, setError] = useState("");
@@ -134,6 +134,44 @@ export default function SettingsPage() {
                                     </button>
                                 );
                             })}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Voice Entry Section */}
+                <section className="mt-4">
+                    <div className="bg-card-light dark:bg-card-dark rounded-2xl border border-border-light dark:border-border-dark p-5">
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="size-5 text-primary">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                        <line x1="12" y1="19" x2="12" y2="23" />
+                                        <line x1="8" y1="23" x2="16" y2="23" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 className="text-base font-extrabold tracking-tight">{t("voiceEntry")}</h2>
+                                    <p className="text-xs text-muted mt-0.5">{t("voiceEntryDesc")}</p>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                role="switch"
+                                aria-checked={voiceEntry}
+                                aria-label={t("voiceEntry")}
+                                onClick={() => setVoiceEntry(!voiceEntry)}
+                                className={`relative shrink-0 w-12 h-7 rounded-full transition-colors cursor-pointer ${
+                                    voiceEntry ? "bg-primary" : "bg-gray-300 dark:bg-white/20"
+                                }`}
+                            >
+                                <span
+                                    className={`absolute top-1 size-5 rounded-full bg-white shadow transition-all ${
+                                        voiceEntry ? "left-6" : "left-1"
+                                    }`}
+                                />
+                            </button>
                         </div>
                     </div>
                 </section>
