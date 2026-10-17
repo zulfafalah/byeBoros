@@ -9,6 +9,8 @@ type ThemeContextType = {
     toggleDarkMode: (e?: React.MouseEvent) => void;
     palette: PaletteId;
     setPalette: (palette: PaletteId) => void;
+    voiceEntry: boolean;
+    setVoiceEntry: (enabled: boolean) => void;
 };
 
 const ThemeContext = createContext<ThemeContextType>({
@@ -16,6 +18,8 @@ const ThemeContext = createContext<ThemeContextType>({
     toggleDarkMode: () => { },
     palette: "default",
     setPalette: () => { },
+    voiceEntry: true,
+    setVoiceEntry: () => { },
 });
 
 export function useTheme() {
@@ -31,13 +35,16 @@ export default function ThemeProvider({
     children,
     initialDark = false,
     initialPalette = "default",
+    initialVoiceEntry = true,
 }: {
     children: ReactNode;
     initialDark?: boolean;
     initialPalette?: PaletteId;
+    initialVoiceEntry?: boolean;
 }) {
     const [darkMode, setDarkMode] = useState(initialDark);
     const [palette, setPaletteState] = useState<PaletteId>(initialPalette);
+    const [voiceEntry, setVoiceEntryState] = useState(initialVoiceEntry);
 
     // Sync cookie & theme-color meta tag whenever darkMode changes
     useEffect(() => {
@@ -56,7 +63,13 @@ export default function ThemeProvider({
         document.cookie = `palette=${palette};path=/;max-age=31536000`;
     }, [palette]);
 
+    // Persist the voice quick-record preference
+    useEffect(() => {
+        document.cookie = `voiceEntry=${voiceEntry ? "1" : "0"};path=/;max-age=31536000`;
+    }, [voiceEntry]);
+
     const setPalette = (next: PaletteId) => setPaletteState(next);
+    const setVoiceEntry = (enabled: boolean) => setVoiceEntryState(enabled);
 
     const toggleDarkMode = (e?: React.MouseEvent) => {
         const isDark = !darkMode;
@@ -88,7 +101,7 @@ export default function ThemeProvider({
     };
 
     return (
-        <ThemeContext.Provider value={{ darkMode, toggleDarkMode, palette, setPalette }}>
+        <ThemeContext.Provider value={{ darkMode, toggleDarkMode, palette, setPalette, voiceEntry, setVoiceEntry }}>
             {children}
         </ThemeContext.Provider>
     );
