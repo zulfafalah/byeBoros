@@ -79,6 +79,20 @@ export default function ExpensePage() {
     const handleVoice = (parsed: ParsedVoiceTransaction) => {
         if (parsed.amount) setAmount(String(parsed.amount));
         if (parsed.description) setName(parsed.description);
+        if (parsed.priority) {
+            const value = parsed.priority.toLowerCase();
+            const label = Object.keys(priorityMap).find(
+                (key) => priorityMap[key] === value
+            );
+            if (label) setPriority(label);
+        }
+        if (parsed.category) {
+            const target = parsed.category.toLowerCase();
+            const match = categories.find(
+                (item) => item.sub_category_name.toLowerCase() === target
+            );
+            if (match) setCategory(match.sub_category_name);
+        }
     };
 
     const speechLang = locale === "id" ? "id-ID" : "en-US";

@@ -2,6 +2,8 @@ export interface ParsedVoiceTransaction {
   amount?: number;
   description?: string;
   type?: "income" | "expense";
+  category?: string;
+  priority?: string;
 }
 
 const UNITS: Record<string, number> = {

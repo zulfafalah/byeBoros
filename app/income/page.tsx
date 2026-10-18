@@ -79,13 +79,10 @@ export default function IncomePage() {
 
     const handleVoice = (parsed: ParsedVoiceTransaction) => {
         if (parsed.amount) setAmount(formatRupiah(String(parsed.amount)));
-        if (parsed.description) {
-            setName(parsed.description);
-            const spoken = parsed.description.toLowerCase();
-            const match = quickTags.find((tag) => {
-                const lowerTag = tag.toLowerCase();
-                return spoken.includes(lowerTag) || lowerTag.includes(spoken);
-            });
+        if (parsed.description) setName(parsed.description);
+        const target = parsed.category?.toLowerCase();
+        if (target) {
+            const match = quickTags.find((tag) => tag.toLowerCase() === target);
             if (match) setSelectedTag(match);
         }
     };
