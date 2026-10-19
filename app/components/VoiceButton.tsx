@@ -13,6 +13,7 @@ import {
   parseVoiceTransaction,
   type ParsedVoiceTransaction,
 } from "@/lib/voice/parse";
+import { notifyTransactionsChanged } from "@/lib/events";
 import { ApiError } from "@/lib/api/types";
 
 interface VoiceButtonProps {
@@ -49,6 +50,7 @@ export default function VoiceButton({
       try {
         if (autoSave) {
           const res = await createVoiceTransaction(wav);
+          notifyTransactionsChanged();
           onSaved?.(res.data);
         } else {
           const res = await transcribeVoice(wav);
@@ -60,6 +62,7 @@ export default function VoiceButton({
               type: data.type,
               category: data.category || undefined,
               priority: data.priority || undefined,
+              notes: data.notes || undefined,
             },
             data.text,
           );

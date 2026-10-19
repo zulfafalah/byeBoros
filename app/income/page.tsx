@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { createIncome } from "@/lib/api/transactions";
+import { notifyTransactionsChanged } from "@/lib/events";
 import { getIncomeCategories } from "@/lib/api/category";
 import VoiceButton from "../components/VoiceButton";
 import type { ParsedVoiceTransaction } from "@/lib/voice/parse";
@@ -68,6 +69,7 @@ export default function IncomePage() {
                 notes: note || undefined,
                 transaction_at: formatTransactionAt(),
             });
+            notifyTransactionsChanged();
             router.push("/");
         } catch (err) {
             console.error("Failed to save income:", err);
@@ -85,6 +87,7 @@ export default function IncomePage() {
             const match = quickTags.find((tag) => tag.toLowerCase() === target);
             if (match) setSelectedTag(match);
         }
+        if (parsed.notes) setNote(parsed.notes);
     };
 
     const speechLang = locale === "id" ? "id-ID" : "en-US";
