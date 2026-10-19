@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { updateTransaction } from "@/lib/api/transactions";
+import { updateTransaction, deleteTransaction } from "@/lib/api/transactions";
 import { getCategories, getIncomeCategories, type CategoryItem } from "@/lib/api/category";
 import type { TransactionItem } from "@/lib/api/types";
 
@@ -27,6 +27,7 @@ export default function EditTransactionModal({
   const [notes, setNotes] = useState("");
   const [transactionDate, setTransactionDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [incomeCategories, setIncomeCategories] = useState<string[]>([]);
 
@@ -112,6 +113,27 @@ export default function EditTransactionModal({
       showToast("error", err instanceof Error ? err.message : "Failed to update transaction");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!transaction) return;
+    const confirmed = window.confirm(
+      `Delete this ${transaction.type}? This action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteTransaction(transaction.id, transaction.type);
+      showToast("success", "Transaction deleted successfully!");
+      onSuccess();
+      onClose();
+    } catch (err) {
+      console.error("Failed to delete transaction:", err);
+      showToast("error", err instanceof Error ? err.message : "Failed to delete transaction");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -294,12 +316,22 @@ export default function EditTransactionModal({
             </button>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isDeleting}
               className="flex-1 h-12 rounded-xl font-semibold bg-primary text-on-primary hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Saving..." : "Save Changes"}
             </button>
           </div>
+
+          {/* Delete */}
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={isLoading || isDeleting}
+            className="w-full h-12 rounded-xl font-semibold border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isDeleting ? "Deleting..." : `Delete ${transaction.type === "income" ? "Income" : "Expense"}`}
+          </button>
         </form>
       </div>
     </div>

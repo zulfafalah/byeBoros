@@ -81,3 +81,11 @@ export interface UpdateExpensePayload {
 export async function updateTransaction(payload: UpdateIncomePayload | UpdateExpensePayload) {
   return api.put("/api/transaction", payload);
 }
+
+/**
+ * Delete an existing transaction (income or expense).
+ * Spreadsheet ID and sheet name are automatically injected by the API client.
+ */
+export async function deleteTransaction(id: string, type: "income" | "expense") {
+  return api.delete("/api/transaction", { body: { id, type } });
+}
