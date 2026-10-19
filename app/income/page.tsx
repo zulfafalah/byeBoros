@@ -18,6 +18,9 @@ export default function IncomePage() {
     const [amount, setAmount] = useState("");
     const [name, setName] = useState("");
     const [note, setNote] = useState("");
+    const [date, setDate] = useState(
+        new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" })
+    );
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -36,11 +39,9 @@ export default function IncomePage() {
         }
     };
 
-    const formatTransactionAt = (): string => {
+    const formatTransactionAt = (selectedDate: string): string => {
         const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
-        const dd = String(now.getDate()).padStart(2, "0");
-        const mm = String(now.getMonth() + 1).padStart(2, "0");
-        const yyyy = now.getFullYear();
+        const [yyyy, mm, dd] = selectedDate.split("-");
         const hh = String(now.getHours()).padStart(2, "0");
         const mi = String(now.getMinutes()).padStart(2, "0");
         const ss = String(now.getSeconds()).padStart(2, "0");
@@ -67,7 +68,7 @@ export default function IncomePage() {
                 priority: "low",
                 amount: Number(amount.replace(/\./g, "")),
                 notes: note || undefined,
-                transaction_at: formatTransactionAt(),
+                transaction_at: formatTransactionAt(date),
             });
             notifyTransactionsChanged();
             router.push("/");
@@ -88,6 +89,7 @@ export default function IncomePage() {
             if (match) setSelectedTag(match);
         }
         if (parsed.notes) setNote(parsed.notes);
+        if (parsed.date) setDate(parsed.date);
     };
 
     const speechLang = locale === "id" ? "id-ID" : "en-US";
@@ -225,6 +227,21 @@ export default function IncomePage() {
                                 {tag}
                             </button>
                         ))}
+                    </div>
+
+                    {/* Date Input */}
+                    <div className="space-y-3">
+                        <label className="block text-xs font-bold uppercase tracking-widest text-muted ml-1">
+                            {t("date")}
+                        </label>
+                        <div className="relative group">
+                            <input
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                className="w-full h-14 px-5 rounded-2xl bg-gray-50/50 dark:bg-white/5 border border-border-light dark:border-border-dark focus:border-primary focus:bg-white dark:focus:bg-black/20 focus:ring-0 transition-all text-base font-medium dark:text-white"
+                                type="date"
+                            />
+                        </div>
                     </div>
 
                     {/* Note Input (Optional) */}

@@ -99,6 +99,7 @@
         "incomeSource": "Income Source",
         "sourcePlaceholder": "e.g. Monthly Salary",
         "amount": "Amount",
+        "date": "Date",
         "note": "Note (Optional)",
         "notePlaceholder": "Add more details...",
         "saveIncome": "Save Income",

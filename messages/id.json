@@ -99,6 +99,7 @@
         "incomeSource": "Sumber Pemasukan",
         "sourcePlaceholder": "cth. Gaji Bulanan",
         "amount": "Jumlah",
+        "date": "Tanggal",
         "note": "Catatan (Opsional)",
         "notePlaceholder": "Tambahkan detail...",
         "saveIncome": "Simpan Pemasukan",

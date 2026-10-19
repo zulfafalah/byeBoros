@@ -96,6 +96,7 @@ export default function ExpensePage() {
             if (match) setCategory(match.sub_category_name);
         }
         if (parsed.notes) setNote(parsed.notes);
+        if (parsed.date) setDate(parsed.date);
     };
 
     const speechLang = locale === "id" ? "id-ID" : "en-US";

@@ -5,6 +5,7 @@ export interface ParsedVoiceTransaction {
   category?: string;
   priority?: string;
   notes?: string;
+  date?: string;
 }
 
 const UNITS: Record<string, number> = {

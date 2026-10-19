@@ -63,6 +63,7 @@ export default function VoiceButton({
               category: data.category || undefined,
               priority: data.priority || undefined,
               notes: data.notes || undefined,
+              date: data.date || undefined,
             },
             data.text,
           );
