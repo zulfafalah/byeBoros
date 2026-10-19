@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getTransactions } from "@/lib/api/transactions";
+import { onTransactionsChanged } from "@/lib/events";
 import type { TransactionGroup } from "@/lib/api/types";
 
 interface UseTransactionsOptions {
@@ -39,6 +40,8 @@ export function useTransactions({
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
+
+  useEffect(() => onTransactionsChanged(fetchTransactions), [fetchTransactions]);
 
   return { transactions, isLoading, error, refetch: fetchTransactions };
 }

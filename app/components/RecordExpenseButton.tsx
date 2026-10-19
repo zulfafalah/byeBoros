@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useVoiceRecorder } from "@/lib/hooks/useVoiceRecorder";
 import { createVoiceTransaction } from "@/lib/api/voice";
+import { notifyTransactionsChanged } from "@/lib/events";
 import { ApiError } from "@/lib/api/types";
 
 /**
@@ -23,6 +24,7 @@ export default function RecordExpenseButton() {
       setBusy(true);
       try {
         await createVoiceTransaction(wav);
+        notifyTransactionsChanged();
         router.replace("/");
         router.refresh();
       } catch (error) {

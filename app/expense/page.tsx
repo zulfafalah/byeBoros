@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { createExpense } from "@/lib/api/transactions";
+import { notifyTransactionsChanged } from "@/lib/events";
 import { getCategories, type CategoryItem } from "@/lib/api/category";
 import VoiceButton from "../components/VoiceButton";
 import type { ParsedVoiceTransaction } from "@/lib/voice/parse";
@@ -67,6 +68,7 @@ export default function ExpensePage() {
                 notes: note || undefined,
                 transaction_at: formatTransactionAt(date),
             });
+            notifyTransactionsChanged();
             router.push("/");
         } catch (err) {
             console.error("Failed to save expense:", err);
@@ -93,6 +95,7 @@ export default function ExpensePage() {
             );
             if (match) setCategory(match.sub_category_name);
         }
+        if (parsed.notes) setNote(parsed.notes);
     };
 
     const speechLang = locale === "id" ? "id-ID" : "en-US";
